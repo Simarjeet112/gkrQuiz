@@ -17,6 +17,7 @@ import {
   Eye,
   Sliders,
   Sparkles,
+  Lock,
 } from 'lucide-react';
 import { api } from '../services/api';
 import { CodeBlock } from '../components/ui/CodeBlock';
@@ -236,25 +237,25 @@ export const OrganizerPage: React.FC = () => {
   // ── PASSCODE ENTRY SCREEN ──
   if (!isAuthenticated) {
     return (
-      <div className="min-h-[calc(100vh-4rem)] cyber-grid flex items-center justify-center p-4">
+      <div className="min-h-[calc(100vh-4.5rem)] bg-carbon-950 tech-grid flex items-center justify-center p-4">
         <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
+          initial={{ opacity: 0, scale: 0.96 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="cyber-card w-full max-w-md p-8 border border-arena-cyan/30 shadow-glow-cyan space-y-6"
+          className="titanium-card w-full max-w-md p-8 border border-white/10 space-y-6"
         >
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-xl bg-arena-cyan/15 border border-arena-cyan/40 flex items-center justify-center text-arena-cyan">
+            <div className="w-12 h-12 rounded-xl bg-lime-400/10 border border-lime-400/30 flex items-center justify-center text-lime-400">
               <Shield className="w-6 h-6" />
             </div>
             <div>
-              <div className="text-[11px] font-mono text-arena-cyan uppercase tracking-widest">
+              <div className="text-[10px] font-mono text-lime-400 uppercase tracking-widest">
                 CONTROL ROOM
               </div>
               <h1 className="text-xl font-bold text-white font-display">Organizer Access</h1>
             </div>
           </div>
 
-          <p className="text-xs text-slate-400">
+          <p className="text-xs text-carbon-400">
             Enter the organizer passcode to manage the 50-question bank, event timer, and quiz controls.
           </p>
 
@@ -267,7 +268,7 @@ export const OrganizerPage: React.FC = () => {
 
           <form onSubmit={handleVerify} className="space-y-4">
             <div>
-              <label className="block text-xs font-mono uppercase text-slate-400 mb-1.5">
+              <label className="block text-xs font-mono uppercase text-carbon-400 mb-1.5">
                 Organizer Passcode
               </label>
               <input
@@ -276,14 +277,14 @@ export const OrganizerPage: React.FC = () => {
                 onChange={(e) => setPasscode(e.target.value)}
                 placeholder="Enter passcode..."
                 required
-                className="w-full px-4 py-3 rounded-xl bg-[#060A12] border border-arena-border text-white text-sm outline-none focus:border-arena-cyan font-mono"
+                className="w-full px-4 py-3 rounded-xl bg-carbon-900 border border-white/10 text-white text-sm outline-none focus:border-lime-400 font-mono transition-colors"
               />
             </div>
 
             <button
               type="submit"
               disabled={verifying}
-              className="w-full py-3.5 rounded-xl bg-arena-cyan hover:bg-cyan-300 text-slate-950 font-bold text-xs uppercase tracking-wider font-mono shadow-glow-cyan transition-all disabled:opacity-50"
+              className="btn-primary w-full py-3.5 text-xs font-bold uppercase tracking-wider disabled:opacity-50"
             >
               {verifying ? 'Verifying...' : 'Unlock Control Room'}
             </button>
@@ -295,16 +296,16 @@ export const OrganizerPage: React.FC = () => {
 
   // ── ORGANIZER DASHBOARD ──
   return (
-    <div className="relative min-h-[calc(100vh-4rem)] cyber-grid py-8 px-4 sm:px-6 lg:px-8">
+    <div className="relative min-h-[calc(100vh-4.5rem)] bg-carbon-950 tech-grid py-8 px-4 sm:px-6 lg:px-8">
       <div className="max-w-6xl mx-auto space-y-6">
         {/* Header HUD */}
-        <div className="cyber-card p-5 border border-arena-cyan/30 flex flex-wrap items-center justify-between gap-4">
+        <div className="titanium-card p-5 border border-white/10 flex flex-wrap items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-arena-cyan/20 border border-arena-cyan/40 flex items-center justify-center text-arena-cyan">
+            <div className="w-10 h-10 rounded-xl bg-lime-400/10 border border-lime-400/30 flex items-center justify-center text-lime-400">
               <Settings className="w-5 h-5" />
             </div>
             <div>
-              <div className="text-[10px] font-mono text-arena-cyan tracking-widest uppercase">
+              <div className="text-[10px] font-mono text-lime-400 tracking-widest uppercase">
                 GEEKROOM GTBIT // CONTROL ROOM
               </div>
               <h1 className="text-lg font-bold text-white font-display">
@@ -316,9 +317,9 @@ export const OrganizerPage: React.FC = () => {
           <div className="flex items-center gap-2.5">
             <button
               onClick={handleExportCSV}
-              className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs text-slate-300 font-mono transition-colors"
+              className="btn-secondary flex items-center gap-1.5 px-3 py-2 text-xs font-mono"
             >
-              <Download className="w-3.5 h-3.5 text-arena-cyan" />
+              <Download className="w-3.5 h-3.5 text-lime-400" />
               <span>Export CSV</span>
             </button>
 
@@ -326,6 +327,7 @@ export const OrganizerPage: React.FC = () => {
               onClick={handleLogout}
               className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-red-500/10 hover:bg-red-500/20 border border-red-500/20 text-xs text-red-300 font-mono transition-colors"
             >
+              <Lock className="w-3.5 h-3.5" />
               <span>Lock Room</span>
             </button>
           </div>
@@ -334,32 +336,32 @@ export const OrganizerPage: React.FC = () => {
         {/* Breakdown Stats Bar */}
         {stats && (
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 font-mono">
-            <div className="cyber-card p-4 border border-emerald-500/30">
-              <div className="text-[10px] text-emerald-400">EASY QUESTIONS</div>
+            <div className="titanium-card p-4 border border-lime-500/20">
+              <div className="text-[10px] text-lime-400 uppercase">EASY QUESTIONS</div>
               <div className="text-2xl font-bold text-white mt-1">
                 {stats.breakdown.easy.active}{' '}
-                <span className="text-xs text-slate-500 font-normal">/ {stats.breakdown.easy.total}</span>
+                <span className="text-xs text-carbon-500 font-normal">/ {stats.breakdown.easy.total}</span>
               </div>
             </div>
 
-            <div className="cyber-card p-4 border border-amber-500/30">
-              <div className="text-[10px] text-amber-400">MEDIUM QUESTIONS</div>
+            <div className="titanium-card p-4 border border-amber-500/20">
+              <div className="text-[10px] text-amber-400 uppercase">MEDIUM QUESTIONS</div>
               <div className="text-2xl font-bold text-white mt-1">
                 {stats.breakdown.medium.active}{' '}
-                <span className="text-xs text-slate-500 font-normal">/ {stats.breakdown.medium.total}</span>
+                <span className="text-xs text-carbon-500 font-normal">/ {stats.breakdown.medium.total}</span>
               </div>
             </div>
 
-            <div className="cyber-card p-4 border border-red-500/30">
-              <div className="text-[10px] text-red-400">TOUGH QUESTIONS</div>
+            <div className="titanium-card p-4 border border-ember-500/20">
+              <div className="text-[10px] text-ember-400 uppercase">TOUGH QUESTIONS</div>
               <div className="text-2xl font-bold text-white mt-1">
                 {stats.breakdown.tough.active}{' '}
-                <span className="text-xs text-slate-500 font-normal">/ {stats.breakdown.tough.total}</span>
+                <span className="text-xs text-carbon-500 font-normal">/ {stats.breakdown.tough.total}</span>
               </div>
             </div>
 
-            <div className="cyber-card p-4 border border-arena-cyan/30">
-              <div className="text-[10px] text-arena-cyan">LIVE ATTEMPTS</div>
+            <div className="titanium-card p-4 border border-cyan-500/20">
+              <div className="text-[10px] text-cyan-400 uppercase">LIVE ATTEMPTS</div>
               <div className="text-2xl font-bold text-white mt-1">
                 {stats.total_completed_attempts}
               </div>
@@ -368,7 +370,7 @@ export const OrganizerPage: React.FC = () => {
         )}
 
         {/* Tab Switcher */}
-        <div className="flex items-center gap-2 border-b border-arena-border pb-2 font-mono text-xs">
+        <div className="flex items-center gap-2 border-b border-white/10 pb-2 font-mono text-xs">
           {[
             { id: 'questions', label: 'Question Bank (50 Questions)', icon: HelpCircle },
             { id: 'settings', label: 'Timer & Scoring Settings', icon: Sliders },
@@ -382,8 +384,8 @@ export const OrganizerPage: React.FC = () => {
                 onClick={() => setActiveTab(tab.id as any)}
                 className={`flex items-center gap-2 px-4 py-2.5 rounded-xl border transition-all ${
                   isActive
-                    ? 'bg-arena-cyan/15 text-arena-cyan border-arena-cyan shadow-glow-cyan font-bold'
-                    : 'bg-arena-card text-slate-400 border-arena-border hover:text-white'
+                    ? 'bg-lime-400/15 text-lime-300 border-lime-400/40 font-bold'
+                    : 'bg-carbon-900 text-carbon-400 border-white/10 hover:text-white'
                 }`}
               >
                 <Icon className="w-4 h-4" />
@@ -399,20 +401,20 @@ export const OrganizerPage: React.FC = () => {
             <div className="flex flex-wrap items-center justify-between gap-4">
               <div className="flex items-center gap-2.5 flex-1 max-w-lg">
                 <div className="relative flex-1">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-carbon-500" />
                   <input
                     type="text"
                     value={searchQuery}
                     onChange={(e) => handleFilterChange(selectedDifficulty, e.target.value)}
                     placeholder="Search question text or category..."
-                    className="w-full pl-9 pr-3 py-2 rounded-xl bg-[#060A12] border border-arena-border text-xs text-white placeholder:text-slate-600 focus:outline-none focus:border-arena-cyan font-mono"
+                    className="w-full pl-9 pr-3 py-2 rounded-xl bg-carbon-900 border border-white/10 text-xs text-white placeholder:text-carbon-500 focus:outline-none focus:border-lime-400 font-mono"
                   />
                 </div>
 
                 <select
                   value={selectedDifficulty}
                   onChange={(e) => handleFilterChange(e.target.value, searchQuery)}
-                  className="px-3 py-2 rounded-xl bg-[#0B0F19] border border-arena-border text-xs font-mono text-white"
+                  className="px-3 py-2 rounded-xl bg-carbon-900 border border-white/10 text-xs font-mono text-white"
                 >
                   <option value="all">All Tiers</option>
                   <option value="easy">Easy Only</option>
@@ -423,7 +425,7 @@ export const OrganizerPage: React.FC = () => {
 
               <button
                 onClick={openCreateModal}
-                className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-arena-cyan text-slate-950 font-bold text-xs font-mono shadow-glow-cyan hover:bg-cyan-300 transition-colors"
+                className="btn-primary flex items-center gap-2 px-4 py-2.5 text-xs font-mono font-bold"
               >
                 <Plus className="w-4 h-4" />
                 <span>Add New Question</span>
@@ -432,11 +434,11 @@ export const OrganizerPage: React.FC = () => {
 
             {/* Questions List */}
             {loadingQuestions ? (
-              <div className="py-16 text-center text-xs font-mono text-slate-500">
+              <div className="py-16 text-center text-xs font-mono text-carbon-400">
                 Loading questions...
               </div>
             ) : questions.length === 0 ? (
-              <div className="py-12 text-center text-slate-500 text-xs font-mono">
+              <div className="py-12 text-center text-carbon-400 text-xs font-mono">
                 No questions found.
               </div>
             ) : (
@@ -444,8 +446,8 @@ export const OrganizerPage: React.FC = () => {
                 {questions.map((q, idx) => (
                   <div
                     key={q.id}
-                    className={`cyber-card p-4 border transition-all ${
-                      q.is_active ? 'border-arena-border' : 'border-red-500/20 opacity-60'
+                    className={`titanium-card p-4 border transition-all ${
+                      q.is_active ? 'border-white/10' : 'border-red-500/20 opacity-60'
                     }`}
                   >
                     <div className="flex items-start justify-between gap-4">
@@ -454,38 +456,38 @@ export const OrganizerPage: React.FC = () => {
                           <span
                             className={`px-2 py-0.5 rounded text-[10px] uppercase font-bold ${
                               q.difficulty === 'easy'
-                                ? 'bg-emerald-500/20 text-emerald-300'
+                                ? 'bg-lime-400/20 text-lime-300 border border-lime-400/30'
                                 : q.difficulty === 'medium'
-                                ? 'bg-amber-500/20 text-amber-300'
-                                : 'bg-red-500/20 text-red-300'
+                                ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
+                                : 'bg-ember-500/20 text-ember-300 border border-ember-500/30'
                             }`}
                           >
                             {q.difficulty}
                           </span>
-                          <span className="text-slate-500">•</span>
-                          <span className="text-slate-400">{q.category}</span>
+                          <span className="text-carbon-600">•</span>
+                          <span className="text-carbon-400">{q.category}</span>
                           {!q.is_active && (
                             <span className="text-red-400 font-bold">[INACTIVE]</span>
                           )}
                         </div>
 
                         <h4 className="text-sm font-semibold text-white">
-                          <span className="text-slate-500 font-mono mr-2">#{idx + 1}</span>
+                          <span className="text-carbon-500 font-mono mr-2">#{idx + 1}</span>
                           {q.text}
                         </h4>
 
                         {/* Options preview */}
-                        <div className="grid grid-cols-2 gap-1.5 pt-1 text-xs font-mono text-slate-400">
+                        <div className="grid grid-cols-2 gap-1.5 pt-1 text-xs font-mono text-carbon-400">
                           {q.options.map((opt: string, optI: number) => (
                             <div
                               key={optI}
                               className={`p-1.5 px-2.5 rounded-lg border text-[11px] ${
                                 opt === q.correct_answer
-                                  ? 'bg-emerald-500/15 border-emerald-500/40 text-emerald-300 font-semibold'
-                                  : 'bg-white/5 border-white/5'
+                                  ? 'bg-lime-400/10 border-lime-400/40 text-lime-300 font-semibold'
+                                  : 'bg-carbon-900 border-white/5'
                               }`}
                             >
-                              <span className="text-slate-500 mr-1.5">
+                              <span className="text-carbon-500 mr-1.5">
                                 {['A', 'B', 'C', 'D'][optI]})
                               </span>
                               {opt}
@@ -493,7 +495,7 @@ export const OrganizerPage: React.FC = () => {
                           ))}
                         </div>
 
-                        <div className="text-[11px] font-mono text-slate-500 pt-1">
+                        <div className="text-[11px] font-mono text-carbon-400 pt-1">
                           Explanation: {q.explanation}
                         </div>
                       </div>
@@ -504,7 +506,7 @@ export const OrganizerPage: React.FC = () => {
                           onClick={() => handleToggleActive(q)}
                           className={`px-2.5 py-1 rounded-lg text-xs font-mono ${
                             q.is_active
-                              ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/30'
+                              ? 'bg-lime-400/10 text-lime-400 border border-lime-400/30'
                               : 'bg-red-500/10 text-red-400 border border-red-500/30'
                           }`}
                         >
@@ -513,7 +515,7 @@ export const OrganizerPage: React.FC = () => {
 
                         <button
                           onClick={() => openEditModal(q)}
-                          className="p-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-slate-300"
+                          className="p-1.5 rounded-lg bg-carbon-900 hover:bg-carbon-800 text-carbon-300 transition-colors"
                           title="Edit Question"
                         >
                           <Edit className="w-4 h-4" />
@@ -521,7 +523,7 @@ export const OrganizerPage: React.FC = () => {
 
                         <button
                           onClick={() => handleDelete(q.id)}
-                          className="p-1.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400"
+                          className="p-1.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 transition-colors"
                           title="Delete Question"
                         >
                           <Trash2 className="w-4 h-4" />
@@ -537,11 +539,11 @@ export const OrganizerPage: React.FC = () => {
 
         {/* ── TAB 2: SETTINGS ── */}
         {activeTab === 'settings' && (
-          <div className="cyber-card p-6 border border-arena-border space-y-4 max-w-xl">
+          <div className="titanium-card p-6 border border-white/10 space-y-4 max-w-xl">
             <h3 className="text-base font-bold text-white font-display">Event Configuration</h3>
 
             {configSuccess && (
-              <div className="p-3 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-xs text-emerald-300 flex items-center gap-2 font-mono">
+              <div className="p-3 rounded-xl bg-lime-400/15 border border-lime-400/30 text-xs text-lime-300 flex items-center gap-2 font-mono">
                 <CheckCircle className="w-4 h-4" />
                 <span>Settings saved successfully.</span>
               </div>
@@ -549,7 +551,7 @@ export const OrganizerPage: React.FC = () => {
 
             <form onSubmit={handleSaveConfig} className="space-y-4 font-mono text-xs">
               <div>
-                <label className="block text-slate-400 mb-1">Quiz Duration (Minutes)</label>
+                <label className="block text-carbon-400 mb-1">Quiz Duration (Minutes)</label>
                 <input
                   type="number"
                   min="1"
@@ -558,50 +560,50 @@ export const OrganizerPage: React.FC = () => {
                   onChange={(e) =>
                     setConfig((prev) => ({ ...prev, quiz_duration_minutes: e.target.value }))
                   }
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-[#060A12] border border-arena-border text-white"
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-carbon-900 border border-white/10 text-white focus:outline-none focus:border-lime-400"
                 />
               </div>
 
               <div className="grid grid-cols-3 gap-3">
                 <div>
-                  <label className="block text-slate-400 mb-1">Easy Points</label>
+                  <label className="block text-carbon-400 mb-1">Easy Points</label>
                   <input
                     type="number"
                     value={config.points_easy}
                     onChange={(e) =>
                       setConfig((prev) => ({ ...prev, points_easy: e.target.value }))
                     }
-                    className="w-full px-3 py-2 rounded-xl bg-[#060A12] border border-arena-border text-white"
+                    className="w-full px-3 py-2 rounded-xl bg-carbon-900 border border-white/10 text-white focus:outline-none focus:border-lime-400"
                   />
                 </div>
                 <div>
-                  <label className="block text-slate-400 mb-1">Medium Points</label>
+                  <label className="block text-carbon-400 mb-1">Medium Points</label>
                   <input
                     type="number"
                     value={config.points_medium}
                     onChange={(e) =>
                       setConfig((prev) => ({ ...prev, points_medium: e.target.value }))
                     }
-                    className="w-full px-3 py-2 rounded-xl bg-[#060A12] border border-arena-border text-white"
+                    className="w-full px-3 py-2 rounded-xl bg-carbon-900 border border-white/10 text-white focus:outline-none focus:border-lime-400"
                   />
                 </div>
                 <div>
-                  <label className="block text-slate-400 mb-1">Tough Points</label>
+                  <label className="block text-carbon-400 mb-1">Tough Points</label>
                   <input
                     type="number"
                     value={config.points_tough}
                     onChange={(e) =>
                       setConfig((prev) => ({ ...prev, points_tough: e.target.value }))
                     }
-                    className="w-full px-3 py-2 rounded-xl bg-[#060A12] border border-arena-border text-white"
+                    className="w-full px-3 py-2 rounded-xl bg-carbon-900 border border-white/10 text-white focus:outline-none focus:border-lime-400"
                   />
                 </div>
               </div>
 
-              <div className="flex items-center justify-between p-3 rounded-xl bg-white/5 border border-white/5">
+              <div className="flex items-center justify-between p-3 rounded-xl bg-carbon-900 border border-white/10">
                 <div>
                   <div className="font-semibold text-white">Require College Roll Number</div>
-                  <div className="text-[11px] text-slate-500">
+                  <div className="text-[11px] text-carbon-400">
                     Enforces roll number on registration screen
                   </div>
                 </div>
@@ -614,13 +616,13 @@ export const OrganizerPage: React.FC = () => {
                       require_roll_number: e.target.checked ? 'true' : 'false',
                     }))
                   }
-                  className="w-4 h-4 accent-arena-cyan"
+                  className="w-4 h-4 accent-lime-400"
                 />
               </div>
 
               <button
                 type="submit"
-                className="px-6 py-2.5 rounded-xl bg-arena-cyan text-slate-950 font-bold text-xs uppercase shadow-glow-cyan hover:bg-cyan-300 transition-colors"
+                className="btn-primary px-6 py-2.5 text-xs font-bold uppercase tracking-wider"
               >
                 Save Settings
               </button>
@@ -630,12 +632,12 @@ export const OrganizerPage: React.FC = () => {
 
         {/* ── TAB 3: DANGER ZONE ── */}
         {activeTab === 'danger' && (
-          <div className="cyber-card p-6 border border-red-500/40 space-y-4 max-w-xl bg-red-950/20">
+          <div className="titanium-card p-6 border border-red-500/40 space-y-4 max-w-xl bg-red-950/20">
             <div className="flex items-center gap-2.5 text-red-400">
               <AlertTriangle className="w-5 h-5 shrink-0" />
               <h3 className="text-base font-bold font-display">Danger Zone: Reset Event Attempts</h3>
             </div>
-            <p className="text-xs text-slate-400 leading-relaxed font-mono">
+            <p className="text-xs text-carbon-400 leading-relaxed font-mono">
               Purges all participant records and completed quiz attempts so you start with a clean leaderboard for the live event. The 50 questions in the question bank will remain intact.
             </p>
 
@@ -646,14 +648,14 @@ export const OrganizerPage: React.FC = () => {
             )}
 
             {resetSuccess && (
-              <div className="p-3 rounded-xl bg-emerald-500/20 border border-emerald-500/40 text-xs text-emerald-300 font-mono">
+              <div className="p-3 rounded-xl bg-lime-400/20 border border-lime-400/40 text-xs text-lime-300 font-mono">
                 All event participants and attempts have been purged!
               </div>
             )}
 
             <form onSubmit={handleResetAttempts} className="space-y-3 font-mono text-xs">
               <div>
-                <label className="block text-slate-400 mb-1">
+                <label className="block text-carbon-400 mb-1">
                   Type <strong className="text-red-400">RESET ARENA</strong> to confirm:
                 </label>
                 <input
@@ -661,7 +663,7 @@ export const OrganizerPage: React.FC = () => {
                   value={confirmPhrase}
                   onChange={(e) => setConfirmPhrase(e.target.value)}
                   placeholder="RESET ARENA"
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-[#060A12] border border-red-500/40 text-white"
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-carbon-900 border border-red-500/40 text-white font-mono"
                 />
               </div>
 
@@ -679,14 +681,14 @@ export const OrganizerPage: React.FC = () => {
         {/* ── MODAL: CREATE / EDIT QUESTION ── */}
         {modalOpen && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md overflow-y-auto">
-            <div className="cyber-card w-full max-w-2xl p-6 border border-arena-cyan/40 shadow-2xl my-8 space-y-4">
-              <div className="flex items-center justify-between pb-3 border-b border-arena-border">
+            <div className="titanium-card w-full max-w-2xl p-6 border border-white/20 shadow-2xl my-8 space-y-4">
+              <div className="flex items-center justify-between pb-3 border-b border-white/10">
                 <h3 className="text-base font-bold text-white font-display">
                   {editingId ? 'Edit Question' : 'Add New Question'}
                 </h3>
                 <button
                   onClick={() => setModalOpen(false)}
-                  className="p-1 rounded-lg text-slate-400 hover:text-white"
+                  className="p-1 rounded-lg text-carbon-400 hover:text-white"
                 >
                   <X className="w-5 h-5" />
                 </button>
@@ -694,23 +696,23 @@ export const OrganizerPage: React.FC = () => {
 
               <form onSubmit={handleSaveQuestion} className="space-y-4 font-mono text-xs">
                 <div>
-                  <label className="block text-slate-400 mb-1">Question Statement</label>
+                  <label className="block text-carbon-400 mb-1">Question Statement</label>
                   <textarea
                     rows={2}
                     value={qText}
                     onChange={(e) => setQText(e.target.value)}
                     required
-                    className="w-full p-2.5 rounded-xl bg-[#060A12] border border-arena-border text-white text-xs outline-none focus:border-arena-cyan font-sans"
+                    className="w-full p-2.5 rounded-xl bg-carbon-900 border border-white/10 text-white text-xs outline-none focus:border-lime-400 font-sans"
                   />
                 </div>
 
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-slate-400 mb-1">Difficulty</label>
+                    <label className="block text-carbon-400 mb-1">Difficulty</label>
                     <select
                       value={qDifficulty}
                       onChange={(e) => setQDifficulty(e.target.value as any)}
-                      className="w-full p-2.5 rounded-xl bg-[#060A12] border border-arena-border text-white text-xs"
+                      className="w-full p-2.5 rounded-xl bg-carbon-900 border border-white/10 text-white text-xs"
                     >
                       <option value="easy">Easy (10 pts)</option>
                       <option value="medium">Medium (20 pts)</option>
@@ -719,22 +721,22 @@ export const OrganizerPage: React.FC = () => {
                   </div>
 
                   <div>
-                    <label className="block text-slate-400 mb-1">Category</label>
+                    <label className="block text-carbon-400 mb-1">Category</label>
                     <input
                       type="text"
                       value={qCategory}
                       onChange={(e) => setQCategory(e.target.value)}
                       required
-                      className="w-full p-2.5 rounded-xl bg-[#060A12] border border-arena-border text-white text-xs"
+                      className="w-full p-2.5 rounded-xl bg-carbon-900 border border-white/10 text-white text-xs"
                     />
                   </div>
                 </div>
 
                 <div className="space-y-2">
-                  <label className="block text-slate-400">4 Plausible Answer Options</label>
+                  <label className="block text-carbon-400">4 Plausible Answer Options</label>
                   {qOptions.map((opt, idx) => (
                     <div key={idx} className="flex items-center gap-2">
-                      <span className="w-5 text-center text-slate-500">
+                      <span className="w-5 text-center text-carbon-500">
                         {['A', 'B', 'C', 'D'][idx]}
                       </span>
                       <input
@@ -747,21 +749,21 @@ export const OrganizerPage: React.FC = () => {
                         }}
                         placeholder={`Option ${idx + 1}`}
                         required
-                        className="flex-1 p-2 rounded-xl bg-[#060A12] border border-arena-border text-white text-xs"
+                        className="flex-1 p-2 rounded-xl bg-carbon-900 border border-white/10 text-white text-xs font-mono"
                       />
                     </div>
                   ))}
                 </div>
 
                 <div>
-                  <label className="block text-slate-400 mb-1">
+                  <label className="block text-carbon-400 mb-1">
                     Correct Answer (Must match one option)
                   </label>
                   <select
                     value={qCorrect}
                     onChange={(e) => setQCorrect(e.target.value)}
                     required
-                    className="w-full p-2.5 rounded-xl bg-[#060A12] border border-arena-border text-white text-xs"
+                    className="w-full p-2.5 rounded-xl bg-carbon-900 border border-white/10 text-white text-xs"
                   >
                     <option value="">Select correct option...</option>
                     {qOptions.filter(Boolean).map((opt, idx) => (
@@ -773,27 +775,27 @@ export const OrganizerPage: React.FC = () => {
                 </div>
 
                 <div>
-                  <label className="block text-slate-400 mb-1">Explanation</label>
+                  <label className="block text-carbon-400 mb-1">Explanation</label>
                   <textarea
                     rows={2}
                     value={qExplanation}
                     onChange={(e) => setQExplanation(e.target.value)}
                     required
-                    className="w-full p-2.5 rounded-xl bg-[#060A12] border border-arena-border text-white text-xs outline-none focus:border-arena-cyan font-sans"
+                    className="w-full p-2.5 rounded-xl bg-carbon-900 border border-white/10 text-white text-xs outline-none focus:border-lime-400 font-sans"
                   />
                 </div>
 
-                <div className="flex justify-end gap-3 pt-3 border-t border-arena-border">
+                <div className="flex justify-end gap-3 pt-3 border-t border-white/10">
                   <button
                     type="button"
                     onClick={() => setModalOpen(false)}
-                    className="px-4 py-2 rounded-xl border border-arena-border text-slate-400 hover:bg-white/5"
+                    className="btn-secondary px-4 py-2 text-xs"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
-                    className="px-5 py-2 rounded-xl bg-arena-cyan text-slate-950 font-bold text-xs"
+                    className="btn-primary px-5 py-2 text-xs font-bold"
                   >
                     Save Question
                   </button>

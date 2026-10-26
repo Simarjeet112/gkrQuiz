@@ -13,10 +13,9 @@ import {
   Target,
   ChevronDown,
   ChevronUp,
-  RotateCcw,
   Sparkles,
-  Award,
-  Flame,
+  ArrowRight,
+  ShieldCheck,
 } from 'lucide-react';
 import { api } from '../services/api';
 import { BitByte3D } from '../components/mascot/BitByte3D';
@@ -99,10 +98,10 @@ export const ResultsPage: React.FC = () => {
         if (target >= 50) {
           setTimeout(() => {
             confetti({
-              particleCount: 110,
-              spread: 85,
+              particleCount: 90,
+              spread: 75,
               origin: { y: 0.58 },
-              colors: ['#00F0FF', '#00FF88', '#8B5CF6', '#FF6B00'],
+              colors: ['#D4FF00', '#FF5C00', '#F8FAFC', '#38BDF8'],
             });
           }, 350);
         }
@@ -117,9 +116,9 @@ export const ResultsPage: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="min-h-[calc(100vh-4rem)] cyber-grid flex flex-col items-center justify-center gap-4">
-        <div className="w-12 h-12 border-4 border-arena-cyan/30 border-t-arena-cyan rounded-full animate-spin" />
-        <p className="text-sm font-mono text-arena-cyan tracking-widest">
+      <div className="min-h-[calc(100vh-4.5rem)] bg-carbon-950 tech-grid flex flex-col items-center justify-center gap-4">
+        <div className="w-10 h-10 border-2 border-lime-400/20 border-t-lime-400 rounded-full animate-spin" />
+        <p className="text-xs font-mono text-lime-400 tracking-widest uppercase">
           COMPUTING ACCURACY & LEADERBOARD RANK...
         </p>
       </div>
@@ -128,16 +127,17 @@ export const ResultsPage: React.FC = () => {
 
   if (error || !results) {
     return (
-      <div className="min-h-[calc(100vh-4rem)] cyber-grid flex items-center justify-center p-4">
-        <div className="cyber-card max-w-md w-full p-8 border border-red-500/40 text-center space-y-4">
+      <div className="min-h-[calc(100vh-4.5rem)] bg-carbon-950 tech-grid flex items-center justify-center p-4">
+        <div className="titanium-card max-w-md w-full p-8 border border-red-500/30 text-center space-y-4">
           <XCircle className="w-10 h-10 text-red-400 mx-auto" />
           <h2 className="text-lg font-bold text-white font-display">Results Unavailable</h2>
-          <p className="text-xs text-slate-400">{error || 'Session could not be retrieved.'}</p>
+          <p className="text-xs text-carbon-400">{error || 'Session could not be retrieved.'}</p>
           <Link
             to="/"
-            className="inline-block px-6 py-2.5 rounded-xl bg-arena-cyan text-slate-950 font-mono font-bold text-xs"
+            className="btn-secondary inline-flex items-center gap-2"
           >
-            Return to Arena
+            <Home className="w-4 h-4" />
+            <span>Return to Arena</span>
           </Link>
         </div>
       </div>
@@ -145,10 +145,10 @@ export const ResultsPage: React.FC = () => {
   }
 
   const getRankBadge = (score: number) => {
-    if (score >= 80) return { title: 'ARENA TITAN // S-TIER', color: 'text-amber-400 border-amber-400/50 bg-amber-500/10' };
-    if (score >= 60) return { title: 'CYBER GLADIATOR // A-TIER', color: 'text-arena-cyan border-cyan-400/50 bg-cyan-500/10' };
-    if (score >= 40) return { title: 'CODE WARRIOR // B-TIER', color: 'text-emerald-400 border-emerald-400/50 bg-emerald-500/10' };
-    return { title: 'ARENA RECRUIT // INITIATE', color: 'text-purple-400 border-purple-400/50 bg-purple-500/10' };
+    if (score >= 80) return { title: 'ARENA TITAN // S-TIER', color: 'text-lime-300 border-lime-400/40 bg-lime-400/10' };
+    if (score >= 60) return { title: 'CODE GLADIATOR // A-TIER', color: 'text-ember-300 border-ember-400/40 bg-ember-500/10' };
+    if (score >= 40) return { title: 'CORE ARCHITECT // B-TIER', color: 'text-cyan-300 border-cyan-400/40 bg-cyan-500/10' };
+    return { title: 'ARENA RECRUIT // INITIATE', color: 'text-slate-300 border-white/20 bg-white/5' };
   };
 
   const rankBadge = getRankBadge(results.total_score);
@@ -156,51 +156,51 @@ export const ResultsPage: React.FC = () => {
   const mascotMood: BitByteMood = results.total_score >= 60 ? 'victory' : results.total_score >= 40 ? 'excited' : 'defeat';
   const mascotMsg =
     results.total_score >= 70
-      ? `Phenomenal performance, ${results.participant.display_name}! You dominated the Arena with ${results.total_score} points!`
+      ? `Phenomenal performance, ${results.participant.display_name}! You conquered the Arena with ${results.total_score} points!`
       : results.total_score >= 40
-      ? `Impressive run, ${results.participant.display_name}! ${results.total_score} points locked on the board!`
-      : `Good battle, ${results.participant.display_name}! Review the explanations below to level up for the next challenge.`;
+      ? `Solid execution, ${results.participant.display_name}! ${results.total_score} points locked on the board!`
+      : `Good effort, ${results.participant.display_name}! Review the breakdown below to sharpen your edge.`;
 
   const bd = results.difficulty_breakdown;
 
   return (
-    <div className="relative min-h-[calc(100vh-4rem)] cyber-grid py-10 px-4 sm:px-6">
+    <div className="relative min-h-[calc(100vh-4.5rem)] bg-carbon-950 tech-grid py-10 px-4 sm:px-6">
       <div className="max-w-4xl mx-auto space-y-6">
 
         {/* ── HERO RESULT FINALE CARD ── */}
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          className="cyber-card p-6 sm:p-8 border border-arena-cyan/35 shadow-glow-cyan overflow-hidden space-y-6"
+          className="titanium-card p-6 sm:p-8 border border-white/10 overflow-hidden space-y-6"
         >
           {/* Top Banner: Mascot + Score Gauge */}
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-6 pb-6 border-b border-arena-border">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-6 pb-6 border-b border-white/10">
             <div className="w-full sm:w-auto flex-1 max-w-md">
               <BitByte3D mood={mascotMood} customMessage={mascotMsg} size="companion" showSpeech={true} />
             </div>
 
             <div className="text-center sm:text-right shrink-0">
-              <span className={`inline-block px-3 py-1 rounded-md text-[10px] font-mono font-bold uppercase tracking-widest border mb-2 ${rankBadge.color}`}>
+              <span className={`inline-block px-3 py-1 rounded-md text-[10px] font-mono font-bold uppercase tracking-widest border mb-2.5 ${rankBadge.color}`}>
                 {rankBadge.title}
               </span>
 
-              <div className="text-[10px] font-mono uppercase tracking-widest text-slate-400">
-                FINAL SCORE
+              <div className="text-[10px] font-mono uppercase tracking-widest text-carbon-400">
+                TOTAL SCORE
               </div>
               <div className="flex items-baseline justify-center sm:justify-end gap-1.5 my-1 font-mono">
-                <span className="text-6xl sm:text-7xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-arena-cyan via-cyan-200 to-arena-greenNeon tabular-nums">
+                <span className="text-6xl sm:text-7xl font-extrabold text-lime-400 tabular-nums">
                   {animatedScore}
                 </span>
-                <span className="text-2xl font-bold text-slate-600">/90</span>
+                <span className="text-2xl font-bold text-carbon-500">/90</span>
               </div>
 
               {results.rank && (
-                <div className="inline-flex items-center gap-1.5 text-xs font-mono px-3.5 py-1 rounded-full bg-[#080C14] border border-arena-border text-slate-300">
-                  <Trophy className="w-3.5 h-3.5 text-arena-cyan" />
+                <div className="inline-flex items-center gap-1.5 text-xs font-mono px-3.5 py-1 rounded-full bg-carbon-900 border border-white/10 text-slate-300">
+                  <Trophy className="w-3.5 h-3.5 text-lime-400" />
                   <span>
-                    LEADERBOARD RANK: <strong className="text-arena-cyan">#{results.rank}</strong>
+                    LEADERBOARD RANK: <strong className="text-lime-400">#{results.rank}</strong>
                     {results.total_participants && (
-                      <span className="text-slate-500"> OF {results.total_participants}</span>
+                      <span className="text-carbon-400"> OF {results.total_participants}</span>
                     )}
                   </span>
                 </div>
@@ -210,17 +210,17 @@ export const ResultsPage: React.FC = () => {
 
           {/* Key Metrics Grid */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 font-mono">
-            <div className="p-3.5 rounded-xl bg-[#080C14] border border-arena-border">
-              <div className="flex items-center gap-1.5 text-xs text-emerald-400 mb-1">
+            <div className="p-3.5 rounded-xl bg-carbon-900 border border-white/10">
+              <div className="flex items-center gap-1.5 text-xs text-lime-400 mb-1">
                 <CheckCircle2 className="w-4 h-4" />
                 <span>CORRECT</span>
               </div>
               <div className="text-2xl font-bold text-white">
-                {results.correct_count} <span className="text-xs text-slate-500 font-normal">/ 5</span>
+                {results.correct_count} <span className="text-xs text-carbon-500 font-normal">/ 5</span>
               </div>
             </div>
 
-            <div className="p-3.5 rounded-xl bg-[#080C14] border border-arena-border">
+            <div className="p-3.5 rounded-xl bg-carbon-900 border border-white/10">
               <div className="flex items-center gap-1.5 text-xs text-red-400 mb-1">
                 <XCircle className="w-4 h-4" />
                 <span>INCORRECT</span>
@@ -230,8 +230,8 @@ export const ResultsPage: React.FC = () => {
               </div>
             </div>
 
-            <div className="p-3.5 rounded-xl bg-[#080C14] border border-arena-border">
-              <div className="flex items-center gap-1.5 text-xs text-arena-cyan mb-1">
+            <div className="p-3.5 rounded-xl bg-carbon-900 border border-white/10">
+              <div className="flex items-center gap-1.5 text-xs text-cyan-400 mb-1">
                 <Clock className="w-4 h-4" />
                 <span>TIME TAKEN</span>
               </div>
@@ -240,8 +240,8 @@ export const ResultsPage: React.FC = () => {
               </div>
             </div>
 
-            <div className="p-3.5 rounded-xl bg-[#080C14] border border-arena-border">
-              <div className="flex items-center gap-1.5 text-xs text-purple-400 mb-1">
+            <div className="p-3.5 rounded-xl bg-carbon-900 border border-white/10">
+              <div className="flex items-center gap-1.5 text-xs text-ember-400 mb-1">
                 <Target className="w-4 h-4" />
                 <span>ACCURACY</span>
               </div>
@@ -252,9 +252,9 @@ export const ResultsPage: React.FC = () => {
           </div>
 
           {/* Difficulty Tier Performance Bars */}
-          <div className="p-4 rounded-xl bg-[#080C14] border border-arena-border space-y-3 font-mono">
-            <div className="text-xs uppercase tracking-wider text-slate-400 flex justify-between">
-              <span>PROGRESSIVE DIFFICULTY AUDIT</span>
+          <div className="p-4 rounded-xl bg-carbon-900 border border-white/10 space-y-3 font-mono">
+            <div className="text-xs uppercase tracking-wider text-carbon-400 flex justify-between">
+              <span>TIER PROGRESSION AUDIT</span>
               <span>POINTS EARNED</span>
             </div>
 
@@ -262,8 +262,8 @@ export const ResultsPage: React.FC = () => {
               {
                 label: 'Tier 1 // Easy (10 pts each)',
                 b: bd.easy,
-                color: 'bg-emerald-400',
-                text: 'text-emerald-300',
+                color: 'bg-lime-400',
+                text: 'text-lime-300',
               },
               {
                 label: 'Tier 2 // Medium (20 pts each)',
@@ -274,8 +274,8 @@ export const ResultsPage: React.FC = () => {
               {
                 label: 'Tier 3 // Tough (30 pts)',
                 b: bd.tough,
-                color: 'bg-red-500',
-                text: 'text-red-300',
+                color: 'bg-ember-500',
+                text: 'text-ember-300',
               },
             ].map(({ label, b, color, text }, idx) => {
               const maxP = b?.max_points || 1;
@@ -285,11 +285,11 @@ export const ResultsPage: React.FC = () => {
                 <div key={idx} className="space-y-1">
                   <div className="flex justify-between text-xs">
                     <span className={`${text} font-semibold`}>{label}</span>
-                    <span className="text-slate-300">
+                    <span className="text-carbon-300">
                       {pts} / {maxP} pts ({b?.correct || 0}/{b?.total || 0})
                     </span>
                   </div>
-                  <div className="w-full h-2 rounded-full bg-slate-800 overflow-hidden">
+                  <div className="w-full h-2 rounded-full bg-carbon-800 overflow-hidden">
                     <motion.div
                       initial={{ width: 0 }}
                       animate={{ width: `${pct}%` }}
@@ -307,16 +307,17 @@ export const ResultsPage: React.FC = () => {
             <Link
               to="/leaderboard"
               onClick={() => sounds.playSelect()}
-              className="flex-1 flex items-center justify-center gap-2 py-3.5 rounded-xl bg-cyan-400 text-slate-950 font-black uppercase tracking-wider font-display shadow-[0_0_20px_rgba(0,240,255,0.4)] hover:bg-cyan-300 arcade-btn transition-all"
+              className="btn-primary flex-1 flex items-center justify-center gap-2 py-3.5 text-xs font-bold"
             >
               <Trophy className="w-4 h-4" />
               <span>VIEW LIVE LEADERBOARD</span>
+              <ArrowRight className="w-4 h-4 ml-1" />
             </Link>
 
             <Link
               to="/"
               onClick={() => sounds.playClick()}
-              className="flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl cyber-card border border-arena-border text-slate-300 hover:text-white hover:bg-white/5 transition-colors font-semibold"
+              className="btn-secondary flex items-center justify-center gap-2 px-6 py-3.5 text-xs font-semibold"
             >
               <Home className="w-4 h-4" />
               <span>ARENA HOME</span>
@@ -327,11 +328,11 @@ export const ResultsPage: React.FC = () => {
         {/* ── QUESTION REVIEW SECTION ── */}
         <div className="space-y-3">
           <div className="flex items-center justify-between font-mono">
-            <h3 className="text-base font-bold text-white flex items-center gap-2">
-              <Sparkles className="w-4 h-4 text-arena-cyan" />
+            <h3 className="text-sm font-bold text-white flex items-center gap-2">
+              <ShieldCheck className="w-4 h-4 text-lime-400" />
               <span>CHALLENGE VERIFICATION & EXPLANATIONS</span>
             </h3>
-            <span className="text-xs text-slate-500">5 QUESTIONS REVIEWED</span>
+            <span className="text-xs text-carbon-400">5 QUESTIONS REVIEWED</span>
           </div>
 
           {results.questions.map((q) => {
@@ -341,27 +342,27 @@ export const ResultsPage: React.FC = () => {
             return (
               <div
                 key={q.id}
-                className={`cyber-card border overflow-hidden transition-colors ${
+                className={`titanium-card border overflow-hidden transition-colors ${
                   q.is_correct
-                    ? 'border-emerald-500/30'
+                    ? 'border-lime-500/30'
                     : q.selected_answer
                     ? 'border-red-500/30'
-                    : 'border-slate-700'
+                    : 'border-white/10'
                 }`}
               >
                 {/* Header Toggle */}
                 <button
                   onClick={() => setExpanded((p) => ({ ...p, [q.id]: !isOpen }))}
-                  className="w-full p-4 sm:p-5 flex items-center justify-between gap-4 text-left"
+                  className="w-full p-4 sm:p-5 flex items-center justify-between gap-4 text-left hover:bg-white/[0.02] transition-colors"
                 >
                   <div className="flex items-center gap-3 min-w-0">
                     <div
                       className={`w-7 h-7 rounded-lg flex items-center justify-center font-mono text-xs font-bold shrink-0 ${
                         q.is_correct
-                          ? 'bg-emerald-500/20 text-emerald-300'
+                          ? 'bg-lime-400/20 text-lime-300 border border-lime-400/40'
                           : q.selected_answer
-                          ? 'bg-red-500/20 text-red-400'
-                          : 'bg-slate-800 text-slate-500'
+                          ? 'bg-red-500/20 text-red-400 border border-red-500/40'
+                          : 'bg-carbon-800 text-carbon-400 border border-white/10'
                       }`}
                     >
                       {q.position}
@@ -374,15 +375,15 @@ export const ResultsPage: React.FC = () => {
                       <div className="flex items-center gap-2 mt-0.5 font-mono text-[11px]">
                         <span
                           className={`uppercase font-bold ${
-                            isBoss ? 'text-red-400' : q.difficulty === 'medium' ? 'text-amber-400' : 'text-emerald-400'
+                            isBoss ? 'text-ember-400' : q.difficulty === 'medium' ? 'text-amber-400' : 'text-lime-400'
                           }`}
                         >
                           {q.difficulty}
                         </span>
-                        <span className="text-slate-600">•</span>
-                        <span className="text-slate-400">{q.category}</span>
-                        <span className="text-slate-600">•</span>
-                        <span className={q.is_correct ? 'text-emerald-400 font-bold' : 'text-slate-500'}>
+                        <span className="text-carbon-600">•</span>
+                        <span className="text-carbon-400">{q.category}</span>
+                        <span className="text-carbon-600">•</span>
+                        <span className={q.is_correct ? 'text-lime-400 font-bold' : 'text-carbon-400'}>
                           +{q.points_awarded}/{q.max_points} PTS
                         </span>
                       </div>
@@ -391,7 +392,7 @@ export const ResultsPage: React.FC = () => {
 
                   <div className="flex items-center gap-2 shrink-0 font-mono text-xs">
                     {q.is_correct ? (
-                      <span className="hidden sm:flex items-center gap-1 text-emerald-400">
+                      <span className="hidden sm:flex items-center gap-1 text-lime-400">
                         <Check className="w-3.5 h-3.5" /> Correct
                       </span>
                     ) : q.selected_answer ? (
@@ -399,12 +400,12 @@ export const ResultsPage: React.FC = () => {
                         <X className="w-3.5 h-3.5" /> Incorrect
                       </span>
                     ) : (
-                      <span className="hidden sm:block text-slate-500">Unanswered</span>
+                      <span className="hidden sm:block text-carbon-400">Unanswered</span>
                     )}
                     {isOpen ? (
-                      <ChevronUp className="w-4 h-4 text-slate-400" />
+                      <ChevronUp className="w-4 h-4 text-carbon-400" />
                     ) : (
-                      <ChevronDown className="w-4 h-4 text-slate-400" />
+                      <ChevronDown className="w-4 h-4 text-carbon-400" />
                     )}
                   </div>
                 </button>
@@ -423,15 +424,15 @@ export const ResultsPage: React.FC = () => {
                             key={optI}
                             className={`p-3 rounded-xl border flex items-center justify-between gap-2 ${
                               isCorrectOpt
-                                ? 'bg-emerald-500/15 border-emerald-500/50 text-emerald-200 font-semibold'
+                                ? 'bg-lime-400/10 border-lime-400/50 text-lime-200 font-semibold'
                                 : isSelected && !isCorrectOpt
-                                ? 'bg-red-500/15 border-red-500/50 text-red-300 line-through'
-                                : 'bg-[#080C14] border-arena-border text-slate-400'
+                                ? 'bg-red-500/10 border-red-500/50 text-red-300 line-through'
+                                : 'bg-carbon-900 border-white/10 text-carbon-400'
                             }`}
                           >
                             <span>{opt}</span>
                             {isCorrectOpt && (
-                              <span className="text-[10px] font-bold text-emerald-400 uppercase">
+                              <span className="text-[10px] font-bold text-lime-400 uppercase">
                                 ✓ Correct
                               </span>
                             )}
@@ -446,11 +447,12 @@ export const ResultsPage: React.FC = () => {
                     </div>
 
                     {/* Explanation */}
-                    <div className="p-3.5 rounded-xl bg-[#080C14] border border-arena-border text-xs text-slate-300 space-y-1">
-                      <div className="text-[10px] font-mono font-bold text-arena-cyan uppercase tracking-wider">
-                        💡 EXPLANATION
+                    <div className="p-3.5 rounded-xl bg-carbon-900 border border-white/10 text-xs text-carbon-300 space-y-1">
+                      <div className="text-[10px] font-mono font-bold text-lime-400 uppercase tracking-wider flex items-center gap-1.5">
+                        <Sparkles className="w-3 h-3" />
+                        <span>EXPLANATION</span>
                       </div>
-                      <p className="leading-relaxed font-sans">{q.explanation}</p>
+                      <p className="leading-relaxed font-sans text-carbon-200">{q.explanation}</p>
                     </div>
                   </div>
                 )}

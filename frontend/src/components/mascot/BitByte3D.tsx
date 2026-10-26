@@ -723,11 +723,11 @@ export const BitByte3D: React.FC<BitByte3DProps> = ({
               className="z-10 mb-2 cursor-pointer group pointer-events-auto px-2"
               title="Click to interact with BitByte!"
             >
-              <div className="relative px-4 py-2 rounded-2xl bg-[#090E20]/95 border-2 border-cyan-400/50 shadow-[0_0_25px_rgba(0,240,255,0.3)] backdrop-blur-md max-w-xs sm:max-w-sm text-center transition-all group-hover:border-cyan-400 group-hover:shadow-[0_0_35px_rgba(0,240,255,0.5)]">
+              <div className="relative px-4 py-2 rounded-2xl bg-[#101522] border border-white/15 shadow-2xl backdrop-blur-md max-w-xs sm:max-w-sm text-center transition-all group-hover:border-lime/60">
                 {/* Speech tail */}
-                <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-3.5 h-3.5 bg-[#090E20] border-r-2 border-b-2 border-cyan-400/50 transform rotate-45" />
+                <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-3.5 h-3.5 bg-[#101522] border-r border-b border-white/15 transform rotate-45" />
 
-                <div className="flex items-center justify-center gap-1.5 text-[10px] font-mono uppercase tracking-wider font-bold mb-0.5 text-cyan-300">
+                <div className="flex items-center justify-center gap-1.5 text-[10px] font-mono uppercase tracking-wider font-bold mb-0.5 text-lime">
                   {moodBadge.icon}
                   <span>{moodBadge.label}</span>
                 </div>
@@ -736,7 +736,7 @@ export const BitByte3D: React.FC<BitByte3DProps> = ({
                   “{dialogue}”
                 </p>
 
-                <div className="text-[9px] font-mono text-cyan-400/80 mt-0.5 opacity-80 group-hover:opacity-100 transition-opacity">
+                <div className="text-[9px] font-mono text-slate-400 mt-0.5 opacity-80 group-hover:opacity-100 transition-opacity">
                   [click to interact]
                 </div>
               </div>
@@ -746,8 +746,8 @@ export const BitByte3D: React.FC<BitByte3DProps> = ({
 
         {/* 3D Canvas Container with High-Contrast Background Spotlight */}
         <div className={`relative ${containerDimensions} flex items-center justify-center`}>
-          {/* Subtle Contrast Radial Glow Behind BitByte so he pops out from the dark background */}
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(0,240,255,0.15)_0%,rgba(139,92,246,0.08)_45%,transparent_75%)] pointer-events-none rounded-full blur-xl" />
+          {/* Subtle Contrast Radial Glow Behind BitByte */}
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(212,255,0,0.1)_0%,rgba(255,92,0,0.05)_50%,transparent_75%)] pointer-events-none rounded-full blur-xl" />
 
           <Canvas
             dpr={[1, 1.5]}

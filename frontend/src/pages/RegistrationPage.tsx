@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Play, User, Hash, AlertCircle, ShieldAlert, Terminal, Sparkles } from 'lucide-react';
+import { Play, User, Hash, AlertCircle, ShieldAlert, Terminal, Sparkles, Cpu } from 'lucide-react';
 import { BitByte3D } from '../components/mascot/BitByte3D';
 import { BitByteMood } from '../components/mascot/bitbyteDialogue';
 import { api } from '../services/api';
@@ -33,20 +33,21 @@ export const RegistrationPage: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError(null);
-
     const name = displayName.trim();
     if (!name) {
-      setError('Player name is required.');
+      setError('Player callsign / name is required.');
       return;
     }
+
     if (config.require_roll_number && !participantCode.trim()) {
       setError('College Roll Number is required for this event.');
       return;
     }
 
-    sounds.playSelect();
+    setError(null);
     setLoading(true);
+    sounds.playSelect();
+
     try {
       const data = await api.startQuiz(name, participantCode.trim() || undefined);
       localStorage.setItem('gkr_active_attempt_id', data.attemptId);
@@ -60,38 +61,38 @@ export const RegistrationPage: React.FC = () => {
   };
 
   return (
-    <div className="relative min-h-[calc(100vh-4rem)] cyber-grid flex items-center justify-center p-4">
+    <div className="relative min-h-[calc(100vh-4rem)] tech-grid flex items-center justify-center p-4 bg-carbon-950 text-carbon-50">
       {/* Background Lighting Aura */}
-      <div className="absolute w-[500px] h-[500px] bg-arena-cyan/10 rounded-full blur-[140px] pointer-events-none" />
+      <div className="absolute w-[500px] h-[500px] bg-lime/5 rounded-full blur-[140px] pointer-events-none" />
 
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-        className="ticket-stub w-full max-w-lg p-6 sm:p-8 rounded-3xl border-2 border-cyan-400/40 shadow-[0_0_40px_rgba(0,240,255,0.2)] relative bg-gradient-to-b from-[#090E20]/95 via-[#060A16]/95 to-black"
+        className="w-full max-w-lg p-6 sm:p-8 rounded-2xl border border-white/10 shadow-titanium relative bg-[#101522]"
       >
-        {/* Top Stickers */}
+        {/* Top Header */}
         <div className="flex items-center justify-between pb-4 border-b border-white/10">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-cyan-400/20 border border-cyan-400/40 p-1 flex items-center justify-center">
+            <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/15 p-1 flex items-center justify-center">
               <img src="/geekroom-logo.png" alt="Geekroom GTBIT" className="w-full h-full object-contain" />
             </div>
             <div>
-              <span className="pinterest-sticker bg-cyan-400 text-slate-950 -rotate-1 text-[9px]">
-                PASS #GKR-2026
+              <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-lime/10 text-lime border border-lime/30 font-bold uppercase tracking-wider">
+                CHALLENGER SEAT #2026
               </span>
               <div className="text-sm font-black text-white font-display mt-0.5">
                 GEEKROOM CODE ARENA
               </div>
             </div>
           </div>
-          <span className="text-[10px] font-mono px-2.5 py-1 rounded-full bg-emerald-400/10 text-emerald-400 border border-emerald-400/30 font-bold">
-            [ READY TO COMPETE ]
+          <span className="text-[10px] font-mono px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 font-bold">
+            [ READY ]
           </span>
         </div>
 
         {/* 3D BitByte Greeting */}
-        <div className="py-2 border-b border-arena-border">
+        <div className="py-2 border-b border-white/10">
           <BitByte3D
             size="companion"
             mood={displayName.length > 2 ? 'excited' : 'welcome'}
@@ -105,10 +106,10 @@ export const RegistrationPage: React.FC = () => {
 
         {/* Heading */}
         <div className="mt-4 mb-4 text-center sm:text-left">
-          <h1 className="text-2xl font-bold text-white font-display">
+          <h1 className="text-2xl font-black text-white font-display tracking-tight">
             CHALLENGER REGISTRATION
           </h1>
-          <p className="text-slate-400 text-xs mt-1">
+          <p className="text-slate-400 text-xs mt-1 font-mono">
             5 questions: 2 Easy (10p) → 2 Medium (20p) → 1 Tough (30p). 5 minutes total.
           </p>
         </div>
@@ -118,9 +119,9 @@ export const RegistrationPage: React.FC = () => {
           <motion.div
             initial={{ opacity: 0, scale: 0.96 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="mb-4 p-3 rounded-xl bg-red-500/15 border border-red-500/30 text-xs text-red-300 flex items-start gap-2.5 font-mono"
+            className="mb-4 p-3 rounded-xl bg-rose-500/15 border border-rose-500/30 text-xs text-rose-300 flex items-start gap-2.5 font-mono"
           >
-            <AlertCircle className="w-4 h-4 text-red-400 shrink-0 mt-0.5" />
+            <AlertCircle className="w-4 h-4 text-rose-400 shrink-0 mt-0.5" />
             <span>{error}</span>
           </motion.div>
         )}
@@ -129,8 +130,8 @@ export const RegistrationPage: React.FC = () => {
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-xs font-mono uppercase tracking-wider text-slate-300 mb-1.5 flex items-center justify-between">
-              <span>Player Name <span className="text-arena-cyan">*</span></span>
-              <span className="text-[10px] text-slate-500">Will appear on leaderboard</span>
+              <span>Player Name / Callsign <span className="text-lime">*</span></span>
+              <span className="text-[10px] text-slate-500 font-normal">Max 40 chars</span>
             </label>
             <div className="relative">
               <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
@@ -141,7 +142,7 @@ export const RegistrationPage: React.FC = () => {
                 placeholder="e.g. Alex Mercer"
                 maxLength={40}
                 required
-                className="w-full pl-10 pr-4 py-3 rounded-xl bg-[#060A12] border border-arena-border focus:border-arena-cyan focus:ring-1 focus:ring-arena-cyan/50 text-white text-sm outline-none transition-all placeholder:text-slate-600 font-sans"
+                className="w-full pl-10 pr-4 py-3 rounded-xl bg-[#090D16] border border-white/10 focus:border-lime focus:ring-1 focus:ring-lime text-white text-sm outline-none transition-all placeholder:text-slate-600 font-sans"
               />
             </div>
           </div>
@@ -161,19 +162,19 @@ export const RegistrationPage: React.FC = () => {
                 onChange={(e) => setParticipantCode(e.target.value)}
                 placeholder="e.g. 02315603124 or GTBIT-01"
                 maxLength={30}
-                className="w-full pl-10 pr-4 py-3 rounded-xl bg-[#060A12] border border-arena-border focus:border-arena-cyan focus:ring-1 focus:ring-arena-cyan/50 text-white text-sm outline-none transition-all placeholder:text-slate-600 font-mono text-xs"
+                className="w-full pl-10 pr-4 py-3 rounded-xl bg-[#090D16] border border-white/10 focus:border-lime focus:ring-1 focus:ring-lime text-white text-sm outline-none transition-all placeholder:text-slate-600 font-mono text-xs"
               />
             </div>
           </div>
 
           {/* Rules briefing */}
-          <div className="p-3.5 rounded-xl bg-[#080C16] border border-arena-border text-[11px] font-mono text-slate-400 space-y-1">
-            <div className="text-xs font-bold text-arena-cyan flex items-center gap-1.5 mb-1">
+          <div className="p-3.5 rounded-xl bg-[#090D16] border border-white/10 text-[11px] font-mono text-slate-400 space-y-1">
+            <div className="text-xs font-bold text-lime flex items-center gap-1.5 mb-1">
               <ShieldAlert className="w-3.5 h-3.5" />
               <span>RULES OF ENGAGEMENT:</span>
             </div>
             <div>• Strict order: 2 Easy (10p) → 2 Medium (20p) → 1 Tough (30p)</div>
-            <div>• 5-Minute timer runs on server; progress auto-saves as you move</div>
+            <div>• 5-Minute timer runs on server; progress auto-saves continuously</div>
             <div>• Ties broken by: 1) Score 2) Time taken 3) Submission timestamp</div>
           </div>
 
@@ -181,16 +182,16 @@ export const RegistrationPage: React.FC = () => {
             type="submit"
             disabled={loading}
             whileTap={{ scale: 0.98 }}
-            className="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl bg-gradient-to-r from-cyan-400 to-cyan-300 hover:from-cyan-300 hover:to-cyan-200 text-slate-950 font-black text-xs font-display uppercase tracking-wider shadow-[0_0_25px_rgba(0,240,255,0.4)] arcade-btn transition-all duration-200 disabled:opacity-50"
+            className="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl btn-primary text-xs uppercase tracking-wider disabled:opacity-50"
           >
             {loading ? (
               <span className="flex items-center gap-2">
-                <span className="w-4 h-4 border-2 border-slate-950/30 border-t-slate-950 rounded-full animate-spin" />
+                <span className="w-4 h-4 border-2 border-carbon-950/30 border-t-carbon-950 rounded-full animate-spin" />
                 <span>INITIALIZING ARENA SESSION...</span>
               </span>
             ) : (
               <>
-                <Play className="w-4 h-4 fill-slate-950" />
+                <Play className="w-4 h-4 fill-current" />
                 <span>INITIATE ARENA CHALLENGE</span>
               </>
             )}

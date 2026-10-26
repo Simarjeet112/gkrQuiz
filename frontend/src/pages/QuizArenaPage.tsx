@@ -260,16 +260,14 @@ export const QuizArenaPage: React.FC = () => {
   const tier = getTierInfo(currentQ.difficulty);
 
   return (
-    <div className={`min-h-[calc(100vh-4rem)] py-6 px-4 sm:px-6 transition-colors duration-500 ${
-      isBossTier ? 'bg-[#060309] cyber-grid-dense' : 'cyber-grid'
-    }`}>
+    <div className="min-h-[calc(100vh-4rem)] py-6 px-4 sm:px-6 tech-grid bg-carbon-950 text-carbon-50">
       <div className="max-w-4xl mx-auto space-y-4">
 
         {/* ── TOP ARENA HUD BAR ── */}
-        <div className="cyber-card px-5 py-3 border border-arena-border flex items-center justify-between gap-4 flex-wrap">
+        <div className="titanium-card px-5 py-3.5 flex items-center justify-between gap-4 flex-wrap border border-white/10">
           {/* Challenger Identity */}
           <div className="flex items-center gap-3 min-w-0">
-            <div className="w-9 h-9 rounded-xl bg-[#070B14] border border-arena-cyan/30 flex items-center justify-center font-mono text-xs font-bold text-arena-cyan shrink-0">
+            <div className="w-9 h-9 rounded-xl bg-[#07090E] border border-white/10 flex items-center justify-center font-mono text-xs font-bold text-lime shrink-0">
               &gt;_
             </div>
             <div className="min-w-0">
@@ -278,7 +276,7 @@ export const QuizArenaPage: React.FC = () => {
             </div>
           </div>
 
-          {/* Question Stepper Indicator (Strict: 1 & 2 Easy, 3 & 4 Medium, 5 Tough) */}
+          {/* Question Stepper Indicator */}
           <div className="flex items-center gap-2">
             {questions.map((q, idx) => {
               const isActive = currentIndex === idx;
@@ -292,11 +290,11 @@ export const QuizArenaPage: React.FC = () => {
                   className={`w-8 h-8 rounded-lg font-mono text-xs font-bold transition-all flex items-center justify-center border ${
                     isActive
                       ? isQBoss
-                        ? 'bg-red-600 text-white border-red-400 scale-110 shadow-glow-crimson'
-                        : 'bg-arena-cyan text-slate-950 border-cyan-300 scale-110 shadow-glow-cyan'
+                        ? 'bg-rose-500 text-white border-rose-400 scale-105'
+                        : 'bg-lime text-carbon-950 border-lime scale-105 font-black'
                       : isAnswered
-                      ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40'
-                      : 'bg-[#080C14] text-slate-500 border-arena-border hover:text-white'
+                      ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30'
+                      : 'bg-[#090D16] text-slate-400 border-white/10 hover:text-white hover:border-white/20'
                   }`}
                   title={`Question ${idx + 1} (${q.difficulty.toUpperCase()}): ${isAnswered ? 'Answered' : 'Unanswered'}`}
                 >
@@ -310,11 +308,11 @@ export const QuizArenaPage: React.FC = () => {
           <div
             className={`flex items-center gap-2.5 px-4 py-2 rounded-xl font-mono border transition-all shrink-0 ${
               isUrgent
-                ? 'bg-red-500/20 text-red-300 border-red-500 animate-pulse shadow-glow-crimson'
-                : 'bg-[#080C14] text-white border-arena-border'
+                ? 'bg-rose-500/20 text-rose-300 border-rose-500 animate-pulse'
+                : 'bg-[#090D16] text-white border-white/10'
             }`}
           >
-            <Clock className={`w-4 h-4 ${isUrgent ? 'text-red-400' : 'text-arena-cyan'}`} />
+            <Clock className={`w-4 h-4 ${isUrgent ? 'text-rose-400' : 'text-lime'}`} />
             <div className="text-right">
               <div className="text-[9px] text-slate-400 uppercase leading-none">TIME REMAINING</div>
               <div className="text-base font-bold tracking-wider leading-none mt-1">
@@ -325,7 +323,7 @@ export const QuizArenaPage: React.FC = () => {
         </div>
 
         {/* ── BITBYTE 3D COMPANION BANNER ── */}
-        <div className="cyber-card p-4 border border-cyan-400/30 shadow-[0_0_25px_rgba(0,240,255,0.15)] flex flex-col md:flex-row items-center justify-between gap-4 bg-gradient-to-r from-black/90 via-[#090E22]/80 to-black/90">
+        <div className="titanium-card p-4 border border-white/10 flex flex-col md:flex-row items-center justify-between gap-4 bg-[#101522]">
           <div className="w-full md:w-auto flex-1">
             <BitByte3D
               size="companion"
@@ -336,11 +334,11 @@ export const QuizArenaPage: React.FC = () => {
           </div>
 
           <div className="hidden lg:flex flex-col items-end gap-1.5 text-xs font-mono text-slate-400 shrink-0 border-l border-white/10 pl-6">
-            <span className="text-[10px] text-cyan-400 font-bold uppercase tracking-wider">HUD TELEMETRY</span>
+            <span className="text-[10px] text-lime font-bold uppercase tracking-wider">HUD TELEMETRY</span>
             <span>
-              STATUS: <strong className="text-emerald-400 font-display text-sm">{answeredTotal}/5 LOCKED</strong>
+              STATUS: <strong className="text-white font-display text-sm">{answeredTotal}/5 LOCKED</strong>
             </span>
-            <span>TIER: <strong className="text-white uppercase font-bold">{currentQ.difficulty}</strong></span>
+            <span>TIER: <strong className="text-lime uppercase font-bold">{currentQ.difficulty}</strong></span>
             <span className="text-slate-500 text-[10px]">MAX POSSIBLE: 90 PTS</span>
           </div>
         </div>
@@ -353,18 +351,18 @@ export const QuizArenaPage: React.FC = () => {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -20 }}
             transition={{ duration: 0.2 }}
-            className={`p-6 sm:p-8 transition-all ${
-              isBossTier ? 'cyber-card-crimson' : 'cyber-card'
+            className={`p-6 sm:p-8 transition-all titanium-card ${
+              isBossTier ? 'border-rose-500/40 bg-[#15101A]' : 'border-white/10 bg-[#101522]'
             }`}
           >
             {/* Boss Level Alert Banner */}
             {isBossTier && (
-              <div className="mb-4 p-2.5 rounded-lg bg-red-500/20 border border-red-500/40 text-red-200 text-xs font-mono flex items-center justify-between">
+              <div className="mb-4 p-2.5 rounded-xl bg-rose-500/15 border border-rose-500/30 text-rose-200 text-xs font-mono flex items-center justify-between">
                 <span className="flex items-center gap-2 font-bold uppercase tracking-wider">
-                  <Flame className="w-4 h-4 text-red-400 animate-pulse" />
+                  <Flame className="w-4 h-4 text-rose-400 animate-pulse" />
                   BOSS ENCOUNTER // MAXIMUM DIFFICULTY
                 </span>
-                <span className="text-red-300 font-bold">30 POINTS</span>
+                <span className="text-rose-300 font-bold">30 POINTS</span>
               </div>
             )}
 
@@ -405,12 +403,12 @@ export const QuizArenaPage: React.FC = () => {
                       key={optIdx}
                       whileTap={{ scale: 0.985 }}
                       onClick={() => handleSelectOption(currentQ.id, option)}
-                      className={`w-full text-left p-4 rounded-xl border arcade-btn transition-all duration-150 flex items-center justify-between group ${
+                      className={`w-full text-left p-4 rounded-xl border transition-all duration-150 flex items-center justify-between group ${
                         isSelected
                           ? isBossTier
-                            ? 'bg-red-500/20 border-red-500 shadow-glow-crimson text-white'
-                            : 'bg-cyan-500/20 border-cyan-400 shadow-[0_0_20px_rgba(0,240,255,0.3)] text-white'
-                          : 'bg-[#080C14] border-arena-border hover:border-cyan-400/50 hover:bg-white/[0.04] text-slate-300'
+                            ? 'bg-rose-500/20 border-rose-500 text-white'
+                            : 'bg-lime/10 border-lime text-white'
+                          : 'bg-[#090D16] border-white/10 hover:border-lime/40 text-slate-300'
                       }`}
                     >
                       <div className="flex items-center gap-3.5">
@@ -418,8 +416,8 @@ export const QuizArenaPage: React.FC = () => {
                           className={`w-7 h-7 rounded-lg font-mono text-xs font-bold flex items-center justify-center border transition-colors ${
                             isSelected
                               ? isBossTier
-                                ? 'bg-red-600 text-white border-white/20'
-                                : 'bg-arena-cyan text-slate-950 border-white/20'
+                                ? 'bg-rose-500 text-white border-white/20'
+                                : 'bg-lime text-carbon-950 border-white/20 font-black'
                               : 'bg-white/5 text-slate-400 border-white/10 group-hover:text-white'
                           }`}
                         >
@@ -432,7 +430,7 @@ export const QuizArenaPage: React.FC = () => {
                         {isSelected ? (
                           <CheckCircle2
                             className={`w-5 h-5 shrink-0 ${
-                              isBossTier ? 'text-red-400' : 'text-arena-cyan'
+                              isBossTier ? 'text-rose-400' : 'text-lime'
                             }`}
                           />
                         ) : (
@@ -450,7 +448,7 @@ export const QuizArenaPage: React.FC = () => {
               <button
                 onClick={() => navigateToQuestion(currentIndex - 1)}
                 disabled={currentIndex === 0}
-                className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl border border-arena-border text-xs font-mono text-slate-400 hover:text-white hover:bg-white/5 disabled:opacity-20 disabled:pointer-events-none transition-colors"
+                className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl btn-secondary text-xs font-mono disabled:opacity-20 disabled:pointer-events-none"
               >
                 <ChevronLeft className="w-4 h-4" />
                 <span>PREVIOUS</span>
@@ -460,7 +458,7 @@ export const QuizArenaPage: React.FC = () => {
                 {currentIndex < questions.length - 1 ? (
                   <button
                     onClick={() => navigateToQuestion(currentIndex + 1)}
-                    className="flex items-center gap-1.5 px-5 py-2.5 rounded-xl bg-white/10 hover:bg-white/15 text-xs font-bold text-white transition-colors"
+                    className="flex items-center gap-1.5 px-5 py-2.5 rounded-xl btn-secondary text-xs font-bold"
                   >
                     <span>NEXT CHALLENGE</span>
                     <ChevronRight className="w-4 h-4" />
@@ -471,7 +469,7 @@ export const QuizArenaPage: React.FC = () => {
                       sounds.playSelect();
                       setShowConfirmModal(true);
                     }}
-                    className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-arena-cyan text-slate-950 font-bold text-xs uppercase tracking-wider shadow-glow-cyan hover:bg-cyan-300 transition-all hover:scale-105 active:scale-95"
+                    className="flex items-center gap-2 px-6 py-2.5 rounded-xl btn-primary text-xs uppercase tracking-wider"
                   >
                     <Send className="w-3.5 h-3.5" />
                     <span>SUBMIT QUIZ</span>
@@ -487,10 +485,10 @@ export const QuizArenaPage: React.FC = () => {
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="cyber-card p-3.5 border border-emerald-500/40 flex items-center justify-between gap-4 font-mono text-xs"
+            className="titanium-card p-4 border border-lime/40 flex items-center justify-between gap-4 font-mono text-xs bg-[#101522]"
           >
-            <div className="flex items-center gap-2 text-emerald-300">
-              <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+            <div className="flex items-center gap-2 text-lime">
+              <CheckCircle2 className="w-4 h-4 text-lime" />
               <span>All 5 questions answered! Ready to lock in your score?</span>
             </div>
             <button
@@ -498,7 +496,7 @@ export const QuizArenaPage: React.FC = () => {
                 sounds.playSelect();
                 setShowConfirmModal(true);
               }}
-              className="px-4 py-1.5 rounded-lg bg-emerald-400 text-slate-950 font-bold hover:bg-emerald-300 transition-colors shrink-0"
+              className="px-4 py-2 rounded-lg btn-primary text-xs font-bold shrink-0"
             >
               Submit Now
             </button>

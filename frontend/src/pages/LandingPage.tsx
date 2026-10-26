@@ -24,28 +24,28 @@ const tierCards = [
     tier: 'STAGE 01',
     level: 'RECRUIT WARMUP',
     points: '10 PTS EACH',
-    color: 'border-emerald-400/40 text-emerald-300',
-    bg: 'from-emerald-500/15 via-black/80 to-black',
-    tag: 'bg-emerald-400 text-slate-950',
+    color: 'border-white/10 hover:border-lime/40',
+    bg: 'bg-[#101522]',
+    tag: 'bg-lime text-carbon-950',
     desc: '2 Random Easy questions on core algorithms, control flow, loops, and fundamental data structures.',
-    icon: <Sparkles className="w-5 h-5 text-emerald-400" />,
+    icon: <Sparkles className="w-5 h-5 text-lime" />,
   },
   {
     tier: 'STAGE 02',
     level: 'WARRIOR TRIALS',
     points: '20 PTS EACH',
-    color: 'border-amber-400/40 text-amber-300',
-    bg: 'from-amber-500/15 via-black/80 to-black',
-    tag: 'bg-amber-400 text-slate-950',
+    color: 'border-white/10 hover:border-ember/40',
+    bg: 'bg-[#101522]',
+    tag: 'bg-ember text-white',
     desc: '2 Random Medium questions on OOP polymorphism, Tower of Hanoi recurrence, BFS/DFS, and dynamic allocation.',
-    icon: <Zap className="w-5 h-5 text-amber-400" />,
+    icon: <Zap className="w-5 h-5 text-ember" />,
   },
   {
     tier: 'STAGE 03',
     level: 'BOSS ENCOUNTER',
     points: '30 PTS',
-    color: 'border-rose-500/50 text-rose-300',
-    bg: 'from-rose-500/20 via-black/80 to-black',
+    color: 'border-rose-500/30 hover:border-rose-500/60',
+    bg: 'bg-[#15101A]',
     tag: 'bg-rose-500 text-white',
     desc: '1 Random Tough challenge on LRU cache architecture, Dijkstra, CAP theorem trade-offs, and deadlock theory.',
     icon: <Flame className="w-5 h-5 text-rose-400" />,
@@ -64,41 +64,37 @@ export const LandingPage: React.FC = () => {
   };
 
   return (
-    <div className="relative min-h-[calc(100vh-4rem)] cyber-grid overflow-hidden selection:bg-cyan-400 selection:text-black">
-      {/* Background Lighting Gradients */}
-      <div className="absolute top-1/4 left-1/4 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] bg-cyan-500/10 rounded-full blur-[160px] pointer-events-none" />
-      <div className="absolute bottom-20 right-10 w-[550px] h-[550px] bg-violet-600/15 rounded-full blur-[140px] pointer-events-none" />
+    <div className="relative min-h-[calc(100vh-4rem)] tech-grid overflow-hidden bg-carbon-950 text-carbon-50">
+      {/* Background Lighting Gradients - Soft, Architectural, Not AI-Neon */}
+      <div className="absolute top-1/4 left-1/4 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-lime/5 rounded-full blur-[140px] pointer-events-none" />
+      <div className="absolute bottom-20 right-10 w-[500px] h-[500px] bg-ember/5 rounded-full blur-[120px] pointer-events-none" />
 
-      {/* ── 1. PINTEREST EDITORIAL TOP MARQUEE TAPE ── */}
-      <div className="w-full bg-cyan-400 text-slate-950 py-1.5 overflow-hidden font-mono text-[11px] font-black uppercase tracking-widest border-y border-black select-none z-20 shadow-[0_0_20px_rgba(0,240,255,0.4)]">
-        <div className="animate-marquee whitespace-nowrap flex items-center gap-6">
-          <span>★ GEEKROOM CODE ARENA 2026</span>
-          <span>•</span>
-          <span>GTBIT ORIENTATION EVENT</span>
-          <span>•</span>
-          <span>5 QUESTIONS • 5 MINUTES • 90 POINTS MAX</span>
-          <span>•</span>
-          <span>NO LOGINS • INSTANT COMPETITION</span>
-          <span>•</span>
-          <span>MEET BITBYTE: LIVING 3D COMPANION</span>
-          <span>•</span>
+      {/* ── 1. ARCHITECTURAL TOP TICKER TAPE ── */}
+      <div className="w-full bg-[#101522] text-slate-300 py-2 overflow-hidden font-mono text-xs border-y border-white/10 select-none">
+        <div className="animate-marquee whitespace-nowrap flex items-center gap-8">
+          <span className="text-lime font-bold">★ GEEKROOM CODE ARENA 2026</span>
+          <span className="text-slate-600">•</span>
+          <span>GTBIT ORIENTATION CODING EVENT</span>
+          <span className="text-slate-600">•</span>
+          <span>5 QUESTIONS // 5 MINUTES // 90 POINTS MAX</span>
+          <span className="text-slate-600">•</span>
+          <span className="text-ember font-bold">INSTANT TERMINAL ACCESS</span>
+          <span className="text-slate-600">•</span>
           <span>THINK FAST • CODE SMART • OWN THE ARENA</span>
-          <span>•</span>
-          <span>★ GEEKROOM CODE ARENA 2026</span>
-          <span>•</span>
-          <span>GTBIT ORIENTATION EVENT</span>
-          <span>•</span>
-          <span>5 QUESTIONS • 5 MINUTES • 90 POINTS MAX</span>
-          <span>•</span>
-          <span>NO LOGINS • INSTANT COMPETITION</span>
-          <span>•</span>
-          <span>MEET BITBYTE: LIVING 3D COMPANION</span>
-          <span>•</span>
+          <span className="text-slate-600">•</span>
+          <span className="text-lime font-bold">★ GEEKROOM CODE ARENA 2026</span>
+          <span className="text-slate-600">•</span>
+          <span>GTBIT ORIENTATION CODING EVENT</span>
+          <span className="text-slate-600">•</span>
+          <span>5 QUESTIONS // 5 MINUTES // 90 POINTS MAX</span>
+          <span className="text-slate-600">•</span>
+          <span className="text-ember font-bold">INSTANT TERMINAL ACCESS</span>
+          <span className="text-slate-600">•</span>
           <span>THINK FAST • CODE SMART • OWN THE ARENA</span>
         </div>
       </div>
 
-      {/* ── 2. HERO EDITORIAL COLLAGE SECTION ── */}
+      {/* ── 2. HERO EDITORIAL SECTION ── */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-14 lg:pt-16 lg:pb-20">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
           
@@ -109,32 +105,32 @@ export const LandingPage: React.FC = () => {
             transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
             className="lg:col-span-7 space-y-6 text-center lg:text-left"
           >
-            {/* Pinterest Angled Tactile Stickers */}
+            {/* Badges */}
             <div className="flex flex-wrap items-center justify-center lg:justify-start gap-2.5 pt-1">
-              <span className="pinterest-sticker bg-cyan-400 text-slate-950 -rotate-2 border border-black">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-lime/10 text-lime font-mono text-xs font-bold border border-lime/30">
                 <Cpu className="w-3.5 h-3.5" /> GTBIT TECH ORIENTATION 2026
               </span>
-              <span className="pinterest-sticker bg-[#101728] text-cyan-300 border border-cyan-400/40 rotate-1 shadow-[0_0_12px_rgba(0,240,255,0.2)]">
-                <Code2 className="w-3.5 h-3.5 text-orange-400" /> OFFICIAL GEEKROOM SOCIETY
+              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#161D2E] text-slate-300 font-mono text-xs font-bold border border-white/10">
+                <Code2 className="w-3.5 h-3.5 text-ember" /> GEEKROOM TECHNICAL SOCIETY
               </span>
             </div>
 
-            {/* Giant Editorial Headline */}
-            <div className="space-y-1 relative">
-              <div className="text-xs font-mono text-cyan-400 tracking-[0.3em] uppercase font-bold">
+            {/* Editorial Headline */}
+            <div className="space-y-1">
+              <div className="text-xs font-mono text-slate-400 tracking-[0.25em] uppercase font-bold">
                 [ DIVISION 01 // COMPETITIVE ARENA ]
               </div>
               <h1 className="text-4xl sm:text-6xl md:text-7xl font-black tracking-tight text-white leading-[0.95] font-display">
                 OWN THE <br />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-teal-200 to-violet-400">
+                <span className="text-lime">
                   CODE ARENA.
                 </span>
               </h1>
             </div>
 
-            {/* Sub-quote Tagline with Barcode */}
+            {/* Tagline */}
             <div className="space-y-2">
-              <p className="text-lg sm:text-xl font-bold text-cyan-300 font-mono tracking-wide">
+              <p className="text-lg sm:text-xl font-bold text-slate-200 font-mono tracking-wide">
                 “Think Fast. Code Smart. Own the Arena.”
               </p>
               <div className="font-mono text-[9px] tracking-[0.25em] text-slate-500 select-none hidden sm:block">
@@ -143,26 +139,26 @@ export const LandingPage: React.FC = () => {
             </div>
 
             <p className="text-sm sm:text-base text-slate-300 max-w-xl mx-auto lg:mx-0 leading-relaxed font-sans">
-              Welcome to the official competitive coding gauntlet for first-year engineering students. 
-              Five questions, strict progressive difficulty order, and a 5-minute countdown clock. 
+              The official competitive coding gauntlet for first-year engineering students. 
+              Five randomized questions, strict progressive difficulty order, and a 5-minute countdown clock. 
               No logins, zero friction — test your algorithms acumen and claim the live podium.
             </p>
 
-            {/* Progression Pills with Tactile Beads */}
+            {/* Progression Pills */}
             <div className="flex flex-wrap items-center justify-center lg:justify-start gap-2.5 pt-1 font-mono text-xs">
-              <div className="px-3.5 py-1.5 rounded-xl bg-emerald-500/10 border border-emerald-400/30 text-emerald-300 flex items-center gap-2 shadow-sm">
-                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+              <div className="px-3.5 py-1.5 rounded-xl bg-[#101522] border border-white/10 text-slate-300 flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-lime animate-pulse" />
                 <span>2 Easy (20 pts)</span>
               </div>
-              <div className="px-3.5 py-1.5 rounded-xl bg-amber-500/10 border border-amber-400/30 text-amber-300 flex items-center gap-2 shadow-sm">
-                <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
+              <div className="px-3.5 py-1.5 rounded-xl bg-[#101522] border border-white/10 text-slate-300 flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-ember animate-pulse" />
                 <span>2 Medium (40 pts)</span>
               </div>
-              <div className="px-3.5 py-1.5 rounded-xl bg-rose-500/10 border border-rose-400/40 text-rose-300 flex items-center gap-2 shadow-sm">
-                <span className="w-2 h-2 rounded-full bg-rose-400 animate-pulse" />
+              <div className="px-3.5 py-1.5 rounded-xl bg-[#101522] border border-rose-500/30 text-rose-300 flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-rose-500 animate-pulse" />
                 <span>1 Tough (30 pts)</span>
               </div>
-              <div className="px-3.5 py-1.5 rounded-xl bg-cyan-400/15 border border-cyan-400/40 text-cyan-300 font-bold">
+              <div className="px-3.5 py-1.5 rounded-xl bg-lime/10 border border-lime/40 text-lime font-bold">
                 MAX 90 PTS
               </div>
             </div>
@@ -172,28 +168,28 @@ export const LandingPage: React.FC = () => {
               <Link
                 to="/register"
                 onClick={() => sounds.playSelect()}
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-3 px-8 py-4 rounded-2xl bg-gradient-to-r from-cyan-400 to-cyan-300 hover:from-cyan-300 hover:to-cyan-200 text-slate-950 font-black text-sm uppercase tracking-wider font-display shadow-[0_0_30px_rgba(0,240,255,0.4)] arcade-btn transition-all duration-200 group"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-3 px-8 py-4 rounded-xl btn-primary text-sm uppercase tracking-wider"
               >
-                <Play className="w-4 h-4 fill-slate-950 group-hover:translate-x-0.5 transition-transform" />
-                <span>ENTER ARENA</span>
+                <Play className="w-4 h-4 fill-current" />
+                <span>START CHALLENGE</span>
               </Link>
 
               <Link
                 to="/leaderboard"
                 onClick={() => sounds.playClick()}
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-4 rounded-2xl bg-[#090E1D] hover:bg-white/10 text-slate-200 font-bold text-sm transition-colors border border-cyan-400/30 hover:border-cyan-400 font-mono shadow-sm"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-4 rounded-xl btn-secondary text-sm font-mono"
               >
-                <Trophy className="w-4 h-4 text-cyan-400" />
-                <span>LIVE PODIUM</span>
+                <Trophy className="w-4 h-4 text-lime" />
+                <span>LIVE LEADERBOARD</span>
               </Link>
 
               {/* Interactive Arcade Coin Flip Widget */}
               <button
                 onClick={handleInsertToken}
-                className="inline-flex items-center gap-2 px-4 py-3 rounded-2xl bg-amber-400/15 border border-amber-400/40 text-amber-300 hover:bg-amber-400/25 transition-all text-xs font-mono font-bold active:scale-95 shadow-[0_0_15px_rgba(251,191,36,0.2)]"
+                className="inline-flex items-center gap-2 px-4 py-3 rounded-xl bg-[#101522] border border-white/15 text-slate-300 hover:border-lime/40 transition-all text-xs font-mono font-bold active:scale-95"
                 title="Click to insert arcade token!"
               >
-                <Coins className={`w-4 h-4 ${tokenInserted ? 'text-amber-400 animate-spin' : 'text-amber-300'}`} />
+                <Coins className={`w-4 h-4 ${tokenInserted ? 'text-lime animate-spin' : 'text-slate-400'}`} />
                 <span>{tokenInserted ? 'TOKEN ACTIVE 🪙' : 'INSERT TOKEN'}</span>
               </button>
             </div>
@@ -205,7 +201,7 @@ export const LandingPage: React.FC = () => {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
-                  className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-amber-400 text-slate-950 font-mono text-xs font-black shadow-lg"
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-lime text-carbon-950 font-mono text-xs font-black shadow-lg"
                 >
                   <span>🪙 ARCADE TOKEN INSERTED! CHALLENGER SLOT VERIFIED!</span>
                 </motion.div>
@@ -213,31 +209,27 @@ export const LandingPage: React.FC = () => {
             </AnimatePresence>
           </motion.div>
 
-          {/* Hero Right: Pinterest Arcade Console Card with 3D BitByte */}
+          {/* Hero Right: High-End Titanium Console Card with 3D BitByte */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.94 }}
+            initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
             className="lg:col-span-5 flex flex-col items-center justify-center relative"
           >
-            {/* Pinterest Tape Accents on Corners */}
-            <div className="absolute -top-3 -left-3 w-12 h-5 bg-cyan-400/60 rotate-[-12deg] z-20 backdrop-blur-sm pointer-events-none border border-black/40" />
-            <div className="absolute -bottom-3 -right-3 w-12 h-5 bg-orange-500/60 rotate-[-8deg] z-20 backdrop-blur-sm pointer-events-none border border-black/40" />
-
-            <div className="relative w-full max-w-lg rounded-3xl p-4 sm:p-6 border-2 border-cyan-400/40 shadow-[0_0_45px_rgba(0,240,255,0.25)] overflow-hidden bg-gradient-to-b from-[#0B1226]/95 via-[#060A16]/95 to-black">
+            <div className="relative w-full max-w-lg rounded-2xl p-5 sm:p-6 border border-white/15 shadow-titanium overflow-hidden bg-[#101522]">
               {/* Header Badge */}
               <div className="flex items-center justify-between pb-3 border-b border-white/10 mb-2">
-                <div className="flex items-center gap-2.5 font-mono text-xs text-cyan-400 font-bold">
-                  <div className="w-7 h-7 rounded-lg bg-cyan-400/20 border border-cyan-400/40 flex items-center justify-center p-0.5">
+                <div className="flex items-center gap-2.5 font-mono text-xs font-bold">
+                  <div className="w-7 h-7 rounded-lg bg-white/10 border border-white/15 flex items-center justify-center p-0.5">
                     <img src="/geekroom-logo.png" alt="Geekroom" className="w-full h-full object-contain" />
                   </div>
                   <div>
                     <div className="leading-tight text-white font-display">BITBYTE // GKR-01</div>
-                    <div className="text-[10px] text-cyan-400 font-mono">CODE ARENA COMPANION</div>
+                    <div className="text-[10px] text-slate-400 font-mono">CODE ARENA COMPANION</div>
                   </div>
                 </div>
-                <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-400/10 border border-emerald-400/30 text-[10px] font-mono text-emerald-400 font-bold">
-                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-lime/10 border border-lime/30 text-[10px] font-mono text-lime font-bold">
+                  <span className="w-2 h-2 rounded-full bg-lime animate-pulse" />
                   <span>ONLINE</span>
                 </div>
               </div>
@@ -247,8 +239,8 @@ export const LandingPage: React.FC = () => {
 
               {/* Console Footer */}
               <div className="flex items-center justify-between pt-3 border-t border-white/10 text-[11px] font-mono text-slate-400">
-                <span className="text-cyan-400 flex items-center gap-1.5">
-                  <Terminal className="w-3.5 h-3.5" />
+                <span className="text-slate-300 flex items-center gap-1.5">
+                  <Terminal className="w-3.5 h-3.5 text-lime" />
                   <span>Click BitByte to interact</span>
                 </span>
                 <span className="text-slate-500 text-[10px]">WebGL 60FPS</span>
@@ -258,10 +250,10 @@ export const LandingPage: React.FC = () => {
         </div>
       </section>
 
-      {/* ── 3. PINTEREST BENTO DISCOVERY GRID ── */}
+      {/* ── 3. ARCHITECTURAL BENTO GAUNTLET GRID ── */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 border-t border-white/10">
         <div className="text-center max-w-2xl mx-auto mb-12 space-y-2">
-          <div className="inline-flex items-center gap-2 text-xs font-mono text-cyan-400 uppercase tracking-widest px-3 py-1 rounded-full bg-cyan-400/10 border border-cyan-400/30">
+          <div className="inline-flex items-center gap-2 text-xs font-mono text-lime uppercase tracking-widest px-3 py-1 rounded-full bg-lime/10 border border-lime/30">
             [ THE ARENA BLUEPRINT // BENTO DISCOVERY ]
           </div>
           <h2 className="text-3xl sm:text-5xl font-black text-white font-display">
@@ -274,7 +266,6 @@ export const LandingPage: React.FC = () => {
 
         {/* Bento Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {/* Card 1: 3-Stage Gauntlet */}
           {tierCards.map((tier, idx) => (
             <motion.div
               key={tier.tier}
@@ -282,7 +273,7 @@ export const LandingPage: React.FC = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: idx * 0.1 }}
-              className={`rounded-3xl p-6 border ${tier.color} bg-gradient-to-b ${tier.bg} flex flex-col justify-between relative overflow-hidden group hover:scale-[1.02] transition-all`}
+              className={`rounded-2xl p-6 border ${tier.color} ${tier.bg} flex flex-col justify-between relative overflow-hidden transition-all shadow-titanium`}
             >
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
@@ -298,7 +289,7 @@ export const LandingPage: React.FC = () => {
                   <h3 className="text-xl font-black text-white font-display tracking-wide">
                     {tier.level}
                   </h3>
-                  <div className="text-xs font-mono font-bold text-cyan-400 mt-0.5">
+                  <div className="text-xs font-mono font-bold text-slate-300 mt-0.5">
                     {tier.points}
                   </div>
                 </div>
@@ -316,13 +307,13 @@ export const LandingPage: React.FC = () => {
           ))}
         </div>
 
-        {/* Bento Row 2: Perforated Ticket Stub Rules + Community Seal */}
+        {/* Bento Row 2: Admission Protocol & Society Crest */}
         <div className="grid grid-cols-1 md:grid-cols-12 gap-6 mt-6">
-          {/* Ticket Stub Card */}
-          <div className="md:col-span-8 ticket-stub rounded-3xl p-6 sm:p-8 flex flex-col sm:flex-row items-center justify-between gap-6 shadow-[0_0_30px_rgba(0,240,255,0.1)]">
+          {/* Ticket Admission Card */}
+          <div className="md:col-span-8 rounded-2xl p-6 sm:p-8 bg-[#101522] border border-white/10 flex flex-col sm:flex-row items-center justify-between gap-6 shadow-titanium">
             <div className="space-y-2 max-w-md">
-              <div className="flex items-center gap-2 text-xs font-mono text-cyan-400 font-bold">
-                <ShieldCheck className="w-4 h-4 text-cyan-400" />
+              <div className="flex items-center gap-2 text-xs font-mono text-lime font-bold">
+                <ShieldCheck className="w-4 h-4 text-lime" />
                 <span>CHALLENGER ADMISSION PROTOCOL</span>
               </div>
               <h3 className="text-2xl font-black text-white font-display">
@@ -338,7 +329,7 @@ export const LandingPage: React.FC = () => {
             </div>
 
             <div className="shrink-0 text-center sm:text-right border-t sm:border-t-0 sm:border-l border-white/10 pt-4 sm:pt-0 sm:pl-6 space-y-2">
-              <div className="px-3 py-1.5 rounded-xl bg-cyan-400 text-slate-950 font-black text-xs font-display uppercase tracking-wider inline-block">
+              <div className="px-3 py-1.5 rounded-xl bg-lime text-carbon-950 font-black text-xs font-display uppercase tracking-wider inline-block">
                 INSTANT ENTRY
               </div>
               <div className="text-xs font-mono text-slate-400">
@@ -351,15 +342,15 @@ export const LandingPage: React.FC = () => {
           </div>
 
           {/* Community Seal Card */}
-          <div className="md:col-span-4 rounded-3xl p-6 border border-cyan-400/30 bg-gradient-to-b from-[#0A1226]/90 to-black flex flex-col justify-between text-center space-y-4">
+          <div className="md:col-span-4 rounded-2xl p-6 border border-white/10 bg-[#101522] flex flex-col justify-between text-center space-y-4 shadow-titanium">
             <div className="flex items-center justify-center pt-2">
-              <div className="relative w-16 h-16 rounded-2xl bg-cyan-400/15 border-2 border-cyan-400/40 p-2 shadow-[0_0_20px_rgba(0,240,255,0.3)]">
+              <div className="relative w-16 h-16 rounded-2xl bg-white/5 border border-white/15 p-2 shadow-md">
                 <img src="/geekroom-logo.png" alt="Geekroom GTBIT" className="w-full h-full object-contain" />
               </div>
             </div>
 
             <div>
-              <div className="text-xs font-mono text-cyan-400 font-bold uppercase tracking-wider">
+              <div className="text-xs font-mono text-lime font-bold uppercase tracking-wider">
                 BUILT BY GEEKROOM
               </div>
               <h4 className="text-lg font-black text-white font-display mt-0.5">
@@ -373,7 +364,7 @@ export const LandingPage: React.FC = () => {
             <Link
               to="/register"
               onClick={() => sounds.playSelect()}
-              className="w-full py-3 rounded-xl bg-cyan-400 text-slate-950 font-black text-xs font-display uppercase tracking-wider arcade-btn hover:bg-cyan-300 transition-colors"
+              className="w-full py-3 rounded-xl btn-primary text-xs uppercase tracking-wider"
             >
               LAUNCH QUIZ HUD →
             </Link>
@@ -381,26 +372,26 @@ export const LandingPage: React.FC = () => {
         </div>
       </section>
 
-      {/* ── 4. BOTTOM MARQUEE TICKER TAPE ── */}
-      <div className="w-full bg-[#080D1A] text-slate-400 py-2.5 overflow-hidden font-mono text-xs border-t border-white/10 select-none">
+      {/* ── 4. BOTTOM TICKER TAPE ── */}
+      <div className="w-full bg-[#0A0E18] text-slate-400 py-3 overflow-hidden font-mono text-xs border-t border-white/10 select-none">
         <div className="animate-marquee whitespace-nowrap flex items-center gap-8">
-          <span className="text-cyan-400 font-bold">⚡ RANKINGS SYNCED EVERY 5 SECONDS</span>
+          <span className="text-lime font-bold">⚡ RANKINGS SYNCED EVERY 5 SECONDS</span>
           <span>•</span>
-          <span>TIE-BREAKER: SCORE → TIME → TIMESTAMP</span>
+          <span>TIE-BREAKER PROTOCOL: SCORE → TIME → TIMESTAMP</span>
           <span>•</span>
           <span>SERVER AUTHORITATIVE SCORING</span>
           <span>•</span>
-          <span className="text-amber-400 font-bold">FINAL BOSS WORTH 30 PTS</span>
+          <span className="text-ember font-bold">FINAL BOSS WORTH 30 PTS</span>
           <span>•</span>
           <span>GEEKROOM GTBIT ORIENTATION 2026</span>
           <span>•</span>
-          <span className="text-cyan-400 font-bold">⚡ RANKINGS SYNCED EVERY 5 SECONDS</span>
+          <span className="text-lime font-bold">⚡ RANKINGS SYNCED EVERY 5 SECONDS</span>
           <span>•</span>
-          <span>TIE-BREAKER: SCORE → TIME → TIMESTAMP</span>
+          <span>TIE-BREAKER PROTOCOL: SCORE → TIME → TIMESTAMP</span>
           <span>•</span>
           <span>SERVER AUTHORITATIVE SCORING</span>
           <span>•</span>
-          <span className="text-amber-400 font-bold">FINAL BOSS WORTH 30 PTS</span>
+          <span className="text-ember font-bold">FINAL BOSS WORTH 30 PTS</span>
           <span>•</span>
           <span>GEEKROOM GTBIT ORIENTATION 2026</span>
         </div>

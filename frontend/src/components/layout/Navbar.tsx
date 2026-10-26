@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Trophy, Play, Volume2, VolumeX, Menu, X, Terminal } from 'lucide-react';
+import { Trophy, Play, Volume2, VolumeX, Menu, X, Terminal, Radio } from 'lucide-react';
 import { sounds } from '../../utils/soundEffects';
 
 export const Navbar: React.FC = () => {
@@ -20,11 +20,12 @@ export const Navbar: React.FC = () => {
   ];
 
   return (
-    <header className="sticky top-0 z-50 w-full glass-panel border-b border-arena-border">
+    <header className="sticky top-0 z-50 w-full bg-[#090D16]/90 backdrop-blur-xl border-b border-white/10 select-none">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+        
         {/* Brand with official Geekroom Logo */}
         <Link to="/" className="flex items-center gap-3 group">
-          <div className="relative w-10 h-10 rounded-xl overflow-hidden border border-arena-cyan/40 bg-[#0B0F19] p-1 shadow-glow-cyan group-hover:scale-105 transition-all">
+          <div className="relative w-10 h-10 rounded-xl overflow-hidden border border-white/15 bg-[#101522] p-1.5 transition-all group-hover:border-lime group-hover:scale-105 shadow-md">
             <img
               src="/geekroom-logo.png"
               alt="Geekroom GTBIT Logo"
@@ -33,18 +34,18 @@ export const Navbar: React.FC = () => {
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <span className="font-extrabold tracking-wider text-base sm:text-lg text-white group-hover:text-cyan-400 transition-colors font-display">
+              <span className="font-extrabold tracking-wider text-base sm:text-lg text-white group-hover:text-lime transition-colors font-display">
                 GEEKROOM
               </span>
-              <span className="text-[10px] px-1.5 py-0.5 rounded bg-cyan-400/15 text-cyan-400 font-mono border border-cyan-400/30">
+              <span className="text-[10px] px-1.5 py-0.5 rounded bg-lime/10 text-lime font-mono border border-lime/30 font-bold">
                 GTBIT 2026
               </span>
             </div>
-            <div className="flex items-center gap-2 text-[10px] font-mono tracking-widest text-emerald-400">
-              <span>CODE ARENA</span>
+            <div className="flex items-center gap-2 text-[10px] font-mono tracking-widest text-slate-400">
+              <span className="text-ember font-bold">CODE ARENA</span>
               <span className="text-slate-600">//</span>
-              <span className="text-cyan-300 font-semibold flex items-center gap-1">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              <span className="text-slate-300 font-semibold flex items-center gap-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-lime animate-pulse" />
                 BITBYTE 3D
               </span>
             </div>
@@ -60,13 +61,13 @@ export const Navbar: React.FC = () => {
               <Link
                 key={link.path}
                 to={link.path}
-                className={`flex items-center gap-2 text-xs font-mono font-medium transition-colors py-1.5 px-3 rounded-lg ${
+                className={`flex items-center gap-2 text-xs font-mono font-bold transition-all py-1.5 px-3 rounded-lg ${
                   isActive
-                    ? 'text-arena-cyan bg-arena-cyan/10 border border-arena-cyan/30 shadow-glow-cyan'
+                    ? 'text-lime bg-lime/10 border border-lime/30'
                     : 'text-slate-400 hover:text-white hover:bg-white/5'
                 }`}
               >
-                {Icon && <Icon className="w-3.5 h-3.5 text-arena-cyan" />}
+                {Icon && <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-lime' : 'text-slate-400'}`} />}
                 {link.label}
               </Link>
             );
@@ -77,8 +78,8 @@ export const Navbar: React.FC = () => {
             onClick={handleToggleSound}
             className={`flex items-center gap-2 px-3 py-1.5 rounded-xl border transition-all ${
               isMuted
-                ? 'bg-white/5 text-slate-500 border-white/10 hover:text-slate-300'
-                : 'bg-cyan-500/10 text-cyan-400 border-cyan-400/40 shadow-[0_0_15px_rgba(0,240,255,0.25)]'
+                ? 'bg-[#101522] text-slate-500 border-white/10 hover:text-slate-300'
+                : 'bg-lime/10 text-lime border-lime/40'
             }`}
             title={isMuted ? 'Unmute Sound' : 'Mute Sound'}
             aria-label="Toggle Sound"
@@ -87,10 +88,10 @@ export const Navbar: React.FC = () => {
               <VolumeX className="w-4 h-4" />
             ) : (
               <div className="flex items-end gap-0.5 h-3.5">
-                <span className="w-0.5 bg-cyan-400 rounded-full eq-bar-1" />
-                <span className="w-0.5 bg-cyan-400 rounded-full eq-bar-2" />
-                <span className="w-0.5 bg-cyan-400 rounded-full eq-bar-3" />
-                <span className="w-0.5 bg-cyan-400 rounded-full eq-bar-4" />
+                <span className="w-0.5 bg-lime rounded-full eq-bar-1" />
+                <span className="w-0.5 bg-lime rounded-full eq-bar-2" />
+                <span className="w-0.5 bg-lime rounded-full eq-bar-3" />
+                <span className="w-0.5 bg-lime rounded-full eq-bar-4" />
               </div>
             )}
             <span className="text-[10px] font-mono uppercase font-bold">
@@ -101,9 +102,9 @@ export const Navbar: React.FC = () => {
           {/* Enter Arena CTA */}
           <Link
             to="/register"
-            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-cyan-400 to-cyan-300 hover:from-cyan-300 hover:to-cyan-200 text-slate-950 text-xs font-display font-black shadow-[0_0_20px_rgba(0,240,255,0.4)] arcade-btn transition-all duration-200"
+            className="flex items-center gap-2 px-4 py-2 rounded-xl btn-primary text-xs"
           >
-            <Play className="w-3.5 h-3.5 fill-slate-950" />
+            <Play className="w-3.5 h-3.5 fill-current" />
             <span>ENTER ARENA</span>
           </Link>
         </nav>
@@ -112,25 +113,33 @@ export const Navbar: React.FC = () => {
         <div className="flex md:hidden items-center gap-2">
           <button
             onClick={handleToggleSound}
-            className="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-white/5"
+            className="p-2 rounded-lg bg-[#101522] border border-white/10 text-slate-400"
             aria-label="Toggle Sound"
           >
-            {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4 text-arena-cyan" />}
+            {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4 text-lime" />}
           </button>
+
+          <Link
+            to="/register"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg btn-primary text-xs"
+          >
+            <Play className="w-3 h-3 fill-current" />
+            <span>JOIN</span>
+          </Link>
 
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
-            className="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-white/5"
+            className="p-2 rounded-lg bg-[#101522] border border-white/10 text-slate-400 hover:text-white"
             aria-label="Toggle menu"
           >
-            {mobileOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
         </div>
       </div>
 
-      {/* Mobile drawer */}
+      {/* Mobile dropdown */}
       {mobileOpen && (
-        <div className="md:hidden glass-panel border-b border-arena-border px-4 py-4 space-y-2">
+        <div className="md:hidden border-t border-white/10 bg-[#0B0F19] px-4 py-4 space-y-2">
           {navLinks.map((link) => {
             const Icon = link.icon;
             const isActive = location.pathname === link.path;
@@ -139,24 +148,17 @@ export const Navbar: React.FC = () => {
                 key={link.path}
                 to={link.path}
                 onClick={() => setMobileOpen(false)}
-                className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium ${
-                  isActive ? 'text-arena-cyan bg-arena-cyan/10' : 'text-slate-300 hover:bg-white/5'
+                className={`flex items-center gap-2 text-xs font-mono font-bold py-2.5 px-3 rounded-lg w-full ${
+                  isActive
+                    ? 'text-lime bg-lime/10 border border-lime/30'
+                    : 'text-slate-400 hover:text-white hover:bg-white/5'
                 }`}
               >
-                {Icon && <Icon className="w-4 h-4 text-arena-cyan" />}
+                {Icon && <Icon className="w-4 h-4" />}
                 {link.label}
               </Link>
             );
           })}
-
-          <Link
-            to="/register"
-            onClick={() => setMobileOpen(false)}
-            className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl bg-arena-cyan text-slate-950 font-bold text-xs shadow-glow-cyan"
-          >
-            <Play className="w-4 h-4 fill-slate-950" />
-            <span>ENTER ARENA</span>
-          </Link>
         </div>
       )}
     </header>
