@@ -1,5 +1,10 @@
 const API_BASE = '/api';
 
+function getOrganizerHeader(): Record<string, string> {
+  const code = typeof window !== 'undefined' ? sessionStorage.getItem('gkr_organizer_passcode') : null;
+  return code ? { 'x-organizer-passcode': code } : {};
+}
+
 export const api = {
   // Public Quiz Endpoints
   async getConfig() {
@@ -62,5 +67,114 @@ export const api = {
     const json = await res.json();
     if (!res.ok) throw new Error(json.error || 'Failed to fetch leaderboard');
     return json.data;
+  },
+
+  // Organizer API Endpoints
+  async organizerVerify(passcode: string) {
+    const res = await fetch(`${API_BASE}/organizer/verify`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ passcode }),
+    });
+    const json = await res.json();
+    if (!res.ok) throw new Error(json.error || 'Organizer passcode incorrect');
+    return json;
+  },
+
+  async organizerGetStats() {
+    const res = await fetch(`${API_BASE}/organizer/stats`, {
+      headers: getOrganizerHeader(),
+    });
+    const json = await res.json();
+    if (!res.ok) throw new Error(json.error || 'Failed to fetch organizer stats');
+    return json.data;
+  },
+
+  async organizerGetQuestions(difficulty = 'all', search = '') {
+    const params = new URLSearchParams();
+    if (difficulty) params.append('difficulty', difficulty);
+    if (search) params.append('search', search);
+
+    const res = await fetch(`${API_BASE}/organizer/questions?${params.toString()}`, {
+      headers: getOrganizerHeader(),
+    });
+    const json = await res.json();
+    if (!res.ok) throw new Error(json.error || 'Failed to fetch questions');
+    return json.data;
+  },
+
+  async organizerAddQuestion(data: any) {
+    const res = await fetch(`${API_BASE}/organizer/questions`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        ...getOrganizerHeader(),
+      },
+      body: JSON.stringify(data),
+    });
+    const json = await res.json();
+    if (!res.ok) throw new Error(json.error || 'Failed to create question');
+    return json.data;
+  },
+
+  async organizerUpdateQuestion(id: string, data: any) {
+    const res = await fetch(`${API_BASE}/organizer/questions/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        ...getOrganizerHeader(),
+      },
+      body: JSON.stringify(data),
+    });
+    const json = await res.json();
+    if (!res.ok) throw new Error(json.error || 'Failed to update question');
+    return json;
+  },
+
+  async organizerDeleteQuestion(id: string) {
+    const res = await fetch(`${API_BASE}/organizer/questions/${id}`, {
+      method: 'DELETE',
+      headers: getOrganizerHeader(),
+    });
+    const json = await res.json();
+    if (!res.ok) throw new Error(json.error || 'Failed to delete question');
+    return json;
+  },
+
+  async organizerGetConfig() {
+    const res = await fetch(`${API_BASE}/organizer/config`, {
+      headers: getOrganizerHeader(),
+    });
+    const json = await res.json();
+    if (!res.ok) throw new Error(json.error || 'Failed to fetch configurations');
+    return json.data;
+  },
+
+  async organizerUpdateConfig(configs: Record<string, any>) {
+    const res = await fetch(`${API_BASE}/organizer/config`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        ...getOrganizerHeader(),
+      },
+      body: JSON.stringify(configs),
+    });
+    const json = await res.json();
+    if (!res.ok) throw new Error(json.error || 'Failed to update config');
+    return json;
+  },
+
+  async organizerResetAttempts(confirmPhrase: string) {
+    const res = await fetch(`${API_BASE}/organizer/reset-attempts`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        ...getOrganizerHeader(),
+      },
+      body: JSON.stringify({ confirmPhrase }),
+    });
+    const json = await res.json();
+    if (!res.ok) throw new Error(json.error || 'Reset failed');
+    return json;
   },
 };

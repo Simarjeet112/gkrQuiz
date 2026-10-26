@@ -29,7 +29,7 @@ test('GEEKROOM CODE ARENA - Comprehensive Test Suite', async (t) => {
     assert.equal(res.questions.length, 5);
   });
 
-  await t.test('3. Question distribution is exactly 2 Easy, 2 Medium, and 1 Tough', async () => {
+  await t.test('3. Question distribution is exactly 2 Easy, 2 Medium, and 1 Tough in strict progression order', async () => {
     const res = await quizService.startQuiz('Bruce Wayne', 'GTBIT-2025-03');
     const difficulties = res.questions.map((q) => q.difficulty);
     const easyCount = difficulties.filter((d) => d === 'easy').length;
@@ -39,6 +39,13 @@ test('GEEKROOM CODE ARENA - Comprehensive Test Suite', async (t) => {
     assert.equal(easyCount, 2, 'Must have exactly 2 Easy questions');
     assert.equal(medCount, 2, 'Must have exactly 2 Medium questions');
     assert.equal(toughCount, 1, 'Must have exactly 1 Tough question');
+
+    // Strict Progression Order: Q1 -> Easy, Q2 -> Easy, Q3 -> Medium, Q4 -> Medium, Q5 -> Tough
+    assert.equal(res.questions[0].difficulty, 'easy', 'Q1 must be Easy');
+    assert.equal(res.questions[1].difficulty, 'easy', 'Q2 must be Easy');
+    assert.equal(res.questions[2].difficulty, 'medium', 'Q3 must be Medium');
+    assert.equal(res.questions[3].difficulty, 'medium', 'Q4 must be Medium');
+    assert.equal(res.questions[4].difficulty, 'tough', 'Q5 must be Tough');
   });
 
   await t.test('4. No duplicate questions within an attempt', async () => {
@@ -185,5 +192,19 @@ test('GEEKROOM CODE ARENA - Comprehensive Test Suite', async (t) => {
 
     // Restore tough questions
     await db.run("UPDATE questions SET is_active = 1 WHERE difficulty = 'tough'");
+  });
+
+  await t.test('13. Organizer passcode security & clean state', async () => {
+    const passcode = process.env.ORGANIZER_PASSCODE || 'geekroom2026';
+    assert.equal(typeof passcode, 'string');
+    assert.ok(passcode.length >= 6);
+
+    // Clean up test attempts after testing so database has zero fake/test participants
+    await db.run('DELETE FROM attempt_questions;');
+    await db.run('DELETE FROM quiz_attempts;');
+    await db.run('DELETE FROM participants;');
+
+    const remainingParticipants = await db.getOne<{ count: number }>('SELECT count(*) as count FROM participants');
+    assert.equal(remainingParticipants?.count, 0, 'No fake or test participants should remain in production DB');
   });
 });

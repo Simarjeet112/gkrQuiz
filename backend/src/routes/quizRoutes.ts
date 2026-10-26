@@ -19,7 +19,7 @@ router.get('/config', async (_req: Request, res: Response) => {
         allow_multiple_attempts: allowMultiple === 'true',
         require_roll_number: requireRoll === 'true',
         event_title: title,
-        points: { easy: 10, medium: 20, hard: 30, max_score: 90 },
+        points: { easy: 10, medium: 20, tough: 30, max_score: 90 },
       },
     });
   } catch (err: any) {
@@ -30,7 +30,8 @@ router.get('/config', async (_req: Request, res: Response) => {
 // POST /api/quiz/start - Start or resume a quiz attempt
 router.post('/start', async (req: Request, res: Response) => {
   try {
-    const { displayName, participantCode } = req.body;
+    const displayName = req.body.displayName || req.body.display_name;
+    const participantCode = req.body.participantCode || req.body.participant_code;
     if (!displayName || typeof displayName !== 'string' || !displayName.trim()) {
       return res.status(400).json({ success: false, error: 'Player name is required.' });
     }

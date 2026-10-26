@@ -2,25 +2,27 @@ import express, { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import quizRoutes from './routes/quizRoutes.js';
 import leaderboardRoutes from './routes/leaderboardRoutes.js';
+import organizerRoutes from './routes/organizerRoutes.js';
 
 export const app = express();
 
 app.use(cors({
   origin: '*',
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'x-organizer-passcode'],
 }));
 
 app.use(express.json());
 
 // Health check endpoint
-app.get('/health', (_req: Request, res: Response) => {
+app.get(['/health', '/api/health'], (_req: Request, res: Response) => {
   res.json({ status: 'ok', service: 'geekroom-code-arena', time: new Date().toISOString() });
 });
 
 // Mount modular API routers
 app.use('/api/quiz', quizRoutes);
 app.use('/api/leaderboard', leaderboardRoutes);
+app.use('/api/organizer', organizerRoutes);
 
 // 404 handler
 app.use((_req: Request, res: Response) => {

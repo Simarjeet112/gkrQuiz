@@ -3,11 +3,24 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import confetti from 'canvas-confetti';
 import {
-  Trophy, CheckCircle2, XCircle, Clock, Home, Check, X,
-  Target, ChevronDown, ChevronUp, RotateCcw, Sparkles,
+  Trophy,
+  CheckCircle2,
+  XCircle,
+  Clock,
+  Home,
+  Check,
+  X,
+  Target,
+  ChevronDown,
+  ChevronUp,
+  RotateCcw,
+  Sparkles,
+  Award,
+  Flame,
 } from 'lucide-react';
 import { api } from '../services/api';
 import { GeekroomMascotReaction, MascotMood } from '../components/mascot/GeekroomMascotReaction';
+import { sounds } from '../utils/soundEffects';
 
 interface QuestionReviewItem {
   id: string;
@@ -47,12 +60,6 @@ interface ResultsData {
   questions: QuestionReviewItem[];
 }
 
-const DifficultyPip = ({ d }: { d: 'easy' | 'medium' | 'tough' }) => {
-  if (d === 'easy') return <span className="px-2 py-0.5 rounded text-[10px] font-bold font-mono bg-emerald-500/20 text-emerald-300 uppercase">Easy</span>;
-  if (d === 'medium') return <span className="px-2 py-0.5 rounded text-[10px] font-bold font-mono bg-amber-500/20 text-amber-300 uppercase">Medium</span>;
-  return <span className="px-2 py-0.5 rounded text-[10px] font-bold font-mono bg-red-500/20 text-red-300 uppercase">Tough</span>;
-};
-
 export const ResultsPage: React.FC = () => {
   const { attemptId } = useParams<{ attemptId: string }>();
   const navigate = useNavigate();
@@ -61,228 +68,386 @@ export const ResultsPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [results, setResults] = useState<ResultsData | null>(null);
   const [animatedScore, setAnimatedScore] = useState(0);
-  const [allowMultiple, setAllowMultiple] = useState(false);
   const [expanded, setExpanded] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
-    if (!attemptId) { navigate('/'); return; }
+    if (!attemptId) {
+      navigate('/');
+      return;
+    }
 
-    api.getResults(attemptId).then((data) => {
-      setResults(data);
-      setLoading(false);
+    api
+      .getResults(attemptId)
+      .then((data) => {
+        setResults(data);
+        setLoading(false);
 
-      // Score count-up
-      const target = data.total_score || 0;
-      let curr = 0;
-      const step = Math.max(1, Math.ceil(target / 50));
-      const t = setInterval(() => {
-        curr = Math.min(curr + step, target);
-        setAnimatedScore(curr);
-        if (curr >= target) clearInterval(t);
-      }, 20);
+        // Smooth score count-up
+        const target = data.total_score || 0;
+        let curr = 0;
+        const step = Math.max(1, Math.ceil(target / 45));
+        const t = setInterval(() => {
+          curr = Math.min(curr + step, target);
+          setAnimatedScore(curr);
+          if (curr >= target) {
+            clearInterval(t);
+            sounds.playVictory();
+          }
+        }, 22);
 
-      if (target >= 50) {
-        setTimeout(() => confetti({ particleCount: 100, spread: 80, origin: { y: 0.55 }, colors: ['#8B5CF6', '#00FF88', '#38BDF8', '#F59E0B'] }), 350);
-      }
-    }).catch((err) => { setError(err.message || 'Failed to fetch results.'); setLoading(false); });
-
-    api.getConfig().then((cfg) => { if (cfg) setAllowMultiple(cfg.allow_multiple_attempts); }).catch(() => {});
+        if (target >= 50) {
+          setTimeout(() => {
+            confetti({
+              particleCount: 110,
+              spread: 85,
+              origin: { y: 0.58 },
+              colors: ['#00F0FF', '#00FF88', '#8B5CF6', '#FF6B00'],
+            });
+          }, 350);
+        }
+      })
+      .catch((err) => {
+        setError(err.message || 'Failed to fetch results.');
+        setLoading(false);
+      });
   }, [attemptId, navigate]);
 
-  const fmt = (s: number) => `${Math.floor(s / 60)}m ${s % 60}s`;
+  const fmtTime = (s: number) => `${Math.floor(s / 60)}m ${s % 60}s`;
 
-  if (loading) return (
-    <div className="min-h-[calc(100vh-4rem)] cyber-grid flex flex-col items-center justify-center gap-4">
-      <div className="w-12 h-12 border-4 border-arena-violet/30 border-t-arena-violet rounded-full animate-spin" />
-      <p className="text-sm font-mono text-slate-400 tracking-widest">COMPUTING RESULTS...</p>
-    </div>
-  );
-
-  if (error || !results) return (
-    <div className="min-h-[calc(100vh-4rem)] cyber-grid flex items-center justify-center p-4">
-      <div className="max-w-md w-full glass-panel p-8 rounded-2xl border border-red-500/30 text-center space-y-4">
-        <XCircle className="w-10 h-10 text-red-400 mx-auto" />
-        <h2 className="text-lg font-bold text-white">Results Unavailable</h2>
-        <p className="text-xs text-slate-400">{error || 'Session could not be retrieved.'}</p>
-        <Link to="/" className="inline-block px-6 py-2.5 rounded-xl bg-arena-violet text-white text-xs font-semibold hover:bg-arena-violetLight transition-colors">
-          Return to Arena
-        </Link>
+  if (loading) {
+    return (
+      <div className="min-h-[calc(100vh-4rem)] cyber-grid flex flex-col items-center justify-center gap-4">
+        <div className="w-12 h-12 border-4 border-arena-cyan/30 border-t-arena-cyan rounded-full animate-spin" />
+        <p className="text-sm font-mono text-arena-cyan tracking-widest">
+          COMPUTING ACCURACY & LEADERBOARD RANK...
+        </p>
       </div>
-    </div>
-  );
+    );
+  }
 
-  const isHighScorer = results.total_score >= 50;
-  const mascotMood: MascotMood = results.total_score >= 70 ? 'victory' : isHighScorer ? 'correct' : 'idle';
-  const mascotMsg = results.total_score >= 70
-    ? `Outstanding, ${results.participant.display_name}! ${results.total_score} points — you crushed the Arena! 🏆`
-    : isHighScorer
-    ? `Solid run, ${results.participant.display_name}! ${results.total_score} pts. Keep sharpening!`
-    : `Good effort, ${results.participant.display_name}! Review the explanations below and come back stronger.`;
+  if (error || !results) {
+    return (
+      <div className="min-h-[calc(100vh-4rem)] cyber-grid flex items-center justify-center p-4">
+        <div className="cyber-card max-w-md w-full p-8 border border-red-500/40 text-center space-y-4">
+          <XCircle className="w-10 h-10 text-red-400 mx-auto" />
+          <h2 className="text-lg font-bold text-white font-display">Results Unavailable</h2>
+          <p className="text-xs text-slate-400">{error || 'Session could not be retrieved.'}</p>
+          <Link
+            to="/"
+            className="inline-block px-6 py-2.5 rounded-xl bg-arena-cyan text-slate-950 font-mono font-bold text-xs"
+          >
+            Return to Arena
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  const getRankBadge = (score: number) => {
+    if (score >= 80) return { title: 'ARENA TITAN // S-TIER', color: 'text-amber-400 border-amber-400/50 bg-amber-500/10' };
+    if (score >= 60) return { title: 'CYBER GLADIATOR // A-TIER', color: 'text-arena-cyan border-cyan-400/50 bg-cyan-500/10' };
+    if (score >= 40) return { title: 'CODE WARRIOR // B-TIER', color: 'text-emerald-400 border-emerald-400/50 bg-emerald-500/10' };
+    return { title: 'ARENA RECRUIT // INITIATE', color: 'text-purple-400 border-purple-400/50 bg-purple-500/10' };
+  };
+
+  const rankBadge = getRankBadge(results.total_score);
+
+  const mascotMood: MascotMood = results.total_score >= 70 ? 'victory' : results.total_score >= 40 ? 'correct' : 'idle';
+  const mascotMsg =
+    results.total_score >= 70
+      ? `Phenomenal performance, ${results.participant.display_name}! You dominated the Arena with ${results.total_score} points!`
+      : results.total_score >= 40
+      ? `Impressive run, ${results.participant.display_name}! ${results.total_score} points locked on the board!`
+      : `Good battle, ${results.participant.display_name}! Review the explanations below to level up for the next challenge.`;
 
   const bd = results.difficulty_breakdown;
 
   return (
     <div className="relative min-h-[calc(100vh-4rem)] cyber-grid py-10 px-4 sm:px-6">
-      <div className="max-w-3xl mx-auto space-y-6">
+      <div className="max-w-4xl mx-auto space-y-6">
 
-        {/* ── Hero Score Card ── */}
-        <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
-          className="glass-panel-glow rounded-3xl border border-arena-violet/25 shadow-2xl overflow-hidden"
+        {/* ── HERO RESULT FINALE CARD ── */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="cyber-card p-6 sm:p-8 border border-arena-cyan/35 shadow-glow-cyan overflow-hidden space-y-6"
         >
-          {/* Top rainbow stripe */}
-          <div className="h-1.5 w-full bg-gradient-to-r from-arena-violet via-arena-cyanLight to-arena-greenNeon" />
+          {/* Top Banner: Mascot + Score Gauge */}
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-6 pb-6 border-b border-arena-border">
+            <GeekroomMascotReaction mood={mascotMood} size="lg" message={mascotMsg} />
 
-          <div className="p-6 sm:p-8 space-y-6">
-            {/* Mascot + Score Hero */}
-            <div className="flex flex-col sm:flex-row items-center gap-6">
-              <GeekroomMascotReaction mood={mascotMood} size="lg" message={mascotMsg} />
+            <div className="text-center sm:text-right shrink-0">
+              <span className={`inline-block px-3 py-1 rounded-md text-[10px] font-mono font-bold uppercase tracking-widest border mb-2 ${rankBadge.color}`}>
+                {rankBadge.title}
+              </span>
 
-              <div className="text-center sm:text-right flex-1">
-                <div className="text-xs font-mono uppercase tracking-widest text-slate-400 mb-1">Final Score</div>
-                <div className="flex items-baseline justify-center sm:justify-end gap-1.5">
-                  <span className="text-6xl sm:text-7xl font-extrabold font-mono text-transparent bg-clip-text bg-gradient-to-r from-arena-greenNeon via-emerald-300 to-arena-cyanLight tabular-nums">
-                    {animatedScore}
-                  </span>
-                  <span className="text-2xl font-bold text-slate-600 font-mono">/90</span>
-                </div>
-                {results.rank && (
-                  <div className="mt-2 inline-flex items-center gap-2 text-xs font-mono px-3 py-1 rounded-full bg-arena-card border border-arena-border text-slate-300">
-                    <Trophy className="w-3.5 h-3.5 text-amber-400" />
-                    Rank <strong className="text-arena-greenNeon font-bold">#{results.rank}</strong>
-                    {results.total_participants && <span className="text-slate-500"> of {results.total_participants}</span>}
-                  </div>
-                )}
+              <div className="text-[10px] font-mono uppercase tracking-widest text-slate-400">
+                FINAL SCORE
               </div>
-            </div>
+              <div className="flex items-baseline justify-center sm:justify-end gap-1.5 my-1 font-mono">
+                <span className="text-6xl sm:text-7xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-arena-cyan via-cyan-200 to-arena-greenNeon tabular-nums">
+                  {animatedScore}
+                </span>
+                <span className="text-2xl font-bold text-slate-600">/90</span>
+              </div>
 
-            {/* Metrics Row */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-              {[
-                { label: 'Correct', value: results.correct_count, sub: '/ 5', color: 'text-emerald-400', icon: <CheckCircle2 className="w-4 h-4" /> },
-                { label: 'Incorrect', value: results.incorrect_count, sub: '', color: 'text-red-400', icon: <XCircle className="w-4 h-4" /> },
-                { label: 'Time Taken', value: fmt(results.time_taken_seconds), sub: '', color: 'text-arena-cyanLight', icon: <Clock className="w-4 h-4" /> },
-                { label: 'Accuracy', value: `${Math.round((results.correct_count / 5) * 100)}%`, sub: '', color: 'text-arena-violetLight', icon: <Target className="w-4 h-4" /> },
-              ].map((m, i) => (
-                <div key={i} className="bg-[#090D17] border border-arena-border rounded-2xl p-4">
-                  <div className={`flex items-center gap-1.5 text-xs font-mono mb-2 ${m.color}`}>{m.icon} {m.label}</div>
-                  <div className="text-2xl font-bold font-mono text-white">{m.value} <span className="text-xs text-slate-500 font-normal">{m.sub}</span></div>
+              {results.rank && (
+                <div className="inline-flex items-center gap-1.5 text-xs font-mono px-3.5 py-1 rounded-full bg-[#080C14] border border-arena-border text-slate-300">
+                  <Trophy className="w-3.5 h-3.5 text-arena-cyan" />
+                  <span>
+                    LEADERBOARD RANK: <strong className="text-arena-cyan">#{results.rank}</strong>
+                    {results.total_participants && (
+                      <span className="text-slate-500"> OF {results.total_participants}</span>
+                    )}
+                  </span>
                 </div>
-              ))}
-            </div>
-
-            {/* Difficulty Breakdown Bars */}
-            <div className="bg-[#090D17] border border-arena-border rounded-2xl p-4 space-y-3.5">
-              <div className="text-xs font-mono uppercase tracking-wider text-slate-400">Difficulty Breakdown</div>
-              {[
-                { label: 'Easy (10 pts each)', key: 'easy' as const, color: 'bg-emerald-400', textColor: 'text-emerald-300' },
-                { label: 'Medium (20 pts each)', key: 'medium' as const, color: 'bg-amber-400', textColor: 'text-amber-300' },
-                { label: 'Tough (30 pts)', key: 'tough' as const, color: 'bg-red-400', textColor: 'text-red-300' },
-              ].map(({ label, key, color, textColor }) => {
-                const b = bd[key] || { correct: 0, total: 0, points: 0, max_points: 0 };
-                const pct = b.max_points > 0 ? (b.points / b.max_points) * 100 : 0;
-                return (
-                  <div key={key} className="space-y-1">
-                    <div className="flex justify-between text-xs font-mono">
-                      <span className={`${textColor} font-semibold`}>{label}</span>
-                      <span className="text-slate-400">{b.points}/{b.max_points} pts ({b.correct}/{b.total})</span>
-                    </div>
-                    <div className="w-full h-2 rounded-full bg-slate-800 overflow-hidden">
-                      <motion.div initial={{ width: 0 }} animate={{ width: `${pct}%` }} transition={{ duration: 0.8, delay: 0.3 }}
-                        className={`h-full rounded-full ${color}`} />
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-
-            {/* CTAs */}
-            <div className="flex flex-col sm:flex-row gap-3 pt-2">
-              <Link to="/leaderboard" className="flex-1 flex items-center justify-center gap-2 py-3.5 rounded-xl bg-gradient-to-r from-arena-violet to-arena-violetDark hover:from-arena-violetLight hover:to-arena-violet text-white font-bold text-sm shadow-glow-violet transition-all hover:scale-[1.01]">
-                <Trophy className="w-4 h-4" /> View Leaderboard
-              </Link>
-              <Link to="/" className="flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl border border-arena-border text-slate-300 hover:text-white hover:bg-white/5 text-sm font-semibold transition-colors">
-                <Home className="w-4 h-4" /> Home
-              </Link>
-              {allowMultiple && (
-                <Link to="/register" className="flex items-center justify-center gap-2 px-5 py-3.5 rounded-xl border border-emerald-500/30 text-emerald-300 hover:bg-emerald-500/10 text-sm font-semibold transition-colors">
-                  <RotateCcw className="w-4 h-4" /> Retry
-                </Link>
               )}
             </div>
           </div>
+
+          {/* Key Metrics Grid */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 font-mono">
+            <div className="p-3.5 rounded-xl bg-[#080C14] border border-arena-border">
+              <div className="flex items-center gap-1.5 text-xs text-emerald-400 mb-1">
+                <CheckCircle2 className="w-4 h-4" />
+                <span>CORRECT</span>
+              </div>
+              <div className="text-2xl font-bold text-white">
+                {results.correct_count} <span className="text-xs text-slate-500 font-normal">/ 5</span>
+              </div>
+            </div>
+
+            <div className="p-3.5 rounded-xl bg-[#080C14] border border-arena-border">
+              <div className="flex items-center gap-1.5 text-xs text-red-400 mb-1">
+                <XCircle className="w-4 h-4" />
+                <span>INCORRECT</span>
+              </div>
+              <div className="text-2xl font-bold text-white">
+                {results.incorrect_count}
+              </div>
+            </div>
+
+            <div className="p-3.5 rounded-xl bg-[#080C14] border border-arena-border">
+              <div className="flex items-center gap-1.5 text-xs text-arena-cyan mb-1">
+                <Clock className="w-4 h-4" />
+                <span>TIME TAKEN</span>
+              </div>
+              <div className="text-2xl font-bold text-white">
+                {fmtTime(results.time_taken_seconds)}
+              </div>
+            </div>
+
+            <div className="p-3.5 rounded-xl bg-[#080C14] border border-arena-border">
+              <div className="flex items-center gap-1.5 text-xs text-purple-400 mb-1">
+                <Target className="w-4 h-4" />
+                <span>ACCURACY</span>
+              </div>
+              <div className="text-2xl font-bold text-white">
+                {Math.round((results.correct_count / 5) * 100)}%
+              </div>
+            </div>
+          </div>
+
+          {/* Difficulty Tier Performance Bars */}
+          <div className="p-4 rounded-xl bg-[#080C14] border border-arena-border space-y-3 font-mono">
+            <div className="text-xs uppercase tracking-wider text-slate-400 flex justify-between">
+              <span>PROGRESSIVE DIFFICULTY AUDIT</span>
+              <span>POINTS EARNED</span>
+            </div>
+
+            {[
+              {
+                label: 'Tier 1 // Easy (10 pts each)',
+                b: bd.easy,
+                color: 'bg-emerald-400',
+                text: 'text-emerald-300',
+              },
+              {
+                label: 'Tier 2 // Medium (20 pts each)',
+                b: bd.medium,
+                color: 'bg-amber-400',
+                text: 'text-amber-300',
+              },
+              {
+                label: 'Tier 3 // Tough (30 pts)',
+                b: bd.tough,
+                color: 'bg-red-500',
+                text: 'text-red-300',
+              },
+            ].map(({ label, b, color, text }, idx) => {
+              const maxP = b?.max_points || 1;
+              const pts = b?.points || 0;
+              const pct = (pts / maxP) * 100;
+              return (
+                <div key={idx} className="space-y-1">
+                  <div className="flex justify-between text-xs">
+                    <span className={`${text} font-semibold`}>{label}</span>
+                    <span className="text-slate-300">
+                      {pts} / {maxP} pts ({b?.correct || 0}/{b?.total || 0})
+                    </span>
+                  </div>
+                  <div className="w-full h-2 rounded-full bg-slate-800 overflow-hidden">
+                    <motion.div
+                      initial={{ width: 0 }}
+                      animate={{ width: `${pct}%` }}
+                      transition={{ duration: 0.8, delay: 0.2 + idx * 0.1 }}
+                      className={`h-full rounded-full ${color}`}
+                    />
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Action Buttons */}
+          <div className="flex flex-col sm:flex-row gap-3 pt-2 font-mono text-xs">
+            <Link
+              to="/leaderboard"
+              onClick={() => sounds.playSelect()}
+              className="flex-1 flex items-center justify-center gap-2 py-3.5 rounded-xl bg-arena-cyan text-slate-950 font-bold uppercase tracking-wider shadow-glow-cyan hover:bg-cyan-300 transition-all hover:scale-[1.01]"
+            >
+              <Trophy className="w-4 h-4" />
+              <span>VIEW LIVE LEADERBOARD</span>
+            </Link>
+
+            <Link
+              to="/"
+              onClick={() => sounds.playClick()}
+              className="flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl cyber-card border border-arena-border text-slate-300 hover:text-white hover:bg-white/5 transition-colors font-semibold"
+            >
+              <Home className="w-4 h-4" />
+              <span>ARENA HOME</span>
+            </Link>
+          </div>
         </motion.div>
 
-        {/* ── Question Review ── */}
+        {/* ── QUESTION REVIEW SECTION ── */}
         <div className="space-y-3">
-          <div className="flex items-center justify-between">
-            <h3 className="text-lg font-extrabold text-white flex items-center gap-2">
-              <Sparkles className="w-5 h-5 text-arena-violet" /> Question Review & Explanations
+          <div className="flex items-center justify-between font-mono">
+            <h3 className="text-base font-bold text-white flex items-center gap-2">
+              <Sparkles className="w-4 h-4 text-arena-cyan" />
+              <span>CHALLENGE VERIFICATION & EXPLANATIONS</span>
             </h3>
-            <span className="text-xs font-mono text-slate-500">5 Questions</span>
+            <span className="text-xs text-slate-500">5 QUESTIONS REVIEWED</span>
           </div>
 
           {results.questions.map((q) => {
-            const isOpen = expanded[q.id] !== false; // default open
+            const isOpen = expanded[q.id] !== false;
+            const isBoss = q.difficulty === 'tough';
+
             return (
-              <div key={q.id} className={`glass-panel rounded-2xl border overflow-hidden transition-colors ${
-                q.is_correct ? 'border-emerald-500/25' : q.selected_answer ? 'border-red-500/25' : 'border-slate-700/50'
-              }`}>
-                {/* Accordion trigger */}
-                <button onClick={() => setExpanded((p) => ({ ...p, [q.id]: !isOpen }))}
+              <div
+                key={q.id}
+                className={`cyber-card border overflow-hidden transition-colors ${
+                  q.is_correct
+                    ? 'border-emerald-500/30'
+                    : q.selected_answer
+                    ? 'border-red-500/30'
+                    : 'border-slate-700'
+                }`}
+              >
+                {/* Header Toggle */}
+                <button
+                  onClick={() => setExpanded((p) => ({ ...p, [q.id]: !isOpen }))}
                   className="w-full p-4 sm:p-5 flex items-center justify-between gap-4 text-left"
                 >
                   <div className="flex items-center gap-3 min-w-0">
-                    <div className={`w-7 h-7 rounded-lg flex items-center justify-center font-mono text-xs font-bold shrink-0 ${
-                      q.is_correct ? 'bg-emerald-500/20 text-emerald-300'
-                      : q.selected_answer ? 'bg-red-500/20 text-red-400'
-                      : 'bg-slate-800 text-slate-500'
-                    }`}>{q.position}</div>
+                    <div
+                      className={`w-7 h-7 rounded-lg flex items-center justify-center font-mono text-xs font-bold shrink-0 ${
+                        q.is_correct
+                          ? 'bg-emerald-500/20 text-emerald-300'
+                          : q.selected_answer
+                          ? 'bg-red-500/20 text-red-400'
+                          : 'bg-slate-800 text-slate-500'
+                      }`}
+                    >
+                      {q.position}
+                    </div>
+
                     <div className="min-w-0">
-                      <p className="text-sm font-medium text-white truncate">{q.text}</p>
-                      <div className="flex items-center gap-2 mt-0.5">
-                        <DifficultyPip d={q.difficulty} />
-                        <span className="text-[11px] font-mono text-slate-500">{q.category}</span>
-                        <span className={`text-[11px] font-mono font-bold ${q.is_correct ? 'text-emerald-400' : 'text-slate-600'}`}>
-                          +{q.points_awarded}/{q.max_points}
+                      <p className="text-sm font-medium text-white truncate font-sans">
+                        {q.text}
+                      </p>
+                      <div className="flex items-center gap-2 mt-0.5 font-mono text-[11px]">
+                        <span
+                          className={`uppercase font-bold ${
+                            isBoss ? 'text-red-400' : q.difficulty === 'medium' ? 'text-amber-400' : 'text-emerald-400'
+                          }`}
+                        >
+                          {q.difficulty}
+                        </span>
+                        <span className="text-slate-600">•</span>
+                        <span className="text-slate-400">{q.category}</span>
+                        <span className="text-slate-600">•</span>
+                        <span className={q.is_correct ? 'text-emerald-400 font-bold' : 'text-slate-500'}>
+                          +{q.points_awarded}/{q.max_points} PTS
                         </span>
                       </div>
                     </div>
                   </div>
-                  <div className="flex items-center gap-2 shrink-0">
-                    {q.is_correct ? <span className="hidden sm:flex items-center gap-1 text-xs font-mono text-emerald-400"><Check className="w-3 h-3" />Correct</span>
-                      : q.selected_answer ? <span className="hidden sm:flex items-center gap-1 text-xs font-mono text-red-400"><X className="w-3 h-3" />Incorrect</span>
-                      : <span className="hidden sm:text-xs sm:flex font-mono text-slate-500">Unanswered</span>
-                    }
-                    {isOpen ? <ChevronUp className="w-4 h-4 text-slate-500" /> : <ChevronDown className="w-4 h-4 text-slate-500" />}
+
+                  <div className="flex items-center gap-2 shrink-0 font-mono text-xs">
+                    {q.is_correct ? (
+                      <span className="hidden sm:flex items-center gap-1 text-emerald-400">
+                        <Check className="w-3.5 h-3.5" /> Correct
+                      </span>
+                    ) : q.selected_answer ? (
+                      <span className="hidden sm:flex items-center gap-1 text-red-400">
+                        <X className="w-3.5 h-3.5" /> Incorrect
+                      </span>
+                    ) : (
+                      <span className="hidden sm:block text-slate-500">Unanswered</span>
+                    )}
+                    {isOpen ? (
+                      <ChevronUp className="w-4 h-4 text-slate-400" />
+                    ) : (
+                      <ChevronDown className="w-4 h-4 text-slate-400" />
+                    )}
                   </div>
                 </button>
 
-                {/* Expanded content */}
+                {/* Body Details */}
                 {isOpen && (
                   <div className="px-4 pb-5 sm:px-5 space-y-3 border-t border-white/5 pt-4">
-                    {/* Options */}
+                    {/* Options Grid */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 font-mono text-xs">
-                      {q.options.map((opt, i) => {
+                      {q.options.map((opt, optI) => {
                         const isSelected = q.selected_answer === opt;
                         const isCorrectOpt = q.correct_answer === opt;
+
                         return (
-                          <div key={i} className={`p-3 rounded-xl border flex items-center justify-between gap-2 ${
-                            isCorrectOpt ? 'bg-emerald-500/15 border-emerald-500/40 text-emerald-200'
-                            : isSelected && !isCorrectOpt ? 'bg-red-500/15 border-red-500/40 text-red-300 line-through opacity-70'
-                            : 'bg-[#080B14] border-arena-border text-slate-500'
-                          }`}>
-                            <span className="flex-1">{opt}</span>
-                            {isCorrectOpt && <span className="text-[10px] font-bold text-emerald-400 uppercase shrink-0">✓ Correct</span>}
-                            {isSelected && !isCorrectOpt && <span className="text-[10px] font-bold text-red-400 uppercase shrink-0">Your pick</span>}
+                          <div
+                            key={optI}
+                            className={`p-3 rounded-xl border flex items-center justify-between gap-2 ${
+                              isCorrectOpt
+                                ? 'bg-emerald-500/15 border-emerald-500/50 text-emerald-200 font-semibold'
+                                : isSelected && !isCorrectOpt
+                                ? 'bg-red-500/15 border-red-500/50 text-red-300 line-through'
+                                : 'bg-[#080C14] border-arena-border text-slate-400'
+                            }`}
+                          >
+                            <span>{opt}</span>
+                            {isCorrectOpt && (
+                              <span className="text-[10px] font-bold text-emerald-400 uppercase">
+                                ✓ Correct
+                              </span>
+                            )}
+                            {isSelected && !isCorrectOpt && (
+                              <span className="text-[10px] font-bold text-red-400 uppercase">
+                                Your Choice
+                              </span>
+                            )}
                           </div>
                         );
                       })}
                     </div>
 
                     {/* Explanation */}
-                    <div className="p-3.5 rounded-xl bg-arena-card/60 border border-arena-border text-xs text-slate-300 space-y-1">
-                      <div className="text-[11px] font-mono font-bold text-arena-violetLight uppercase tracking-wider">💡 Explanation</div>
-                      <p className="leading-relaxed">{q.explanation}</p>
+                    <div className="p-3.5 rounded-xl bg-[#080C14] border border-arena-border text-xs text-slate-300 space-y-1">
+                      <div className="text-[10px] font-mono font-bold text-arena-cyan uppercase tracking-wider">
+                        💡 EXPLANATION
+                      </div>
+                      <p className="leading-relaxed font-sans">{q.explanation}</p>
                     </div>
                   </div>
                 )}

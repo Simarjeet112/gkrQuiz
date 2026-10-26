@@ -153,8 +153,10 @@ export class QuizService {
     const selectedMed = shuffleArray(mediumQuestions).slice(0, 2);
     const selectedTough = shuffleArray(toughQuestions).slice(0, 1);
 
-    // Combine and shuffle the 5 questions
-    const selected5 = shuffleArray([...selectedEasy, ...selectedMed, ...selectedTough]);
+    // Enforce strict difficulty progression:
+    // Q1 & Q2: Easy | Q3 & Q4: Medium | Q5: Tough
+    // Questions within each tier are randomized; options are independently shuffled
+    const selected5 = [...selectedEasy, ...selectedMed, ...selectedTough];
 
     const pointsMap = await this.getPointsMap();
     const attemptId = 'att_' + crypto.randomUUID().slice(0, 16);

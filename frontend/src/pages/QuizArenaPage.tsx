@@ -9,9 +9,16 @@ import {
   AlertTriangle,
   CheckCircle2,
   Circle,
+  Flame,
+  Zap,
+  Sparkles,
+  Volume2,
+  VolumeX,
+  HelpCircle,
 } from 'lucide-react';
 import { api } from '../services/api';
 import { GeekroomMascotReaction, MascotMood } from '../components/mascot/GeekroomMascotReaction';
+import { sounds } from '../utils/soundEffects';
 
 interface Question {
   id: string;
@@ -38,74 +45,130 @@ export const QuizArenaPage: React.FC = () => {
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [participantName, setParticipantName] = useState<string>('Challenger');
+  const [isMuted, setIsMuted] = useState(sounds.getMuted());
+
+  // Mascot dynamic state
   const [mascotMood, setMascotMood] = useState<MascotMood>('quiz');
-  const [mascotMessage, setMascotMessage] = useState<string>('Stay focused! 5 questions between you and glory.');
+  const [mascotMessage, setMascotMessage] = useState<string>(
+    'Tier 1 Recruit: Warm up with 2 Easy fundamentals.'
+  );
 
   const isSubmittingRef = useRef(false);
 
+  // Load attempt on mount or refresh
   useEffect(() => {
-    if (!attemptId) { navigate('/register'); return; }
+    if (!attemptId) {
+      navigate('/register');
+      return;
+    }
 
-    api.getAttempt(attemptId).then((data) => {
-      if (data.attempt.status === 'completed' || data.attempt.status === 'expired') {
-        navigate(`/results/${attemptId}`); return;
-      }
-      setQuestions(data.questions || []);
-      if (data.selectedAnswers) setSelectedAnswers(data.selectedAnswers);
-      if (data.attempt.participant_name) setParticipantName(data.attempt.participant_name);
+    api
+      .getAttempt(attemptId)
+      .then((data) => {
+        if (data.attempt.status === 'completed' || data.attempt.status === 'expired') {
+          navigate(`/results/${attemptId}`);
+          return;
+        }
 
-      const deadline = new Date(data.attempt.deadline_at);
-      setDeadlineAt(deadline);
-      setSecondsRemaining(Math.max(0, Math.floor((deadline.getTime() - Date.now()) / 1000)));
-      setLoading(false);
-    }).catch((err) => {
-      setError(err.message || 'Failed to load quiz session.');
-      setLoading(false);
-    });
+        setQuestions(data.questions || []);
+        if (data.selectedAnswers) setSelectedAnswers(data.selectedAnswers);
+        if (data.attempt.participant_name) setParticipantName(data.attempt.participant_name);
+
+        const deadline = new Date(data.attempt.deadline_at);
+        setDeadlineAt(deadline);
+        const rem = Math.max(0, Math.floor((deadline.getTime() - Date.now()) / 1000));
+        setSecondsRemaining(rem);
+        setLoading(false);
+      })
+      .catch((err) => {
+        setError(err.message || 'Failed to load quiz session.');
+        setLoading(false);
+      });
   }, [attemptId, navigate]);
 
-  // Timer countdown
+  // Synchronized countdown timer
   useEffect(() => {
     if (!deadlineAt) return;
     const interval = setInterval(() => {
       const rem = Math.max(0, Math.floor((deadlineAt.getTime() - Date.now()) / 1000));
       setSecondsRemaining(rem);
+
       if (rem <= 60 && rem > 0) {
         setMascotMood('urgent');
-        setMascotMessage('Under 60 seconds! Lock in your answers NOW!');
+        setMascotMessage('CRITICAL ALERT: Under 60 seconds remaining! Submit now!');
       }
+
       if (rem === 0 && !isSubmittingRef.current) {
         clearInterval(interval);
         handleAutoSubmit();
       }
     }, 1000);
+
     return () => clearInterval(interval);
   }, [deadlineAt]);
 
-  // Keyboard navigation
+  // Keyboard navigation & hotkeys
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (showConfirmModal || loading || submitting) return;
       const currentQ = questions[currentIndex];
       if (!currentQ) return;
+
       if (['1', '2', '3', '4'].includes(e.key)) {
         const optionIndex = parseInt(e.key, 10) - 1;
-        if (currentQ.options[optionIndex]) handleSelectOption(currentQ.id, currentQ.options[optionIndex]);
-      } else if (e.key === 'ArrowRight' && currentIndex < questions.length - 1) setCurrentIndex((i) => i + 1);
-      else if (e.key === 'ArrowLeft' && currentIndex > 0) setCurrentIndex((i) => i - 1);
+        if (currentQ.options[optionIndex]) {
+          handleSelectOption(currentQ.id, currentQ.options[optionIndex]);
+        }
+      } else if (['a', 'b', 'c', 'd', 'A', 'B', 'C', 'D'].includes(e.key)) {
+        const map: Record<string, number> = { a: 0, b: 1, c: 2, d: 3, A: 0, B: 1, C: 2, D: 3 };
+        const optionIndex = map[e.key];
+        if (currentQ.options[optionIndex]) {
+          handleSelectOption(currentQ.id, currentQ.options[optionIndex]);
+        }
+      } else if (e.key === 'ArrowRight' && currentIndex < questions.length - 1) {
+        navigateToQuestion(currentIndex + 1);
+      } else if (e.key === 'ArrowLeft' && currentIndex > 0) {
+        navigateToQuestion(currentIndex - 1);
+      }
     };
+
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [currentIndex, questions, showConfirmModal, loading, submitting, selectedAnswers]);
 
+  const navigateToQuestion = (targetIndex: number) => {
+    sounds.playClick();
+    setCurrentIndex(targetIndex);
+
+    const targetQ = questions[targetIndex];
+    if (!targetQ) return;
+
+    // React to difficulty tier escalation
+    if (targetQ.difficulty === 'tough') {
+      sounds.playBossWarning();
+      setMascotMood('tough');
+      setMascotMessage('⚠️ BOSS CHALLENGE INITIATED: 30 Points on the line! Stay sharp!');
+    } else if (targetQ.difficulty === 'medium') {
+      sounds.playTierUp();
+      setMascotMood('quiz');
+      setMascotMessage('Leveling up to Tier 2: Warrior challenges (20 pts each)!');
+    } else {
+      setMascotMood('quiz');
+      setMascotMessage('Tier 1 Recruit: 10 pts per question. Keep your momentum!');
+    }
+  };
+
   const handleSelectOption = (questionId: string, option: string) => {
+    sounds.playSelect();
     setSelectedAnswers((prev) => {
       const updated = { ...prev, [questionId]: option };
       api.saveProgress(attemptId!, { [questionId]: option }).catch(console.warn);
-      const count = Object.keys(updated).length;
-      setMascotMood('quiz');
-      if (count === questions.length) setMascotMessage('All 5 answered! Review or submit when ready.');
-      else setMascotMessage(`Good choice! ${questions.length - count} more to go.`);
+
+      const answeredCount = Object.keys(updated).length;
+      if (answeredCount === questions.length) {
+        setMascotMood('quiz');
+        setMascotMessage('All 5 challenges locked in! Verify or submit for your final score.');
+      }
       return updated;
     });
   };
@@ -141,193 +204,261 @@ export const QuizArenaPage: React.FC = () => {
     return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
   };
 
-  const getDifficultyBadge = (difficulty: string) => {
-    switch (difficulty) {
-      case 'easy': return (
-        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold font-mono bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 uppercase tracking-wider">
-          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-          Easy · 10 pts
-        </span>
-      );
-      case 'medium': return (
-        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold font-mono bg-amber-500/15 text-amber-300 border border-amber-500/30 uppercase tracking-wider">
-          <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
-          Medium · 20 pts
-        </span>
-      );
-      case 'tough': return (
-        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold font-mono bg-red-500/15 text-red-300 border border-red-500/30 uppercase tracking-wider">
-          <span className="w-1.5 h-1.5 rounded-full bg-red-400 animate-pulse" />
-          Tough · 30 pts
-        </span>
-      );
-      default: return null;
-    }
-  };
-
-  if (loading) return (
-    <div className="min-h-[calc(100vh-4rem)] cyber-grid flex flex-col items-center justify-center gap-4">
-      <div className="w-12 h-12 border-4 border-arena-violet/30 border-t-arena-violet rounded-full animate-spin" />
-      <p className="text-sm font-mono text-slate-400 tracking-widest">LOADING ARENA SESSION...</p>
-    </div>
-  );
-
-  if (error || questions.length === 0) return (
-    <div className="min-h-[calc(100vh-4rem)] cyber-grid flex items-center justify-center p-4">
-      <div className="max-w-md w-full glass-panel p-8 rounded-2xl border border-red-500/30 text-center space-y-4">
-        <AlertTriangle className="w-10 h-10 text-red-400 mx-auto" />
-        <h2 className="text-lg font-bold text-white">Arena Connection Error</h2>
-        <p className="text-xs text-slate-400">{error || 'Session could not be loaded.'}</p>
-        <button onClick={() => navigate('/register')} className="px-6 py-2.5 rounded-xl bg-arena-violet text-white text-xs font-semibold hover:bg-arena-violetLight transition-colors">
-          Return to Registration
-        </button>
+  if (loading) {
+    return (
+      <div className="min-h-[calc(100vh-4rem)] cyber-grid flex flex-col items-center justify-center gap-4">
+        <div className="w-12 h-12 border-4 border-arena-cyan/30 border-t-arena-cyan rounded-full animate-spin" />
+        <p className="text-sm font-mono text-arena-cyan tracking-widest">
+          CONNECTING TO CODE ARENA HUD...
+        </p>
       </div>
-    </div>
-  );
+    );
+  }
+
+  if (error || questions.length === 0) {
+    return (
+      <div className="min-h-[calc(100vh-4rem)] cyber-grid flex items-center justify-center p-4">
+        <div className="cyber-card max-w-md w-full p-8 border border-red-500/40 text-center space-y-4">
+          <AlertTriangle className="w-10 h-10 text-red-400 mx-auto" />
+          <h2 className="text-lg font-bold text-white font-display">Arena Connection Error</h2>
+          <p className="text-xs text-slate-400">{error || 'Session could not be loaded.'}</p>
+          <button
+            onClick={() => navigate('/register')}
+            className="px-6 py-2.5 rounded-xl bg-arena-cyan text-slate-950 text-xs font-mono font-bold hover:bg-cyan-300 transition-colors"
+          >
+            Return to Registration
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   const currentQ = questions[currentIndex];
   const answeredTotal = Object.keys(selectedAnswers).length;
   const isUrgent = (secondsRemaining ?? 300) <= 60;
+  const isBossTier = currentQ.difficulty === 'tough';
+
+  const getTierInfo = (diff: string) => {
+    if (diff === 'easy') return { label: 'TIER 1 // RECRUIT', pts: '10 PTS', color: 'text-emerald-400 border-emerald-500/40 bg-emerald-500/10' };
+    if (diff === 'medium') return { label: 'TIER 2 // WARRIOR', pts: '20 PTS', color: 'text-amber-400 border-amber-500/40 bg-amber-500/10' };
+    return { label: 'TIER 3 // BOSS CHALLENGE', pts: '30 PTS', color: 'text-red-400 border-red-500/50 bg-red-500/15' };
+  };
+
+  const tier = getTierInfo(currentQ.difficulty);
 
   return (
-    <div className="min-h-[calc(100vh-4rem)] cyber-grid-dense py-5 px-4 sm:px-6">
-      <div className="max-w-3xl mx-auto space-y-4">
+    <div className={`min-h-[calc(100vh-4rem)] py-6 px-4 sm:px-6 transition-colors duration-500 ${
+      isBossTier ? 'bg-[#060309] cyber-grid-dense' : 'cyber-grid'
+    }`}>
+      <div className="max-w-4xl mx-auto space-y-4">
 
-        {/* ── HUD Bar ── */}
-        <div className="glass-panel rounded-2xl px-4 py-3 border border-arena-border flex items-center justify-between gap-3 flex-wrap">
-          {/* Player */}
-          <div className="flex items-center gap-2.5 min-w-0">
-            <div className="w-8 h-8 rounded-lg bg-arena-card border border-arena-border flex items-center justify-center font-mono text-xs font-bold text-arena-greenNeon shrink-0">&gt;_</div>
+        {/* ── TOP ARENA HUD BAR ── */}
+        <div className="cyber-card px-5 py-3 border border-arena-border flex items-center justify-between gap-4 flex-wrap">
+          {/* Challenger Identity */}
+          <div className="flex items-center gap-3 min-w-0">
+            <div className="w-9 h-9 rounded-xl bg-[#070B14] border border-arena-cyan/30 flex items-center justify-center font-mono text-xs font-bold text-arena-cyan shrink-0">
+              &gt;_
+            </div>
             <div className="min-w-0">
-              <div className="text-[10px] font-mono text-slate-500 uppercase">Challenger</div>
-              <div className="text-sm font-bold text-white truncate">{participantName}</div>
+              <div className="text-[10px] font-mono text-slate-500 uppercase">CHALLENGER</div>
+              <div className="text-sm font-bold text-white font-sans truncate">{participantName}</div>
             </div>
           </div>
 
-          {/* Question dots */}
-          <div className="flex items-center gap-1.5">
+          {/* Question Stepper Indicator (Strict: 1 & 2 Easy, 3 & 4 Medium, 5 Tough) */}
+          <div className="flex items-center gap-2">
             {questions.map((q, idx) => {
               const isActive = currentIndex === idx;
-              const answered = !!selectedAnswers[q.id];
+              const isAnswered = !!selectedAnswers[q.id];
+              const isQBoss = q.difficulty === 'tough';
+
               return (
-                <button key={q.id} onClick={() => setCurrentIndex(idx)}
-                  className={`w-7 h-7 rounded-lg font-mono text-xs font-bold transition-all flex items-center justify-center border ${
-                    isActive ? 'bg-arena-violet text-white border-arena-violetLight scale-110 shadow-glow-violet'
-                    : answered ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40'
-                    : 'bg-arena-card text-slate-500 border-arena-border hover:text-white'
-                  }`} title={`Q${idx + 1}: ${answered ? 'Answered' : 'Unanswered'}`}
-                >{idx + 1}</button>
+                <button
+                  key={q.id}
+                  onClick={() => navigateToQuestion(idx)}
+                  className={`w-8 h-8 rounded-lg font-mono text-xs font-bold transition-all flex items-center justify-center border ${
+                    isActive
+                      ? isQBoss
+                        ? 'bg-red-600 text-white border-red-400 scale-110 shadow-glow-crimson'
+                        : 'bg-arena-cyan text-slate-950 border-cyan-300 scale-110 shadow-glow-cyan'
+                      : isAnswered
+                      ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40'
+                      : 'bg-[#080C14] text-slate-500 border-arena-border hover:text-white'
+                  }`}
+                  title={`Question ${idx + 1} (${q.difficulty.toUpperCase()}): ${isAnswered ? 'Answered' : 'Unanswered'}`}
+                >
+                  {isQBoss ? <Flame className="w-3.5 h-3.5" /> : idx + 1}
+                </button>
               );
             })}
           </div>
 
-          {/* Timer */}
-          <div className={`flex items-center gap-2 px-3.5 py-2 rounded-xl font-mono border transition-all shrink-0 ${
-            isUrgent ? 'bg-red-500/20 text-red-300 border-red-500/50 animate-pulse shadow-[0_0_20px_rgba(239,68,68,0.25)]'
-            : 'bg-arena-card text-white border-arena-border'
-          }`}>
-            <Clock className={`w-4 h-4 ${isUrgent ? 'text-red-400' : 'text-arena-violetLight'}`} />
-            <span className="text-lg font-bold tracking-wider tabular-nums">
-              {secondsRemaining !== null ? formatTimer(secondsRemaining) : '--:--'}
-            </span>
-          </div>
-        </div>
-
-        {/* ── Mascot Companion ── */}
-        <div className="glass-panel rounded-xl px-4 py-2.5 border border-arena-border flex items-center justify-between gap-3">
-          <GeekroomMascotReaction size="sm" mood={mascotMood} message={mascotMessage} showSpeech />
-          <div className="hidden sm:flex items-center gap-3 text-xs font-mono text-slate-500 shrink-0">
-            <span className="text-arena-greenNeon font-semibold">{answeredTotal}/5</span>
-            <span>answered</span>
-            <span className="text-slate-700">|</span>
-            <span>Max score: <strong className="text-white">90 pts</strong></span>
-          </div>
-        </div>
-
-        {/* ── Question Card ── */}
-        <AnimatePresence mode="wait">
-          <motion.div key={currentQ.id}
-            initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}
-            transition={{ duration: 0.2 }}
-            className="glass-panel-glow rounded-2xl border border-arena-violet/20 overflow-hidden shadow-xl"
+          {/* Synchronized Countdown Timer */}
+          <div
+            className={`flex items-center gap-2.5 px-4 py-2 rounded-xl font-mono border transition-all shrink-0 ${
+              isUrgent
+                ? 'bg-red-500/20 text-red-300 border-red-500 animate-pulse shadow-glow-crimson'
+                : 'bg-[#080C14] text-white border-arena-border'
+            }`}
           >
-            {/* Card header stripe */}
-            <div className="h-1 w-full bg-gradient-to-r from-arena-violet via-arena-cyanLight to-arena-greenNeon" />
+            <Clock className={`w-4 h-4 ${isUrgent ? 'text-red-400' : 'text-arena-cyan'}`} />
+            <div className="text-right">
+              <div className="text-[9px] text-slate-400 uppercase leading-none">TIME REMAINING</div>
+              <div className="text-base font-bold tracking-wider leading-none mt-1">
+                {secondsRemaining !== null ? formatTimer(secondsRemaining) : '--:--'}
+              </div>
+            </div>
+          </div>
+        </div>
 
-            <div className="p-5 sm:p-7 space-y-5">
-              {/* Meta row */}
-              <div className="flex items-center justify-between gap-3 flex-wrap">
-                <div className="flex items-center gap-2 font-mono text-xs text-slate-500">
-                  <span className="px-2 py-0.5 rounded bg-white/5 border border-white/5 text-slate-400">
-                    Q{currentIndex + 1} / {questions.length}
-                  </span>
-                  <span>•</span>
-                  <span>{currentQ.category}</span>
-                </div>
-                {getDifficultyBadge(currentQ.difficulty)}
+        {/* ── BITBYTE COMPANION BANNER ── */}
+        <div className="cyber-card p-3 border border-arena-border flex items-center justify-between gap-4">
+          <GeekroomMascotReaction
+            size="sm"
+            mood={mascotMood}
+            message={mascotMessage}
+            showSpeech={true}
+          />
+
+          <div className="hidden sm:flex items-center gap-3 text-xs font-mono text-slate-400 shrink-0">
+            <span>
+              STATUS: <strong className="text-arena-cyan">{answeredTotal}/5 LOCKED</strong>
+            </span>
+            <span>•</span>
+            <span>MAX: 90 PTS</span>
+          </div>
+        </div>
+
+        {/* ── QUESTION CARD ── */}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={currentQ.id}
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -20 }}
+            transition={{ duration: 0.2 }}
+            className={`p-6 sm:p-8 transition-all ${
+              isBossTier ? 'cyber-card-crimson' : 'cyber-card'
+            }`}
+          >
+            {/* Boss Level Alert Banner */}
+            {isBossTier && (
+              <div className="mb-4 p-2.5 rounded-lg bg-red-500/20 border border-red-500/40 text-red-200 text-xs font-mono flex items-center justify-between">
+                <span className="flex items-center gap-2 font-bold uppercase tracking-wider">
+                  <Flame className="w-4 h-4 text-red-400 animate-pulse" />
+                  BOSS ENCOUNTER // MAXIMUM DIFFICULTY
+                </span>
+                <span className="text-red-300 font-bold">30 POINTS</span>
+              </div>
+            )}
+
+            {/* Question Header Meta */}
+            <div className="flex items-center justify-between gap-3 pb-4 border-b border-white/10">
+              <div className="flex items-center gap-2.5 font-mono text-xs">
+                <span className="px-2.5 py-1 rounded-md bg-white/5 border border-white/10 text-slate-300">
+                  QUESTION {currentIndex + 1} OF {questions.length}
+                </span>
+                <span className="text-slate-500">•</span>
+                <span className="text-slate-400 uppercase">{currentQ.category}</span>
               </div>
 
-              {/* Question text */}
-              <h2 className="text-base sm:text-lg font-semibold text-white leading-relaxed">
-                {currentQ.text}
-              </h2>
+              <span className={`px-3 py-1 rounded-full text-xs font-mono font-bold border ${tier.color}`}>
+                {tier.label} · {tier.pts}
+              </span>
+            </div>
 
-              {/* Options */}
-              <div className="space-y-2.5 pt-1">
-                <p className="text-[11px] font-mono uppercase tracking-wider text-slate-500 flex items-center justify-between">
-                  <span>Select your answer</span>
-                  <span className="text-slate-600">Keyboard: [1] [2] [3] [4]</span>
-                </p>
+            {/* Question Text */}
+            <h2 className="text-lg sm:text-xl font-semibold text-white leading-relaxed my-5 font-sans">
+              {currentQ.text}
+            </h2>
 
-                <div className="grid gap-2.5">
-                  {currentQ.options.map((option, optIdx) => {
-                    const isSelected = selectedAnswers[currentQ.id] === option;
-                    const letter = ['A', 'B', 'C', 'D'][optIdx];
-                    return (
-                      <motion.button
-                        key={optIdx} whileTap={{ scale: 0.98 }}
-                        onClick={() => handleSelectOption(currentQ.id, option)}
-                        className={`w-full text-left p-4 rounded-xl border transition-all duration-150 flex items-center gap-3.5 group ${
-                          isSelected
-                            ? 'bg-arena-violet/20 border-arena-violet shadow-glow-violet text-white'
-                            : 'bg-[#090D17] border-arena-border hover:border-slate-600 hover:bg-white/[0.03] text-slate-300'
-                        }`}
-                      >
-                        <span className={`w-7 h-7 rounded-lg font-mono text-xs font-bold flex items-center justify-center border shrink-0 transition-colors ${
-                          isSelected ? 'bg-arena-violet text-white border-white/20'
-                          : 'bg-white/5 text-slate-500 border-white/10 group-hover:text-slate-200 group-hover:border-white/20'
-                        }`}>{letter}</span>
-                        <span className="font-mono text-sm leading-snug flex-1">{option}</span>
-                        {isSelected
-                          ? <CheckCircle2 className="w-5 h-5 text-arena-greenNeon shrink-0" />
-                          : <Circle className="w-5 h-5 text-slate-700 group-hover:text-slate-500 shrink-0 transition-colors" />
-                        }
-                      </motion.button>
-                    );
-                  })}
-                </div>
+            {/* Answer Options */}
+            <div className="space-y-3 pt-2">
+              <div className="text-[11px] font-mono uppercase tracking-wider text-slate-400 flex items-center justify-between">
+                <span>SELECT AN ANSWER:</span>
+                <span className="text-slate-500">HOTKEYS: [1] [2] [3] [4] or [A] [B] [C] [D]</span>
               </div>
 
-              {/* Navigation */}
-              <div className="flex items-center justify-between pt-2 border-t border-white/5">
-                <button onClick={() => setCurrentIndex((i) => Math.max(0, i - 1))}
-                  disabled={currentIndex === 0}
-                  className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl border border-arena-border text-xs font-semibold text-slate-400 hover:text-white hover:bg-white/5 disabled:opacity-25 disabled:pointer-events-none transition-colors"
-                >
-                  <ChevronLeft className="w-4 h-4" /> Previous
-                </button>
+              <div className="grid grid-cols-1 gap-2.5">
+                {currentQ.options.map((option, optIdx) => {
+                  const isSelected = selectedAnswers[currentQ.id] === option;
+                  const keyLetter = ['A', 'B', 'C', 'D'][optIdx];
 
+                  return (
+                    <motion.button
+                      key={optIdx}
+                      whileTap={{ scale: 0.985 }}
+                      onClick={() => handleSelectOption(currentQ.id, option)}
+                      className={`w-full text-left p-4 rounded-xl border transition-all duration-150 flex items-center justify-between group ${
+                        isSelected
+                          ? isBossTier
+                            ? 'bg-red-500/20 border-red-500 shadow-glow-crimson text-white'
+                            : 'bg-arena-cyan/20 border-arena-cyan shadow-glow-cyan text-white'
+                          : 'bg-[#080C14] border-arena-border hover:border-slate-500 hover:bg-white/[0.03] text-slate-300'
+                      }`}
+                    >
+                      <div className="flex items-center gap-3.5">
+                        <span
+                          className={`w-7 h-7 rounded-lg font-mono text-xs font-bold flex items-center justify-center border transition-colors ${
+                            isSelected
+                              ? isBossTier
+                                ? 'bg-red-600 text-white border-white/20'
+                                : 'bg-arena-cyan text-slate-950 border-white/20'
+                              : 'bg-white/5 text-slate-400 border-white/10 group-hover:text-white'
+                          }`}
+                        >
+                          {keyLetter}
+                        </span>
+                        <span className="font-mono text-sm leading-snug">{option}</span>
+                      </div>
+
+                      <div className="ml-3">
+                        {isSelected ? (
+                          <CheckCircle2
+                            className={`w-5 h-5 shrink-0 ${
+                              isBossTier ? 'text-red-400' : 'text-arena-cyan'
+                            }`}
+                          />
+                        ) : (
+                          <Circle className="w-5 h-5 text-slate-700 shrink-0 group-hover:text-slate-500" />
+                        )}
+                      </div>
+                    </motion.button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Navigation Controls */}
+            <div className="flex items-center justify-between pt-6 mt-6 border-t border-white/10">
+              <button
+                onClick={() => navigateToQuestion(currentIndex - 1)}
+                disabled={currentIndex === 0}
+                className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl border border-arena-border text-xs font-mono text-slate-400 hover:text-white hover:bg-white/5 disabled:opacity-20 disabled:pointer-events-none transition-colors"
+              >
+                <ChevronLeft className="w-4 h-4" />
+                <span>PREVIOUS</span>
+              </button>
+
+              <div className="flex items-center gap-3 font-mono">
                 {currentIndex < questions.length - 1 ? (
-                  <button onClick={() => setCurrentIndex((i) => Math.min(questions.length - 1, i + 1))}
-                    className="flex items-center gap-1.5 px-5 py-2.5 rounded-xl bg-white/8 hover:bg-white/12 border border-white/10 text-xs font-semibold text-white transition-colors"
+                  <button
+                    onClick={() => navigateToQuestion(currentIndex + 1)}
+                    className="flex items-center gap-1.5 px-5 py-2.5 rounded-xl bg-white/10 hover:bg-white/15 text-xs font-bold text-white transition-colors"
                   >
-                    Next <ChevronRight className="w-4 h-4" />
+                    <span>NEXT CHALLENGE</span>
+                    <ChevronRight className="w-4 h-4" />
                   </button>
                 ) : (
-                  <button onClick={() => setShowConfirmModal(true)}
-                    className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-arena-greenNeon hover:bg-emerald-400 text-slate-950 font-bold text-xs shadow-glow-green transition-all hover:scale-105 active:scale-95"
+                  <button
+                    onClick={() => {
+                      sounds.playSelect();
+                      setShowConfirmModal(true);
+                    }}
+                    className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-arena-cyan text-slate-950 font-bold text-xs uppercase tracking-wider shadow-glow-cyan hover:bg-cyan-300 transition-all hover:scale-105 active:scale-95"
                   >
-                    <Send className="w-3.5 h-3.5" /> Submit Quiz
+                    <Send className="w-3.5 h-3.5" />
+                    <span>SUBMIT QUIZ</span>
                   </button>
                 )}
               </div>
@@ -335,68 +466,89 @@ export const QuizArenaPage: React.FC = () => {
           </motion.div>
         </AnimatePresence>
 
-        {/* ── Quick Submit CTA (visible when all answered) ── */}
+        {/* Quick Submit Floating Bar (when all 5 answered) */}
         {answeredTotal === questions.length && currentIndex < questions.length - 1 && (
-          <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
-            className="glass-panel rounded-xl p-4 border border-emerald-500/30 flex items-center justify-between gap-4"
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="cyber-card p-3.5 border border-emerald-500/40 flex items-center justify-between gap-4 font-mono text-xs"
           >
-            <div className="flex items-center gap-2.5 text-xs">
-              <CheckCircle2 className="w-5 h-5 text-arena-greenNeon" />
-              <span className="text-slate-300">All questions answered. Ready to submit?</span>
+            <div className="flex items-center gap-2 text-emerald-300">
+              <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+              <span>All 5 questions answered! Ready to lock in your score?</span>
             </div>
-            <button onClick={() => setShowConfirmModal(true)}
-              className="flex items-center gap-2 px-5 py-2 rounded-xl bg-arena-greenNeon text-slate-950 font-bold text-xs hover:bg-emerald-400 transition-colors shrink-0"
+            <button
+              onClick={() => {
+                sounds.playSelect();
+                setShowConfirmModal(true);
+              }}
+              className="px-4 py-1.5 rounded-lg bg-emerald-400 text-slate-950 font-bold hover:bg-emerald-300 transition-colors shrink-0"
             >
-              <Send className="w-3.5 h-3.5" /> Submit Now
+              Submit Now
             </button>
           </motion.div>
         )}
       </div>
 
-      {/* ── Confirm Submit Modal ── */}
+      {/* ── CONFIRMATION MODAL ── */}
       <AnimatePresence>
         {showConfirmModal && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-md">
-            <motion.div initial={{ opacity: 0, scale: 0.92 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.92 }}
-              className="w-full max-w-md glass-panel p-6 rounded-2xl border border-arena-border shadow-2xl space-y-5"
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.94 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.94 }}
+              className="cyber-card w-full max-w-md p-6 border border-arena-cyan/40 shadow-2xl space-y-4"
             >
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-arena-greenNeon/10 flex items-center justify-center text-arena-greenNeon">
+                <div className="w-10 h-10 rounded-xl bg-arena-cyan/20 flex items-center justify-center text-arena-cyan">
                   <Send className="w-5 h-5" />
                 </div>
                 <div>
-                  <h3 className="text-base font-bold text-white">Final Submission</h3>
-                  <p className="text-xs text-slate-400">You cannot change answers after submission.</p>
+                  <h3 className="text-base font-bold text-white font-display">Confirm Submission</h3>
+                  <p className="text-xs text-slate-400">Locking in your answers on the server</p>
                 </div>
               </div>
 
-              <div className="p-4 rounded-xl bg-[#090D17] border border-arena-border text-xs space-y-2.5 font-mono">
+              <div className="p-4 rounded-xl bg-[#080C14] border border-arena-border text-xs space-y-2 font-mono">
                 <div className="flex justify-between text-slate-300">
-                  <span>Questions Answered</span>
-                  <strong className={answeredTotal === 5 ? 'text-arena-greenNeon' : 'text-amber-400'}>{answeredTotal} / 5</strong>
+                  <span>Questions Answered:</span>
+                  <strong className={answeredTotal === 5 ? 'text-arena-cyan' : 'text-amber-400'}>
+                    {answeredTotal} OF 5
+                  </strong>
                 </div>
                 {answeredTotal < 5 && (
-                  <div className="flex items-start gap-2 text-amber-300 text-[11px] pt-1 border-t border-white/5">
-                    <AlertTriangle className="w-3.5 h-3.5 shrink-0 mt-0.5" />
-                    <span>{5 - answeredTotal} unanswered question(s) will score 0 points.</span>
+                  <div className="text-amber-400 flex items-center gap-1.5 text-[11px] pt-1 border-t border-white/5">
+                    <AlertTriangle className="w-3.5 h-3.5 shrink-0" />
+                    <span>
+                      {5 - answeredTotal} unanswered question(s) will be scored as 0 points.
+                    </span>
                   </div>
                 )}
-                <div className="flex justify-between text-slate-500 pt-1 border-t border-white/5">
-                  <span>Time remaining</span>
-                  <span>{secondsRemaining !== null ? formatTimer(secondsRemaining) : '--:--'}</span>
+                <div className="flex justify-between text-slate-400 pt-1 border-t border-white/5">
+                  <span>Time Remaining:</span>
+                  <span className="font-bold text-white">
+                    {secondsRemaining !== null ? formatTimer(secondsRemaining) : '--:--'}
+                  </span>
                 </div>
               </div>
 
-              <div className="flex gap-3">
-                <button onClick={() => setShowConfirmModal(false)} disabled={submitting}
-                  className="flex-1 py-2.5 rounded-xl border border-arena-border text-xs font-semibold text-slate-300 hover:bg-white/5 transition-colors"
+              <div className="flex items-center gap-3 pt-2 font-mono text-xs">
+                <button
+                  type="button"
+                  onClick={() => setShowConfirmModal(false)}
+                  disabled={submitting}
+                  className="w-1/2 py-2.5 rounded-xl border border-arena-border text-slate-300 hover:bg-white/5"
                 >
                   Review More
                 </button>
-                <button onClick={handleManualSubmit} disabled={submitting}
-                  className="flex-1 py-2.5 rounded-xl bg-arena-greenNeon text-slate-950 font-bold text-xs hover:bg-emerald-400 transition-colors"
+                <button
+                  type="button"
+                  onClick={handleManualSubmit}
+                  disabled={submitting}
+                  className="w-1/2 py-2.5 rounded-xl bg-arena-cyan text-slate-950 font-bold shadow-glow-cyan hover:bg-cyan-300 transition-colors"
                 >
-                  {submitting ? 'Submitting...' : 'Lock In Answers'}
+                  {submitting ? 'Evaluating...' : 'Yes, Submit Answers'}
                 </button>
               </div>
             </motion.div>
