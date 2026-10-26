@@ -64,10 +64,10 @@ export const LandingPage: React.FC = () => {
   };
 
   return (
-    <div className="relative min-h-[calc(100vh-4rem)] tech-grid overflow-hidden bg-carbon-950 text-carbon-50">
-      {/* Background Lighting Gradients - Soft, Architectural, Not AI-Neon */}
-      <div className="absolute top-1/4 left-1/4 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-lime/5 rounded-full blur-[140px] pointer-events-none" />
-      <div className="absolute bottom-20 right-10 w-[500px] h-[500px] bg-ember/5 rounded-full blur-[120px] pointer-events-none" />
+    <div className="relative min-h-[calc(100vh-4rem)] chessboard-grid overflow-hidden bg-carbon-950 text-carbon-50">
+      {/* Background Lighting Gradients - Chelsea Cobalt + Acid Lime */}
+      <div className="absolute top-1/4 left-1/4 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-blue-600/10 rounded-full blur-[160px] pointer-events-none" />
+      <div className="absolute bottom-20 right-10 w-[500px] h-[500px] bg-lime/5 rounded-full blur-[140px] pointer-events-none" />
 
       {/* ── 1. ARCHITECTURAL TOP TICKER TAPE (Chess Grandmaster Edition) ── */}
       <div className="w-full bg-[#101522] text-slate-300 py-2 overflow-hidden font-mono text-xs border-y border-white/10 select-none">
@@ -99,25 +99,28 @@ export const LandingPage: React.FC = () => {
             transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
             className="lg:col-span-7 space-y-6 text-center lg:text-left"
           >
-            {/* Badges */}
+            {/* Badges - Chelsea Matchday & Chess.com Grandmaster Vibe */}
             <div className="flex flex-wrap items-center justify-center lg:justify-start gap-2.5 pt-1">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-950/70 text-blue-300 font-mono text-xs font-bold border border-blue-500/30">
+                <span>🦁</span> THE BLUES // MATCHDAY 2026
+              </span>
               <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-lime/10 text-lime font-mono text-xs font-bold border border-lime/30">
-                <Cpu className="w-3.5 h-3.5" /> GTBIT TECH ORIENTATION 2026
+                <span>♟</span> CHESS.COM x GEEKROOM
               </span>
               <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#161D2E] text-slate-300 font-mono text-xs font-bold border border-white/10">
-                <Code2 className="w-3.5 h-3.5 text-ember" /> GEEKROOM TECHNICAL SOCIETY
+                <Code2 className="w-3.5 h-3.5 text-ember" /> GTBIT ARENA
               </span>
             </div>
 
             {/* Editorial Headline */}
             <div className="space-y-1">
-              <div className="text-xs font-mono text-slate-400 tracking-[0.25em] uppercase font-bold">
-                [ DIVISION 01 // COMPETITIVE ARENA ]
+              <div className="text-xs font-mono text-blue-400 tracking-[0.25em] uppercase font-bold flex items-center justify-center lg:justify-start gap-2">
+                <span>[ STAMFORD TACTICAL PITCH // 5+0 BLITZ ]</span>
               </div>
               <h1 className="text-4xl sm:text-6xl md:text-7xl font-black tracking-tight text-white leading-[0.95] font-display">
                 OWN THE <br />
                 <span className="text-lime">
-                  CODE ARENA.
+                  CHESS ARENA.
                 </span>
               </h1>
             </div>
@@ -125,35 +128,35 @@ export const LandingPage: React.FC = () => {
             {/* Tagline */}
             <div className="space-y-2">
               <p className="text-lg sm:text-xl font-bold text-slate-200 font-mono tracking-wide">
-                “Think Fast. Code Smart. Own the Arena.”
+                “Think 3 Moves Ahead. Code Smart. Checkmate the Board.”
               </p>
               <div className="font-mono text-[9px] tracking-[0.25em] text-slate-500 select-none hidden sm:block">
-                ||| |||| | ||||| || |||||| |||| | || [GKR-GTBIT-2026-CHALLENGE]
+                ||| |||| | ||||| || |||||| |||| | || [CHELSEA-FC-STAMFORD-CHESS-ENGINE]
               </div>
             </div>
 
             <p className="text-sm sm:text-base text-slate-300 max-w-xl mx-auto lg:mx-0 leading-relaxed font-sans">
-              The official competitive coding gauntlet for first-year engineering students. 
-              Five randomized questions, strict progressive difficulty order, and a 5-minute countdown clock. 
-              No logins, zero friction — test your algorithms acumen and claim the live podium.
+              The premier competitive coding tournament for first-year engineering students. 
+              Five tactical moves, opening theory through the endgame, and a 5-minute blitz clock. 
+              Calculate deep, pre-move with precision, and lift the trophy at the top of the leaderboard.
             </p>
 
-            {/* Progression Pills */}
+            {/* Progression Pills (Opening, Middlegame, Endgame) */}
             <div className="flex flex-wrap items-center justify-center lg:justify-start gap-2.5 pt-1 font-mono text-xs">
               <div className="px-3.5 py-1.5 rounded-xl bg-[#101522] border border-white/10 text-slate-300 flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-lime animate-pulse" />
-                <span>2 Easy (20 pts)</span>
+                <span className="text-sm">♟</span>
+                <span>2 Opening (20p)</span>
               </div>
               <div className="px-3.5 py-1.5 rounded-xl bg-[#101522] border border-white/10 text-slate-300 flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-ember animate-pulse" />
-                <span>2 Medium (40 pts)</span>
+                <span className="text-sm text-ember">♞</span>
+                <span>2 Middlegame (40p)</span>
               </div>
               <div className="px-3.5 py-1.5 rounded-xl bg-[#101522] border border-rose-500/30 text-rose-300 flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-rose-500 animate-pulse" />
-                <span>1 Tough (30 pts)</span>
+                <span className="text-sm text-rose-400">♚</span>
+                <span>1 Endgame (30p)</span>
               </div>
               <div className="px-3.5 py-1.5 rounded-xl bg-lime/10 border border-lime/40 text-lime font-bold">
-                MAX 90 PTS
+                MAX 90 PTS // 2850 ELO
               </div>
             </div>
 
@@ -165,7 +168,7 @@ export const LandingPage: React.FC = () => {
                 className="w-full sm:w-auto inline-flex items-center justify-center gap-3 px-8 py-4 rounded-xl btn-primary text-sm uppercase tracking-wider"
               >
                 <Play className="w-4 h-4 fill-current" />
-                <span>START CHALLENGE</span>
+                <span>♟ 1. e4 ENTER THE ARENA</span>
               </Link>
 
               <Link

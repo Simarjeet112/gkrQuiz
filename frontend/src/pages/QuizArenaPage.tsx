@@ -251,6 +251,21 @@ export const QuizArenaPage: React.FC = () => {
   const isUrgent = (secondsRemaining ?? 300) <= 60;
   const isBossTier = currentQ.difficulty === 'tough';
 
+  // Chess.com Engine Evaluation Metric
+  const evalScore =
+    answeredTotal === 5
+      ? '#M1'
+      : answeredTotal === 4
+      ? '+6.8'
+      : answeredTotal === 3
+      ? '+4.2'
+      : answeredTotal === 2
+      ? '+2.1'
+      : answeredTotal === 1
+      ? '+0.8'
+      : '0.0';
+  const evalPercent = Math.min(100, Math.max(15, 50 + answeredTotal * 10));
+
   const getTierInfo = (diff: string) => {
     if (diff === 'easy') return { label: 'OPENING THEORY // ♟ MOVE 1-2', pts: '10 PTS', color: 'text-emerald-400 border-emerald-500/40 bg-emerald-500/10' };
     if (diff === 'medium') return { label: 'TACTICAL MIDDLEGAME // ♞ MOVE 3-4', pts: '20 PTS', color: 'text-amber-400 border-amber-500/40 bg-amber-500/10' };
@@ -260,18 +275,22 @@ export const QuizArenaPage: React.FC = () => {
   const tier = getTierInfo(currentQ.difficulty);
 
   return (
-    <div className="min-h-[calc(100vh-4rem)] py-6 px-4 sm:px-6 tech-grid bg-carbon-950 text-carbon-50">
+    <div className="min-h-[calc(100vh-4rem)] py-6 px-4 sm:px-6 chessboard-grid bg-carbon-950 text-carbon-50">
       <div className="max-w-4xl mx-auto space-y-4">
 
-        {/* ── TOP ARENA HUD BAR ── */}
+        {/* ── TOP ARENA HUD BAR (Chelsea Matchday & Chess Blitz) ── */}
         <div className="titanium-card px-5 py-3.5 flex items-center justify-between gap-4 flex-wrap border border-white/10">
-          {/* Challenger Identity */}
+          {/* Challenger Identity + Chelsea Pride */}
           <div className="flex items-center gap-3 min-w-0">
-            <div className="w-9 h-9 rounded-xl bg-[#07090E] border border-white/10 flex items-center justify-center font-mono text-xs font-bold text-lime shrink-0">
-              &gt;_
+            <div className="w-9 h-9 rounded-xl bg-blue-950/80 border border-blue-500/30 flex items-center justify-center font-mono text-sm font-bold text-blue-300 shrink-0">
+              🦁
             </div>
             <div className="min-w-0">
-              <div className="text-[10px] font-mono text-slate-500 uppercase">CHALLENGER</div>
+              <div className="flex items-center gap-1.5 text-[10px] font-mono text-blue-400 uppercase font-bold">
+                <span>THE BLUES</span>
+                <span className="text-slate-600">•</span>
+                <span>MATCHDAY 2026</span>
+              </div>
               <div className="text-sm font-bold text-white font-sans truncate">{participantName}</div>
             </div>
           </div>
@@ -347,142 +366,173 @@ export const QuizArenaPage: React.FC = () => {
           </div>
         </div>
 
-        {/* ── QUESTION CARD ── */}
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={currentQ.id}
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -20 }}
-            transition={{ duration: 0.2 }}
-            className={`p-6 sm:p-8 transition-all titanium-card ${
-              isBossTier ? 'border-rose-500/40 bg-[#15101A]' : 'border-white/10 bg-[#101522]'
-            }`}
-          >
-            {/* Boss Level Alert Banner */}
-            {isBossTier && (
-              <div className="mb-4 p-2.5 rounded-xl bg-rose-500/15 border border-rose-500/30 text-rose-200 text-xs font-mono flex items-center justify-between">
-                <span className="flex items-center gap-2 font-bold uppercase tracking-wider">
-                  <span className="text-base text-rose-400">♚</span>
-                  CRITICAL ENDGAME POSITION // GRANDMASTER PUZZLE
-                </span>
-                <span className="text-rose-300 font-bold">30 POINTS</span>
-              </div>
-            )}
-
-            {/* Question Header Meta */}
-            <div className="flex items-center justify-between gap-3 pb-4 border-b border-white/10">
-              <div className="flex items-center gap-2.5 font-mono text-xs">
-                <span className="px-2.5 py-1 rounded-md bg-white/5 border border-white/10 text-slate-300">
-                  MOVE {currentIndex + 1} OF {questions.length} // {currentIndex < 2 ? 'OPENING' : currentIndex < 4 ? 'MIDDLEGAME' : 'ENDGAME'}
-                </span>
-                <span className="text-slate-500">•</span>
-                <span className="text-slate-400 uppercase">{currentQ.category}</span>
-              </div>
-
-              <span className={`px-3 py-1 rounded-full text-xs font-mono font-bold border ${tier.color}`}>
-                {tier.label} · {tier.pts}
-              </span>
+        {/* ── QUESTION CARD WITH CHESS.COM EVALUATION BAR ── */}
+        <div className="flex gap-3 items-stretch">
+          {/* Vertical Chess.com Evaluation Bar */}
+          <div className="hidden sm:flex flex-col items-center justify-between py-3 px-1.5 rounded-2xl bg-[#091222] border border-blue-500/20 shrink-0 w-9 shadow-lg select-none">
+            <span className="text-[10px] font-mono font-black text-lime">
+              {evalScore}
+            </span>
+            <div className="eval-bar-track flex-1 my-2">
+              <div
+                className="eval-bar-fill"
+                style={{ height: `${evalPercent}%` }}
+              />
             </div>
+            <span className="text-[8px] font-mono text-blue-400 font-bold uppercase tracking-wider">
+              EVAL
+            </span>
+          </div>
 
-            {/* Question Text */}
-            <h2 className="text-lg sm:text-xl font-semibold text-white leading-relaxed my-5 font-sans">
-              {currentQ.text}
-            </h2>
+          <div className="flex-1 min-w-0">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={currentQ.id}
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+                transition={{ duration: 0.2 }}
+                className={`p-6 sm:p-8 transition-all titanium-card ${
+                  isBossTier ? 'border-rose-500/40 bg-[#15101A]' : 'border-blue-900/30 bg-[#0B1324]'
+                }`}
+              >
+                {/* Boss Level Alert Banner */}
+                {isBossTier && (
+                  <div className="mb-4 p-2.5 rounded-xl bg-rose-500/15 border border-rose-500/30 text-rose-200 text-xs font-mono flex items-center justify-between">
+                    <span className="flex items-center gap-2 font-bold uppercase tracking-wider">
+                      <span className="text-base text-rose-400">♚</span>
+                      CRITICAL ENDGAME POSITION // GRANDMASTER PUZZLE
+                    </span>
+                    <span className="text-rose-300 font-bold">30 POINTS</span>
+                  </div>
+                )}
 
-            {/* Answer Options */}
-            <div className="space-y-3 pt-2">
-              <div className="text-[11px] font-mono uppercase tracking-wider text-slate-400 flex items-center justify-between">
-                <span>SELECT AN ANSWER:</span>
-                <span className="text-slate-500">HOTKEYS: [1] [2] [3] [4] or [A] [B] [C] [D]</span>
-              </div>
+                {/* Question Header Meta */}
+                <div className="flex items-center justify-between gap-3 pb-4 border-b border-white/10">
+                  <div className="flex items-center gap-2.5 font-mono text-xs">
+                    <span className="px-2.5 py-1 rounded-md bg-white/5 border border-white/10 text-slate-300">
+                      MOVE {currentIndex + 1} OF {questions.length} // {currentIndex < 2 ? 'OPENING' : currentIndex < 4 ? 'MIDDLEGAME' : 'ENDGAME'}
+                    </span>
+                    <span className="text-slate-500">•</span>
+                    <span className="text-slate-400 uppercase">{currentQ.category}</span>
+                  </div>
 
-              <div className="grid grid-cols-1 gap-2.5">
-                {currentQ.options.map((option, optIdx) => {
-                  const isSelected = selectedAnswers[currentQ.id] === option;
-                  const keyLetter = ['A', 'B', 'C', 'D'][optIdx];
+                  <span className={`px-3 py-1 rounded-full text-xs font-mono font-bold border ${tier.color}`}>
+                    {tier.label} · {tier.pts}
+                  </span>
+                </div>
 
-                  return (
-                    <motion.button
-                      key={optIdx}
-                      whileTap={{ scale: 0.985 }}
-                      onClick={() => handleSelectOption(currentQ.id, option)}
-                      className={`w-full text-left p-4 rounded-xl border transition-all duration-150 flex items-center justify-between group ${
-                        isSelected
-                          ? isBossTier
-                            ? 'bg-rose-500/20 border-rose-500 text-white'
-                            : 'bg-lime/10 border-lime text-white'
-                          : 'bg-[#090D16] border-white/10 hover:border-lime/40 text-slate-300'
-                      }`}
-                    >
-                      <div className="flex items-center gap-3.5">
-                        <span
-                          className={`w-7 h-7 rounded-lg font-mono text-xs font-bold flex items-center justify-center border transition-colors ${
+                {/* Question Text */}
+                <h2 className="text-lg sm:text-xl font-semibold text-white leading-relaxed my-5 font-sans">
+                  {currentQ.text}
+                </h2>
+
+                {/* Answer Options */}
+                <div className="space-y-3 pt-2">
+                  <div className="text-[11px] font-mono uppercase tracking-wider text-slate-400 flex items-center justify-between">
+                    <span>SELECT AN ANSWER:</span>
+                    <span className="text-slate-500">HOTKEYS: [1] [2] [3] [4] or [A] [B] [C] [D]</span>
+                  </div>
+
+                  <div className="grid grid-cols-1 gap-2.5">
+                    {currentQ.options.map((option, optIdx) => {
+                      const isSelected = selectedAnswers[currentQ.id] === option;
+                      const keyLetter = ['A', 'B', 'C', 'D'][optIdx];
+
+                      return (
+                        <motion.button
+                          key={optIdx}
+                          whileTap={{ scale: 0.985 }}
+                          onClick={() => handleSelectOption(currentQ.id, option)}
+                          className={`w-full text-left p-4 rounded-xl border transition-all duration-150 flex items-center justify-between group ${
                             isSelected
                               ? isBossTier
-                                ? 'bg-rose-500 text-white border-white/20'
-                                : 'bg-lime text-carbon-950 border-white/20 font-black'
-                              : 'bg-white/5 text-slate-400 border-white/10 group-hover:text-white'
+                                ? 'bg-rose-500/20 border-rose-500 text-white'
+                                : 'bg-lime/10 border-lime text-white'
+                              : 'bg-[#070D1A] border-white/10 hover:border-blue-500/40 text-slate-300'
                           }`}
                         >
-                          {keyLetter}
-                        </span>
-                        <span className="font-mono text-sm leading-snug">{option}</span>
-                      </div>
+                          <div className="flex items-center gap-3.5">
+                            <span
+                              className={`w-7 h-7 rounded-lg font-mono text-xs font-bold flex items-center justify-center border transition-colors ${
+                                isSelected
+                                  ? isBossTier
+                                    ? 'bg-rose-500 text-white border-white/20'
+                                    : 'bg-lime text-carbon-950 border-white/20 font-black'
+                                  : 'bg-white/5 text-slate-400 border-white/10 group-hover:text-white'
+                              }`}
+                            >
+                              {keyLetter}
+                            </span>
+                            <span className="font-mono text-sm leading-snug">{option}</span>
+                          </div>
 
-                      <div className="ml-3">
-                        {isSelected ? (
-                          <CheckCircle2
-                            className={`w-5 h-5 shrink-0 ${
-                              isBossTier ? 'text-rose-400' : 'text-lime'
-                            }`}
-                          />
-                        ) : (
-                          <Circle className="w-5 h-5 text-slate-700 shrink-0 group-hover:text-slate-500" />
-                        )}
-                      </div>
-                    </motion.button>
-                  );
-                })}
-              </div>
-            </div>
+                          <div className="ml-3">
+                            {isSelected ? (
+                              <CheckCircle2
+                                className={`w-5 h-5 shrink-0 ${
+                                  isBossTier ? 'text-rose-400' : 'text-lime'
+                                }`}
+                              />
+                            ) : (
+                              <Circle className="w-5 h-5 text-slate-700 shrink-0 group-hover:text-slate-500" />
+                            )}
+                          </div>
+                        </motion.button>
+                      );
+                    })}
+                  </div>
+                </div>
 
-            {/* Navigation Controls */}
-            <div className="flex items-center justify-between pt-6 mt-6 border-t border-white/10">
-              <button
-                onClick={() => navigateToQuestion(currentIndex - 1)}
-                disabled={currentIndex === 0}
-                className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl btn-secondary text-xs font-mono disabled:opacity-20 disabled:pointer-events-none"
-              >
-                <ChevronLeft className="w-4 h-4" />
-                <span>PREVIOUS</span>
-              </button>
+                {/* Chessboard Coordinates Footer */}
+                <div className="pt-4 mt-5 border-t border-white/5 flex items-center justify-between text-[10px] font-mono text-slate-600 select-none">
+                  <span className="text-blue-400/70 font-bold">RANK {8 - currentIndex}</span>
+                  <div className="hidden sm:flex items-center gap-4 text-slate-500">
+                    {['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'].map((file) => (
+                      <span key={file}>{file}</span>
+                    ))}
+                  </div>
+                  <span>STOCKFISH EVAL: <strong className="text-lime">{evalScore}</strong></span>
+                </div>
 
-              <div className="flex items-center gap-3 font-mono">
-                {currentIndex < questions.length - 1 ? (
+                {/* Navigation Controls */}
+                <div className="flex items-center justify-between pt-6 mt-6 border-t border-white/10">
                   <button
-                    onClick={() => navigateToQuestion(currentIndex + 1)}
-                    className="flex items-center gap-1.5 px-5 py-2.5 rounded-xl btn-secondary text-xs font-bold"
+                    onClick={() => navigateToQuestion(currentIndex - 1)}
+                    disabled={currentIndex === 0}
+                    className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl btn-secondary text-xs font-mono disabled:opacity-20 disabled:pointer-events-none"
                   >
-                    <span>NEXT CHALLENGE</span>
-                    <ChevronRight className="w-4 h-4" />
+                    <ChevronLeft className="w-4 h-4" />
+                    <span>PREVIOUS</span>
                   </button>
-                ) : (
-                  <button
-                    onClick={() => {
-                      sounds.playSelect();
-                      setShowConfirmModal(true);
-                    }}
-                    className="flex items-center gap-2 px-6 py-2.5 rounded-xl btn-primary text-xs uppercase tracking-wider"
-                  >
-                    <Send className="w-3.5 h-3.5" />
-                    <span>SUBMIT QUIZ</span>
-                  </button>
-                )}
-              </div>
-            </div>
-          </motion.div>
-        </AnimatePresence>
+
+                  <div className="flex items-center gap-3 font-mono">
+                    {currentIndex < questions.length - 1 ? (
+                      <button
+                        onClick={() => navigateToQuestion(currentIndex + 1)}
+                        className="flex items-center gap-1.5 px-5 py-2.5 rounded-xl btn-secondary text-xs font-bold"
+                      >
+                        <span>NEXT CHALLENGE</span>
+                        <ChevronRight className="w-4 h-4" />
+                      </button>
+                    ) : (
+                      <button
+                        onClick={() => {
+                          sounds.playSelect();
+                          setShowConfirmModal(true);
+                        }}
+                        className="flex items-center gap-2 px-6 py-2.5 rounded-xl btn-primary text-xs uppercase tracking-wider"
+                      >
+                        <Send className="w-3.5 h-3.5" />
+                        <span>♟ SUBMIT ARENA CHALLENGE</span>
+                      </button>
+                    )}
+                  </div>
+                </div>
+              </motion.div>
+            </AnimatePresence>
+          </div>
+        </div>
 
         {/* Quick Submit Floating Bar (when all 5 answered) */}
         {answeredTotal === questions.length && currentIndex < questions.length - 1 && (
