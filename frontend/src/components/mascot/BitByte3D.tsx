@@ -4,18 +4,15 @@ import { Float, Sparkles, RoundedBox } from '@react-three/drei';
 import * as THREE from 'three';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  Sparkles as SparklesIcon,
   Flame,
   Zap,
   HelpCircle,
   AlertTriangle,
   Award,
-  Crown,
   Code2,
 } from 'lucide-react';
 import {
   BitByteMood,
-  MascotType,
   getMascotDialogue,
   getRandomClickDialogue,
 } from './bitbyteDialogue';
@@ -23,7 +20,6 @@ import { soundEffects } from '../../utils/soundEffects';
 
 export interface BitByte3DProps {
   mood?: BitByteMood;
-  mascotType?: MascotType;
   customMessage?: string;
   size?: 'hero' | 'companion' | 'mini';
   className?: string;
@@ -32,16 +28,14 @@ export interface BitByte3DProps {
   interactive?: boolean;
 }
 
-// ── 3D MASCOT MODEL (Supports both Coder Bot & Chelsea Chess Grandmaster) ──
+// ── 3D BITBYTE MODEL (Official Geekroom Coder Bot with < / > bracket ears & jersey) ──
 function BitByteModel({
   mood,
-  mascotType = 'coder',
   mousePos,
   isClicked,
   onTriggerClick,
 }: {
   mood: BitByteMood;
-  mascotType: MascotType;
   mousePos: { x: number; y: number };
   isClicked: boolean;
   onTriggerClick: () => void;
@@ -63,12 +57,10 @@ function BitByteModel({
   const blinkTimer = useRef(0);
   const eyeScaleY = useRef(1);
 
-  const isChelsea = mascotType === 'chelsea_chess';
-
   useFrame((state, delta) => {
     const t = state.clock.getElapsedTime();
 
-    // 1. Digital Eye Blinking & Pupil Tracking
+    // 1. Digital Eye Blinking & Tracking
     blinkTimer.current += delta;
     if (blinkTimer.current > 3.6) {
       eyeScaleY.current = 0.08;
@@ -124,7 +116,7 @@ function BitByteModel({
       }
     }
 
-    // 3. Ears Articulation
+    // 3. Bracket Ears Articulation
     if (leftEarRef.current && rightEarRef.current) {
       if (mood === 'excited' || mood === 'victory') {
         const flap = Math.sin(t * 14) * 0.28;
@@ -142,13 +134,10 @@ function BitByteModel({
       }
     }
 
-    // 4. Top Crown / Antenna Pulse & Wiggle
+    // 4. Top Orange Antenna Pulse & Wiggle
     if (antennaRef.current) {
       const wiggleSpeed = mood === 'excited' || mood === 'speed_mode' ? 12 : 3;
-      antennaRef.current.rotation.z = Math.sin(t * wiggleSpeed) * 0.1;
-      if (isChelsea) {
-        antennaRef.current.rotation.y = Math.sin(t * 2) * 0.15;
-      }
+      antennaRef.current.rotation.z = Math.sin(t * wiggleSpeed) * 0.12;
     }
 
     // 5. Arm & Hand Kinematics
@@ -213,30 +202,23 @@ function BitByteModel({
     }
   });
 
-  // Eye color depending on mood and mascot identity
+  // Eye color depending on mood
   const eyeColor = useMemo(() => {
     switch (mood) {
       case 'tough':
       case 'low_time':
-        return '#FF0055'; // Intense warning crimson
+        return '#FF0055'; // Intense warning red / crimson
       case 'speed_mode':
-        return isChelsea ? '#FFD700' : '#00F0FF';
+        return '#00F0FF'; // Hyper cyan
       case 'excited':
       case 'victory':
-        return '#00FF9D'; // Neon victory emerald
+        return '#00FF9D'; // Neon emerald victory
       case 'wrong_answer':
         return '#38BDF8';
       default:
-        return isChelsea ? '#FFE066' : '#FFFFFF'; // Chelsea GM warm gold or crisp white
+        return '#FFFFFF';
     }
-  }, [mood, isChelsea]);
-
-  // Color tokens based on Mascot Identity
-  const chassisColor = isChelsea ? '#052A75' : '#1A243B';
-  const bezelColor = isChelsea ? '#FFD700' : '#00F0FF';
-  const jerseyColor = isChelsea ? '#034694' : '#101626';
-  const accentLight = isChelsea ? '#00A3FF' : '#00F0FF';
-  const secondaryAccent = isChelsea ? '#FFD700' : '#FF6B00';
+  }, [mood]);
 
   return (
     <group ref={rootRef} position={[0, -0.05, 0]}>
@@ -255,26 +237,26 @@ function BitByteModel({
       >
         {/* ── 1. HEAD & VISOR ── */}
         <group ref={headRef} position={[0, 0.42, 0]}>
-          {/* Main Helmet / Outer Chassis */}
+          {/* Main Helmet (Metallic Slate-Navy) */}
           <RoundedBox args={[1.28, 1.1, 0.96]} radius={0.24} smoothness={4} position={[0, 0.36, 0]}>
             <meshStandardMaterial
-              color={chassisColor}
+              color="#1A243B"
               roughness={0.22}
               metalness={0.7}
               envMapIntensity={1.5}
             />
           </RoundedBox>
 
-          {/* Visor Bezel (Gold for Chelsea GM, Cyan for Coder) */}
+          {/* Cyan Screen Frame Bezel */}
           <RoundedBox args={[1.08, 0.9, 0.05]} radius={0.16} smoothness={4} position={[0, 0.36, 0.47]}>
             <meshStandardMaterial
-              color={bezelColor}
-              emissive={bezelColor}
-              emissiveIntensity={isChelsea ? 1.4 : 1.8}
+              color="#00F0FF"
+              emissive="#00F0FF"
+              emissiveIntensity={1.8}
             />
           </RoundedBox>
 
-          {/* Deep Visor Screen Face */}
+          {/* Deep Visor Face */}
           <RoundedBox args={[0.98, 0.8, 0.04]} radius={0.12} smoothness={4} position={[0, 0.36, 0.50]}>
             <meshStandardMaterial
               color="#060913"
@@ -305,255 +287,131 @@ function BitByteModel({
             />
           </mesh>
 
-          {/* ── EARS: CODER BRACKETS vs CHELSEA LION/ROOK WINGS ── */}
-          {isChelsea ? (
-            <>
-              {/* Chelsea Gold Rook Wing Left Ear */}
-              <group ref={leftEarRef} position={[-0.78, 0.36, 0]}>
-                <mesh rotation={[0, 0, 0.2]}>
-                  <boxGeometry args={[0.18, 0.42, 0.22]} />
-                  <meshStandardMaterial color="#FFD700" metalness={0.85} roughness={0.2} />
-                </mesh>
-                <mesh position={[-0.08, 0, 0]}>
-                  <boxGeometry args={[0.04, 0.32, 0.18]} />
-                  <meshStandardMaterial color="#00A3FF" emissive="#00A3FF" emissiveIntensity={2.0} />
-                </mesh>
-              </group>
+          {/* Left Bracket Ear (<) */}
+          <group ref={leftEarRef} position={[-0.8, 0.36, 0]}>
+            <mesh rotation={[0, 0, Math.PI / 4]}>
+              <boxGeometry args={[0.34, 0.08, 0.16]} />
+              <meshStandardMaterial color="#00F0FF" emissive="#00F0FF" emissiveIntensity={2.2} />
+            </mesh>
+            <mesh rotation={[0, 0, -Math.PI / 4]}>
+              <boxGeometry args={[0.34, 0.08, 0.16]} />
+              <meshStandardMaterial color="#00F0FF" emissive="#00F0FF" emissiveIntensity={2.2} />
+            </mesh>
+          </group>
 
-              {/* Chelsea Gold Rook Wing Right Ear */}
-              <group ref={rightEarRef} position={[0.78, 0.36, 0]}>
-                <mesh rotation={[0, 0, -0.2]}>
-                  <boxGeometry args={[0.18, 0.42, 0.22]} />
-                  <meshStandardMaterial color="#FFD700" metalness={0.85} roughness={0.2} />
-                </mesh>
-                <mesh position={[0.08, 0, 0]}>
-                  <boxGeometry args={[0.04, 0.32, 0.18]} />
-                  <meshStandardMaterial color="#00A3FF" emissive="#00A3FF" emissiveIntensity={2.0} />
-                </mesh>
-              </group>
-            </>
-          ) : (
-            <>
-              {/* Left Bracket Ear (<) */}
-              <group ref={leftEarRef} position={[-0.8, 0.36, 0]}>
-                <mesh rotation={[0, 0, Math.PI / 4]}>
-                  <boxGeometry args={[0.34, 0.08, 0.16]} />
-                  <meshStandardMaterial color="#00F0FF" emissive="#00F0FF" emissiveIntensity={2.2} />
-                </mesh>
-                <mesh rotation={[0, 0, -Math.PI / 4]}>
-                  <boxGeometry args={[0.34, 0.08, 0.16]} />
-                  <meshStandardMaterial color="#00F0FF" emissive="#00F0FF" emissiveIntensity={2.2} />
-                </mesh>
-              </group>
+          {/* Right Bracket Ear (>) */}
+          <group ref={rightEarRef} position={[0.8, 0.36, 0]}>
+            <mesh rotation={[0, 0, Math.PI / 4]}>
+              <boxGeometry args={[0.34, 0.08, 0.16]} />
+              <meshStandardMaterial color="#00F0FF" emissive="#00F0FF" emissiveIntensity={2.2} />
+            </mesh>
+            <mesh rotation={[0, 0, -Math.PI / 4]}>
+              <boxGeometry args={[0.34, 0.08, 0.16]} />
+              <meshStandardMaterial color="#00F0FF" emissive="#00F0FF" emissiveIntensity={2.2} />
+            </mesh>
+          </group>
 
-              {/* Right Bracket Ear (>) */}
-              <group ref={rightEarRef} position={[0.8, 0.36, 0]}>
-                <mesh rotation={[0, 0, Math.PI / 4]}>
-                  <boxGeometry args={[0.34, 0.08, 0.16]} />
-                  <meshStandardMaterial color="#00F0FF" emissive="#00F0FF" emissiveIntensity={2.2} />
-                </mesh>
-                <mesh rotation={[0, 0, -Math.PI / 4]}>
-                  <boxGeometry args={[0.34, 0.08, 0.16]} />
-                  <meshStandardMaterial color="#00F0FF" emissive="#00F0FF" emissiveIntensity={2.2} />
-                </mesh>
-              </group>
-            </>
-          )}
-
-          {/* ── TOP HEADPIECE: ORANGE CODER ANTENNA vs GOLDEN CHELSEA GRANDMASTER CROWN ── */}
-          <group ref={antennaRef} position={[0, 0.98, 0]}>
-            {isChelsea ? (
-              /* Golden Grandmaster 3-Peak Crown with Center Sapphire */
-              <group position={[0, 0.02, 0]}>
-                {/* Crown base ring */}
-                <mesh position={[0, 0, 0]}>
-                  <cylinderGeometry args={[0.34, 0.36, 0.1, 24]} />
-                  <meshStandardMaterial color="#FFD700" metalness={0.9} roughness={0.15} />
-                </mesh>
-                {/* Center Peak */}
-                <mesh position={[0, 0.15, 0]}>
-                  <coneGeometry args={[0.11, 0.24, 16]} />
-                  <meshStandardMaterial color="#FFD700" metalness={0.9} roughness={0.15} />
-                </mesh>
-                {/* Left Peak */}
-                <mesh position={[-0.2, 0.1, 0]} rotation={[0, 0, 0.28]}>
-                  <coneGeometry args={[0.08, 0.18, 16]} />
-                  <meshStandardMaterial color="#FFD700" metalness={0.9} roughness={0.15} />
-                </mesh>
-                {/* Right Peak */}
-                <mesh position={[0.2, 0.1, 0]} rotation={[0, 0, -0.28]}>
-                  <coneGeometry args={[0.08, 0.18, 16]} />
-                  <meshStandardMaterial color="#FFD700" metalness={0.9} roughness={0.15} />
-                </mesh>
-                {/* Glowing Chelsea Blue Crown Jewel Gem */}
-                <mesh position={[0, 0.05, 0.22]}>
-                  <sphereGeometry args={[0.06, 16, 16]} />
-                  <meshStandardMaterial
-                    color="#00A3FF"
-                    emissive="#00A3FF"
-                    emissiveIntensity={2.8}
-                    toneMapped={false}
-                  />
-                </mesh>
-              </group>
-            ) : (
-              /* Geekroom Orange Antenna (/ with ball) */
-              <>
-                <mesh rotation={[0, 0, -0.15]}>
-                  <cylinderGeometry args={[0.03, 0.04, 0.28, 16]} />
-                  <meshStandardMaterial color="#FF6B00" metalness={0.7} roughness={0.3} />
-                </mesh>
-                <mesh position={[0.04, 0.18, 0]}>
-                  <sphereGeometry args={[0.08, 20, 20]} />
-                  <meshStandardMaterial
-                    color="#FF6B00"
-                    emissive="#FF6B00"
-                    emissiveIntensity={3.0}
-                    toneMapped={false}
-                  />
-                </mesh>
-              </>
-            )}
+          {/* Top Geekroom Orange Antenna (/ with ball) */}
+          <group ref={antennaRef} position={[0, 1.0, 0]}>
+            <mesh rotation={[0, 0, -0.15]}>
+              <cylinderGeometry args={[0.03, 0.04, 0.28, 16]} />
+              <meshStandardMaterial color="#FF6B00" metalness={0.7} roughness={0.3} />
+            </mesh>
+            <mesh position={[0.04, 0.18, 0]}>
+              <sphereGeometry args={[0.08, 20, 20]} />
+              <meshStandardMaterial
+                color="#FF6B00"
+                emissive="#FF6B00"
+                emissiveIntensity={3.0}
+                toneMapped={false}
+              />
+            </mesh>
           </group>
 
           {/* Cyber Neck Collar */}
           <mesh position={[0, -0.28, 0]}>
             <cylinderGeometry args={[0.32, 0.38, 0.12, 24]} />
-            <meshStandardMaterial color={isChelsea ? '#081D45' : '#22304E'} metalness={0.8} />
+            <meshStandardMaterial color="#22304E" metalness={0.8} />
           </mesh>
         </group>
 
-        {/* ── 2. TORSO & JERSEY ── */}
+        {/* ── 2. TORSO & OFFICIAL GEEKROOM JERSEY ── */}
         <group position={[0, -0.16, 0]}>
-          {/* Main Jersey Body */}
           <RoundedBox args={[1.08, 0.82, 0.76]} radius={0.16} smoothness={4}>
-            <meshStandardMaterial
-              color={jerseyColor}
-              roughness={isChelsea ? 0.45 : 0.65}
-              metalness={isChelsea ? 0.35 : 0.15}
-            />
+            <meshStandardMaterial color="#101626" roughness={0.65} metalness={0.15} />
           </RoundedBox>
 
-          {/* Collar Trim (White for Chelsea, Cyan for Coder) */}
+          {/* Cyan V-Neck Collar */}
           <mesh position={[0, 0.37, 0.36]} rotation={[0, 0, Math.PI / 4]}>
             <boxGeometry args={[0.18, 0.04, 0.06]} />
-            <meshStandardMaterial
-              color={isChelsea ? '#FFFFFF' : '#00F0FF'}
-              emissive={isChelsea ? '#FFFFFF' : '#00F0FF'}
-              emissiveIntensity={isChelsea ? 0.8 : 1.5}
-            />
+            <meshStandardMaterial color="#00F0FF" emissive="#00F0FF" emissiveIntensity={1.5} />
           </mesh>
           <mesh position={[0, 0.37, 0.36]} rotation={[0, 0, -Math.PI / 4]}>
             <boxGeometry args={[0.18, 0.04, 0.06]} />
-            <meshStandardMaterial
-              color={isChelsea ? '#FFFFFF' : '#00F0FF'}
-              emissive={isChelsea ? '#FFFFFF' : '#00F0FF'}
-              emissiveIntensity={isChelsea ? 0.8 : 1.5}
-            />
+            <meshStandardMaterial color="#00F0FF" emissive="#00F0FF" emissiveIntensity={1.5} />
           </mesh>
 
-          {/* ── CHEST EMBLEM: CHELSEA LION SHIELD (#26) vs GEEKROOM (< / >) ── */}
-          {isChelsea ? (
-            <group position={[0, 0.08, 0.39]}>
-              {/* Golden Lion Crest Shield */}
-              <mesh position={[0, 0.02, 0]}>
-                <cylinderGeometry args={[0.18, 0.14, 0.03, 6]} />
-                <meshStandardMaterial color="#FFD700" metalness={0.9} roughness={0.2} />
-              </mesh>
-              {/* Rampant Lion Silhouette Bar */}
-              <mesh position={[0, 0.02, 0.02]} rotation={[0, 0, 0.2]}>
-                <boxGeometry args={[0.07, 0.2, 0.02]} />
-                <meshStandardMaterial color="#034694" metalness={0.5} />
-              </mesh>
-              {/* Terry #26 Chest Marking */}
-              <mesh position={[0.26, -0.06, 0]}>
-                <boxGeometry args={[0.16, 0.12, 0.02]} />
-                <meshStandardMaterial color="#FFFFFF" emissive="#FFFFFF" emissiveIntensity={1.2} />
-              </mesh>
-            </group>
-          ) : (
-            <group position={[0, 0.08, 0.39]}>
-              {/* Center Orange Slash / */}
-              <mesh rotation={[0, 0, -0.25]}>
-                <boxGeometry args={[0.06, 0.34, 0.02]} />
-                <meshStandardMaterial color="#FF6B00" emissive="#FF6B00" emissiveIntensity={2.8} />
-              </mesh>
-              {/* Left Cyan Bracket < */}
-              <mesh position={[-0.18, 0, 0]} rotation={[0, 0, Math.PI / 4]}>
-                <boxGeometry args={[0.04, 0.16, 0.02]} />
-                <meshStandardMaterial color="#00F0FF" emissive="#00F0FF" emissiveIntensity={2.2} />
-              </mesh>
-              <mesh position={[-0.18, 0, 0]} rotation={[0, 0, -Math.PI / 4]}>
-                <boxGeometry args={[0.04, 0.16, 0.02]} />
-                <meshStandardMaterial color="#00F0FF" emissive="#00F0FF" emissiveIntensity={2.2} />
-              </mesh>
-              {/* Right Cyan Bracket > */}
-              <mesh position={[0.18, 0, 0]} rotation={[0, 0, Math.PI / 4]}>
-                <boxGeometry args={[0.04, 0.16, 0.02]} />
-                <meshStandardMaterial color="#00F0FF" emissive="#00F0FF" emissiveIntensity={2.2} />
-              </mesh>
-              <mesh position={[0.18, 0, 0]} rotation={[0, 0, -Math.PI / 4]}>
-                <boxGeometry args={[0.04, 0.16, 0.02]} />
-                <meshStandardMaterial color="#00F0FF" emissive="#00F0FF" emissiveIntensity={2.2} />
-              </mesh>
-            </group>
-          )}
+          {/* Front Chest Official Geekroom Emblem (< / >) */}
+          <group position={[0, 0.08, 0.39]}>
+            {/* Center Orange Slash / */}
+            <mesh rotation={[0, 0, -0.25]}>
+              <boxGeometry args={[0.06, 0.34, 0.02]} />
+              <meshStandardMaterial color="#FF6B00" emissive="#FF6B00" emissiveIntensity={2.8} />
+            </mesh>
+            {/* Left Cyan Bracket < */}
+            <mesh position={[-0.18, 0, 0]} rotation={[0, 0, Math.PI / 4]}>
+              <boxGeometry args={[0.04, 0.16, 0.02]} />
+              <meshStandardMaterial color="#00F0FF" emissive="#00F0FF" emissiveIntensity={2.2} />
+            </mesh>
+            <mesh position={[-0.18, 0, 0]} rotation={[0, 0, -Math.PI / 4]}>
+              <boxGeometry args={[0.04, 0.16, 0.02]} />
+              <meshStandardMaterial color="#00F0FF" emissive="#00F0FF" emissiveIntensity={2.2} />
+            </mesh>
+            {/* Right Cyan Bracket > */}
+            <mesh position={[0.18, 0, 0]} rotation={[0, 0, Math.PI / 4]}>
+              <boxGeometry args={[0.04, 0.16, 0.02]} />
+              <meshStandardMaterial color="#00F0FF" emissive="#00F0FF" emissiveIntensity={2.2} />
+            </mesh>
+            <mesh position={[0.18, 0, 0]} rotation={[0, 0, -Math.PI / 4]}>
+              <boxGeometry args={[0.04, 0.16, 0.02]} />
+              <meshStandardMaterial color="#00F0FF" emissive="#00F0FF" emissiveIntensity={2.2} />
+            </mesh>
+          </group>
 
-          {/* Flank Athletic Stripes */}
+          {/* Flank Athletic Swooshes */}
           <mesh position={[-0.48, -0.06, 0.32]} rotation={[0, 0, -0.45]}>
             <boxGeometry args={[0.05, 0.52, 0.02]} />
-            <meshStandardMaterial
-              color={accentLight}
-              emissive={accentLight}
-              emissiveIntensity={isChelsea ? 1.5 : 2.0}
-            />
+            <meshStandardMaterial color="#00F0FF" emissive="#00F0FF" emissiveIntensity={2.0} />
           </mesh>
           <mesh position={[-0.52, -0.14, 0.28]} rotation={[0, 0, -0.45]}>
             <boxGeometry args={[0.04, 0.38, 0.02]} />
-            <meshStandardMaterial
-              color={secondaryAccent}
-              emissive={secondaryAccent}
-              emissiveIntensity={isChelsea ? 1.8 : 2.2}
-            />
+            <meshStandardMaterial color="#FF6B00" emissive="#FF6B00" emissiveIntensity={2.2} />
           </mesh>
 
           <mesh position={[0.48, -0.06, 0.32]} rotation={[0, 0, 0.45]}>
             <boxGeometry args={[0.05, 0.52, 0.02]} />
-            <meshStandardMaterial
-              color={accentLight}
-              emissive={accentLight}
-              emissiveIntensity={isChelsea ? 1.5 : 2.0}
-            />
+            <meshStandardMaterial color="#00F0FF" emissive="#00F0FF" emissiveIntensity={2.0} />
           </mesh>
           <mesh position={[0.52, -0.14, 0.28]} rotation={[0, 0, 0.45]}>
             <boxGeometry args={[0.04, 0.38, 0.02]} />
-            <meshStandardMaterial
-              color={secondaryAccent}
-              emissive={secondaryAccent}
-              emissiveIntensity={isChelsea ? 1.8 : 2.2}
-            />
+            <meshStandardMaterial color="#FF6B00" emissive="#FF6B00" emissiveIntensity={2.2} />
           </mesh>
 
-          {/* Lower Jersey Hem */}
+          {/* Lower Hem */}
           <mesh position={[0, -0.38, 0]}>
             <boxGeometry args={[1.09, 0.05, 0.77]} />
-            <meshStandardMaterial
-              color={isChelsea ? '#FFFFFF' : '#00F0FF'}
-              emissive={isChelsea ? '#FFFFFF' : '#00F0FF'}
-              emissiveIntensity={isChelsea ? 0.8 : 1.4}
-            />
+            <meshStandardMaterial color="#00F0FF" emissive="#00F0FF" emissiveIntensity={1.4} />
           </mesh>
         </group>
 
         {/* ── 3. ARMS & HANDS ── */}
-        {/* Left Arm */}
         <group ref={leftArmRef} position={[-0.68, -0.18, 0]}>
           <RoundedBox args={[0.3, 0.32, 0.3]} radius={0.08} smoothness={3} position={[0, 0.12, 0]}>
-            <meshStandardMaterial color={jerseyColor} roughness={0.6} />
+            <meshStandardMaterial color="#101626" roughness={0.6} />
           </RoundedBox>
           <mesh position={[0, -0.04, 0]}>
             <cylinderGeometry args={[0.155, 0.155, 0.03, 16]} />
-            <meshStandardMaterial color={accentLight} emissive={accentLight} emissiveIntensity={2.0} />
+            <meshStandardMaterial color="#00F0FF" emissive="#00F0FF" emissiveIntensity={2.0} />
           </mesh>
 
           <mesh position={[0, -0.22, 0]}>
@@ -571,23 +429,18 @@ function BitByteModel({
             </mesh>
             <mesh position={[0, -0.02, 0.07]}>
               <circleGeometry args={[0.04, 16]} />
-              <meshStandardMaterial
-                color={isChelsea ? '#FFD700' : '#00F0FF'}
-                emissive={isChelsea ? '#FFD700' : '#00F0FF'}
-                emissiveIntensity={2.5}
-              />
+              <meshStandardMaterial color="#00F0FF" emissive="#00F0FF" emissiveIntensity={2.5} />
             </mesh>
           </group>
         </group>
 
-        {/* Right Arm */}
         <group ref={rightArmRef} position={[0.68, -0.18, 0]}>
           <RoundedBox args={[0.3, 0.32, 0.3]} radius={0.08} smoothness={3} position={[0, 0.12, 0]}>
-            <meshStandardMaterial color={jerseyColor} roughness={0.6} />
+            <meshStandardMaterial color="#101626" roughness={0.6} />
           </RoundedBox>
           <mesh position={[0, -0.04, 0]}>
             <cylinderGeometry args={[0.155, 0.155, 0.03, 16]} />
-            <meshStandardMaterial color={accentLight} emissive={accentLight} emissiveIntensity={2.0} />
+            <meshStandardMaterial color="#00F0FF" emissive="#00F0FF" emissiveIntensity={2.0} />
           </mesh>
 
           <mesh position={[0, -0.22, 0]}>
@@ -605,29 +458,20 @@ function BitByteModel({
             </mesh>
             <mesh position={[0, -0.02, 0.07]}>
               <circleGeometry args={[0.04, 16]} />
-              <meshStandardMaterial
-                color={isChelsea ? '#FFD700' : '#00F0FF'}
-                emissive={isChelsea ? '#FFD700' : '#00F0FF'}
-                emissiveIntensity={2.5}
-              />
+              <meshStandardMaterial color="#00F0FF" emissive="#00F0FF" emissiveIntensity={2.5} />
             </mesh>
           </group>
         </group>
 
         {/* ── 4. LEGS & SNEAKERS ── */}
-        {/* Left Leg */}
         <group ref={leftLegRef} position={[-0.26, -0.65, 0]}>
           <mesh position={[0, -0.08, 0]}>
             <cylinderGeometry args={[0.14, 0.15, 0.2, 16]} />
-            <meshStandardMaterial color={jerseyColor} />
+            <meshStandardMaterial color="#101626" />
           </mesh>
           <mesh position={[-0.14, -0.08, 0]}>
             <boxGeometry args={[0.02, 0.18, 0.05]} />
-            <meshStandardMaterial
-              color={isChelsea ? '#FFFFFF' : '#00F0FF'}
-              emissive={isChelsea ? '#FFFFFF' : '#00F0FF'}
-              emissiveIntensity={1.5}
-            />
+            <meshStandardMaterial color="#00F0FF" emissive="#00F0FF" emissiveIntensity={1.5} />
           </mesh>
           <mesh position={[0, -0.26, 0]}>
             <cylinderGeometry args={[0.09, 0.1, 0.2, 16]} />
@@ -635,7 +479,7 @@ function BitByteModel({
           </mesh>
           <mesh position={[0, -0.36, 0]}>
             <cylinderGeometry args={[0.11, 0.11, 0.04, 16]} />
-            <meshStandardMaterial color={accentLight} emissive={accentLight} emissiveIntensity={2.0} />
+            <meshStandardMaterial color="#00F0FF" emissive="#00F0FF" emissiveIntensity={2.0} />
           </mesh>
           <group position={[0, -0.43, 0.06]}>
             <RoundedBox args={[0.22, 0.12, 0.34]} radius={0.05} smoothness={3}>
@@ -643,28 +487,19 @@ function BitByteModel({
             </RoundedBox>
             <mesh position={[0, -0.065, 0]}>
               <boxGeometry args={[0.23, 0.03, 0.35]} />
-              <meshStandardMaterial
-                color={secondaryAccent}
-                emissive={secondaryAccent}
-                emissiveIntensity={1.5}
-              />
+              <meshStandardMaterial color="#FF6B00" emissive="#FF6B00" emissiveIntensity={1.5} />
             </mesh>
           </group>
         </group>
 
-        {/* Right Leg */}
         <group ref={rightLegRef} position={[0.26, -0.65, 0]}>
           <mesh position={[0, -0.08, 0]}>
             <cylinderGeometry args={[0.14, 0.15, 0.2, 16]} />
-            <meshStandardMaterial color={jerseyColor} />
+            <meshStandardMaterial color="#101626" />
           </mesh>
           <mesh position={[0.14, -0.08, 0]}>
             <boxGeometry args={[0.02, 0.18, 0.05]} />
-            <meshStandardMaterial
-              color={isChelsea ? '#FFFFFF' : '#00F0FF'}
-              emissive={isChelsea ? '#FFFFFF' : '#00F0FF'}
-              emissiveIntensity={1.5}
-            />
+            <meshStandardMaterial color="#00F0FF" emissive="#00F0FF" emissiveIntensity={1.5} />
           </mesh>
           <mesh position={[0, -0.26, 0]}>
             <cylinderGeometry args={[0.09, 0.1, 0.2, 16]} />
@@ -672,7 +507,7 @@ function BitByteModel({
           </mesh>
           <mesh position={[0, -0.36, 0]}>
             <cylinderGeometry args={[0.11, 0.11, 0.04, 16]} />
-            <meshStandardMaterial color={accentLight} emissive={accentLight} emissiveIntensity={2.0} />
+            <meshStandardMaterial color="#00F0FF" emissive="#00F0FF" emissiveIntensity={2.0} />
           </mesh>
           <group position={[0, -0.43, 0.06]}>
             <RoundedBox args={[0.22, 0.12, 0.34]} radius={0.05} smoothness={3}>
@@ -680,11 +515,7 @@ function BitByteModel({
             </RoundedBox>
             <mesh position={[0, -0.065, 0]}>
               <boxGeometry args={[0.23, 0.03, 0.35]} />
-              <meshStandardMaterial
-                color={secondaryAccent}
-                emissive={secondaryAccent}
-                emissiveIntensity={1.5}
-              />
+              <meshStandardMaterial color="#FF6B00" emissive="#FF6B00" emissiveIntensity={1.5} />
             </mesh>
           </group>
         </group>
@@ -713,7 +544,6 @@ class BitByteErrorBoundary extends React.Component<
 
 export const BitByte3D: React.FC<BitByte3DProps> = ({
   mood = 'idle',
-  mascotType = 'coder',
   customMessage,
   size = 'companion',
   className = '',
@@ -726,8 +556,6 @@ export const BitByte3D: React.FC<BitByte3DProps> = ({
   const [isClicked, setIsClicked] = useState(false);
   const [dialogue, setDialogue] = useState<string>('');
   const [clickCount, setClickCount] = useState(0);
-
-  const isChelsea = mascotType === 'chelsea_chess';
 
   // Check WebGL availability and track mouse/touch
   useEffect(() => {
@@ -766,9 +594,9 @@ export const BitByte3D: React.FC<BitByte3DProps> = ({
     if (customMessage) {
       setDialogue(customMessage);
     } else {
-      setDialogue(getMascotDialogue(mood, mascotType));
+      setDialogue(getMascotDialogue(mood));
     }
-  }, [mood, mascotType, customMessage]);
+  }, [mood, customMessage]);
 
   const handleMascotClick = () => {
     if (!interactive) return;
@@ -776,10 +604,7 @@ export const BitByte3D: React.FC<BitByte3DProps> = ({
     setIsClicked(true);
     setClickCount((c) => c + 1);
 
-    const newLine =
-      clickCount % 2 === 1
-        ? getRandomClickDialogue(mascotType)
-        : getMascotDialogue(mood, mascotType);
+    const newLine = clickCount % 2 === 1 ? getRandomClickDialogue() : getMascotDialogue(mood);
     setDialogue(newLine);
 
     if (onMascotClick) {
@@ -803,44 +628,28 @@ export const BitByte3D: React.FC<BitByte3DProps> = ({
 
   // Mood Badge Icon
   const moodBadge = useMemo(() => {
-    if (isChelsea) {
-      switch (mood) {
-        case 'excited':
-        case 'victory':
-          return { label: 'CHAMPIONS!', icon: <Crown className="w-3.5 h-3.5 text-amber-400" /> };
-        case 'speed_mode':
-          return { label: 'BLITZ TACTICS', icon: <Zap className="w-3.5 h-3.5 text-blue-400" /> };
-        case 'low_time':
-          return { label: 'FLAG FALL IMMINENT', icon: <AlertTriangle className="w-3.5 h-3.5 text-rose-400 animate-pulse" /> };
-        case 'thinking':
-          return { label: 'CALCULATING 3 MOVES', icon: <HelpCircle className="w-3.5 h-3.5 text-blue-300" /> };
-        default:
-          return { label: 'LEO // CFC-26 (CHELSEA GM)', icon: <span className="text-sm">🦁</span> };
-      }
-    } else {
-      switch (mood) {
-        case 'excited':
-        case 'victory':
-          return { label: 'CLEAN BUILD!', icon: <Flame className="w-3.5 h-3.5 text-amber-400" /> };
-        case 'speed_mode':
-          return { label: 'TURBO COMPILATION', icon: <Zap className="w-3.5 h-3.5 text-lime" /> };
-        case 'low_time':
-          return { label: 'STACK OVERFLOW', icon: <AlertTriangle className="w-3.5 h-3.5 text-rose-400 animate-pulse" /> };
-        case 'thinking':
-          return { label: 'TRACING ALGORITHM', icon: <HelpCircle className="w-3.5 h-3.5 text-emerald-400" /> };
-        case 'leaderboard':
-          return { label: 'TELEMETRY SYNCED', icon: <Award className="w-3.5 h-3.5 text-amber-400" /> };
-        default:
-          return { label: 'BITBYTE // GKR-01 (CODER)', icon: <Code2 className="w-3.5 h-3.5 text-lime" /> };
-      }
+    switch (mood) {
+      case 'excited':
+      case 'victory':
+        return { label: 'CLEAN BUILD!', icon: <Flame className="w-3.5 h-3.5 text-amber-400" /> };
+      case 'speed_mode':
+        return { label: 'TURBO COMPILATION', icon: <Zap className="w-3.5 h-3.5 text-lime" /> };
+      case 'low_time':
+        return { label: 'STACK OVERFLOW', icon: <AlertTriangle className="w-3.5 h-3.5 text-rose-400 animate-pulse" /> };
+      case 'thinking':
+        return { label: 'TRACING ALGORITHM', icon: <HelpCircle className="w-3.5 h-3.5 text-emerald-400" /> };
+      case 'leaderboard':
+        return { label: 'TELEMETRY SYNCED', icon: <Award className="w-3.5 h-3.5 text-amber-400" /> };
+      default:
+        return { label: 'BITBYTE // GKR-01 (CODER)', icon: <Code2 className="w-3.5 h-3.5 text-lime" /> };
     }
-  }, [mood, isChelsea]);
+  }, [mood]);
 
   // Fallback if WebGL unavailable
   const fallback2D = (
     <div className={`flex flex-col items-center justify-center p-4 ${className}`}>
-      <div className={`w-24 h-24 rounded-2xl ${isChelsea ? 'bg-blue-950/60 border border-blue-500/40 text-blue-300' : 'bg-cyan-950/40 border border-cyan-400/30 text-lime'} flex items-center justify-center`}>
-        {isChelsea ? <span className="text-4xl">🦁</span> : <SparklesIcon className="w-10 h-10 animate-pulse" />}
+      <div className="w-24 h-24 rounded-2xl bg-cyan-950/40 border border-cyan-400/30 text-lime flex items-center justify-center">
+        <Code2 className="w-10 h-10 animate-pulse" />
       </div>
       <p className="text-xs font-mono text-slate-300 mt-2 font-bold">{dialogue}</p>
     </div>
@@ -857,34 +666,20 @@ export const BitByte3D: React.FC<BitByte3DProps> = ({
         {showSpeech && (
           <AnimatePresence mode="wait">
             <motion.div
-              key={`${dialogue}-${mascotType}`}
+              key={dialogue}
               initial={{ opacity: 0, y: 8, scale: 0.95 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -6, scale: 0.95 }}
               transition={{ duration: 0.2 }}
               onClick={handleMascotClick}
               className="z-10 mb-2 cursor-pointer group pointer-events-auto px-2"
-              title={`Click to interact with ${isChelsea ? 'Leo #26' : 'BitByte'}!`}
+              title="Click to interact with BitByte!"
             >
-              <div
-                className={`relative px-4 py-2 rounded-2xl border shadow-2xl backdrop-blur-md max-w-xs sm:max-w-sm text-center transition-all ${
-                  isChelsea
-                    ? 'bg-[#081329] border-blue-500/30 group-hover:border-amber-400/70 shadow-[0_4px_24px_rgba(3,70,148,0.35)]'
-                    : 'bg-[#101522] border-white/15 group-hover:border-lime/60 shadow-[0_4px_24px_rgba(0,0,0,0.5)]'
-                }`}
-              >
+              <div className="relative px-4 py-2 rounded-2xl border border-white/15 bg-[#101522] group-hover:border-lime/60 shadow-[0_4px_24px_rgba(0,0,0,0.5)] backdrop-blur-md max-w-xs sm:max-w-sm text-center transition-all">
                 {/* Speech tail */}
-                <div
-                  className={`absolute -bottom-2 left-1/2 -translate-x-1/2 w-3.5 h-3.5 border-r border-b transform rotate-45 ${
-                    isChelsea ? 'bg-[#081329] border-blue-500/30' : 'bg-[#101522] border-white/15'
-                  }`}
-                />
+                <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-3.5 h-3.5 border-r border-b bg-[#101522] border-white/15 transform rotate-45" />
 
-                <div
-                  className={`flex items-center justify-center gap-1.5 text-[10px] font-mono uppercase tracking-wider font-bold mb-0.5 ${
-                    isChelsea ? 'text-amber-400' : 'text-lime'
-                  }`}
-                >
+                <div className="flex items-center justify-center gap-1.5 text-[10px] font-mono uppercase tracking-wider font-bold mb-0.5 text-lime">
                   {moodBadge.icon}
                   <span>{moodBadge.label}</span>
                 </div>
@@ -903,53 +698,31 @@ export const BitByte3D: React.FC<BitByte3DProps> = ({
 
         {/* 3D Canvas Container */}
         <div className={`relative ${containerDimensions} flex items-center justify-center`}>
-          {/* Spotlight Glow */}
-          <div
-            className={`absolute inset-0 pointer-events-none rounded-full blur-2xl ${
-              isChelsea
-                ? 'bg-[radial-gradient(ellipse_at_center,rgba(3,70,148,0.25)_0%,rgba(255,215,0,0.08)_50%,transparent_75%)]'
-                : 'bg-[radial-gradient(ellipse_at_center,rgba(212,255,0,0.12)_0%,rgba(255,107,0,0.06)_50%,transparent_75%)]'
-            }`}
-          />
+          <div className="absolute inset-0 pointer-events-none rounded-full blur-2xl bg-[radial-gradient(ellipse_at_center,rgba(212,255,0,0.12)_0%,rgba(255,107,0,0.06)_50%,transparent_75%)]" />
 
           <Canvas
             dpr={[1, 1.5]}
             camera={{ position: [0, 0.1, cameraZ], fov: cameraFov }}
             className="w-full h-full cursor-grab active:cursor-grabbing"
           >
-            {/* Lighting */}
             <ambientLight intensity={1.3} />
             <directionalLight position={[3, 5, 4]} intensity={2.4} color="#FFFFFF" />
-            <pointLight
-              position={[-3.5, 2, 2.5]}
-              intensity={4.0}
-              color={isChelsea ? '#00A3FF' : '#00F0FF'}
-            />
-            <pointLight
-              position={[3.5, -1, 2.5]}
-              intensity={3.5}
-              color={isChelsea ? '#FFD700' : '#FF6B00'}
-            />
+            <pointLight position={[-3.5, 2, 2.5]} intensity={4.0} color="#00F0FF" />
+            <pointLight position={[3.5, -1, 2.5]} intensity={3.5} color="#FF6B00" />
             <pointLight position={[0, 4, -3]} intensity={2.0} color="#FFFFFF" />
-            <pointLight
-              position={[0, -3, 2]}
-              intensity={1.8}
-              color={isChelsea ? '#034694' : '#00F0FF'}
-            />
+            <pointLight position={[0, -3, 2]} intensity={1.8} color="#00F0FF" />
 
-            {/* Floating Particles */}
             <Sparkles
               count={22}
               scale={3.2}
               size={1.6}
               speed={0.35}
-              color={isChelsea ? '#FFD700' : mood === 'tough' ? '#FF0055' : '#00F0FF'}
+              color={mood === 'tough' ? '#FF0055' : '#00F0FF'}
             />
 
             <Float speed={2.0} rotationIntensity={0.15} floatIntensity={0.25}>
               <BitByteModel
                 mood={mood}
-                mascotType={mascotType}
                 mousePos={mousePos}
                 isClicked={isClicked}
                 onTriggerClick={handleMascotClick}

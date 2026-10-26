@@ -40,23 +40,15 @@ body {
     linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
 }
 
-/* Chess.com x Chelsea FC Stamford Pitch Grid */
+/* Grandmaster Chess Grid */
 .chessboard-grid {
   background-image: conic-gradient(
-    #0A1222 90deg,
-    #070A12 90deg 180deg,
-    #0A1222 180deg 270deg,
-    #070A12 270deg
+    #0E1424 90deg,
+    #090D18 90deg 180deg,
+    #0E1424 180deg 270deg,
+    #090D18 270deg
   );
   background-size: 64px 64px;
-}
-
-/* Chelsea Royal Matchday Badge */
-.chelsea-card {
-  position: relative;
-  background: linear-gradient(135deg, #091730 0%, #060B17 100%);
-  border: 1px solid rgba(30, 64, 175, 0.35);
-  box-shadow: 0 12px 36px -8px rgba(3, 70, 148, 0.25);
 }
 
 /* Chess.com Tactical Evaluation Bar */

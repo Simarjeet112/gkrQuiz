@@ -8,11 +8,9 @@ import {
   ShieldCheck,
   Code2,
   Coins,
-  Crown,
-  Sparkles,
 } from 'lucide-react';
 import { BitByte3D } from '../components/mascot/BitByte3D';
-import { MascotType } from '../components/mascot/bitbyteDialogue';
+import { ChessBackground } from '../components/ui/ChessBackground';
 import { sounds } from '../utils/soundEffects';
 
 const tierCards = [
@@ -51,7 +49,6 @@ const tierCards = [
 export const LandingPage: React.FC = () => {
   const [tokenInserted, setTokenInserted] = useState(false);
   const [tokenToast, setTokenToast] = useState(false);
-  const [selectedMascot, setSelectedMascot] = useState<MascotType>('coder');
 
   const handleInsertToken = () => {
     sounds.playTierUp();
@@ -61,13 +58,12 @@ export const LandingPage: React.FC = () => {
   };
 
   return (
-    <div className="relative min-h-[calc(100vh-4rem)] chessboard-grid overflow-hidden bg-carbon-950 text-carbon-50">
-      {/* Background Lighting Gradients */}
-      <div className="absolute top-1/4 left-1/4 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-blue-600/10 rounded-full blur-[160px] pointer-events-none" />
-      <div className="absolute bottom-20 right-10 w-[500px] h-[500px] bg-lime/5 rounded-full blur-[140px] pointer-events-none" />
+    <div className="relative min-h-[calc(100vh-4rem)] overflow-hidden bg-carbon-950 text-carbon-50">
+      {/* ── AMBIENT CHESS VIBES IN THE BACKGROUND ── */}
+      <ChessBackground />
 
       {/* ── 1. ARCHITECTURAL TOP TICKER TAPE ── */}
-      <div className="w-full bg-[#101522] text-slate-300 py-2.5 overflow-hidden font-mono text-xs border-y border-white/10 select-none">
+      <div className="w-full bg-[#101522]/90 backdrop-blur-md text-slate-300 py-2.5 overflow-hidden font-mono text-xs border-y border-white/10 select-none">
         <div className="animate-marquee whitespace-nowrap flex items-center gap-8">
           <span className="text-lime font-bold">♟ 1. e4 THINK 3 MOVES AHEAD</span>
           <span className="text-slate-600">•</span>
@@ -77,7 +73,7 @@ export const LandingPage: React.FC = () => {
           <span className="text-slate-600">•</span>
           <span className="text-ember font-bold">♞ OPENING → MIDDLEGAME → ENDGAME</span>
           <span className="text-slate-600">•</span>
-          <span>MASCOT COMPANIONS: BITBYTE (CODER) × LEO #26 (CHELSEA GM)</span>
+          <span>BITBYTE // GKR-01 AI CODE COMPANION</span>
           <span className="text-slate-600">•</span>
           <span className="text-lime font-bold">♚ CHECKMATE THE LEADERBOARD</span>
           <span className="text-slate-600">•</span>
@@ -96,15 +92,15 @@ export const LandingPage: React.FC = () => {
             transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
             className="lg:col-span-7 space-y-6 text-center lg:text-left"
           >
-            {/* Clean Architectural Badges */}
+            {/* Badges */}
             <div className="flex flex-wrap items-center justify-center lg:justify-start gap-2.5 pt-1">
               <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-lime/10 text-lime font-mono text-xs font-bold border border-lime/30">
                 <Code2 className="w-3.5 h-3.5 text-lime" />
                 <span>GEEKROOM GTBIT</span>
               </span>
-              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-950/70 text-blue-300 font-mono text-xs font-bold border border-blue-500/30">
-                <span>🦁</span>
-                <span>MASCOT DUO: CODER × CHELSEA GM</span>
+              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/5 text-slate-200 font-mono text-xs font-bold border border-white/10">
+                <span className="text-lime">♟</span>
+                <span>CHESS TACTICAL ARENA</span>
               </span>
               <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#161D2E] text-slate-300 font-mono text-xs font-bold border border-white/10">
                 <span>⏱️</span>
@@ -131,14 +127,14 @@ export const LandingPage: React.FC = () => {
                 “Think 3 Moves Ahead. Code Smart. Climb the Ranks.”
               </p>
               <div className="font-mono text-[9px] tracking-[0.25em] text-slate-500 select-none hidden sm:block">
-                ||| |||| | ||||| || |||||| |||| | || [GEEKROOM-DUAL-MASCOT-ENGINE-2026]
+                ||| |||| | ||||| || |||||| |||| | || [GEEKROOM-CODE-ARENA-SECTOR-2026]
               </div>
             </div>
 
             <p className="text-sm sm:text-base text-slate-300 max-w-xl mx-auto lg:mx-0 leading-relaxed font-sans">
               The premier competitive coding challenge for first-year engineering students. 
               Five algorithmic moves, opening theory through the endgame, and a 5-minute blitz clock. 
-              Solve with precision, choose your mascot companion, and lift the trophy at the top of the leaderboard.
+              Solve with precision, calculate before you commit, and lift the trophy at the top of the leaderboard.
             </p>
 
             {/* Progression Pills (Opening, Middlegame, Endgame) */}
@@ -206,101 +202,49 @@ export const LandingPage: React.FC = () => {
             </AnimatePresence>
           </motion.div>
 
-          {/* Hero Right: Dual 3D Mascot Console (Coding Bot & Chelsea Chess Mascot) */}
+          {/* Hero Right: 3D BitByte Coder Bot Showcase Console */}
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
             className="lg:col-span-5 flex flex-col items-center justify-center relative w-full"
           >
-            {/* Mascot Switcher Pill */}
-            <div className="flex items-center gap-1.5 mb-3 bg-[#0A101D] p-1.5 rounded-xl border border-white/10 font-mono text-xs w-full max-w-md justify-center shadow-lg">
-              <button
-                onClick={() => {
-                  sounds.playClick();
-                  setSelectedMascot('coder');
-                }}
-                className={`flex-1 flex items-center justify-center gap-2 py-2 px-3 rounded-lg font-bold transition-all text-xs ${
-                  selectedMascot === 'coder'
-                    ? 'bg-lime text-carbon-950 font-black shadow-[0_0_15px_rgba(212,255,0,0.4)]'
-                    : 'text-slate-400 hover:text-white'
-                }`}
-              >
-                <span>💻</span>
-                <span>BITBYTE (CODER)</span>
-              </button>
-              <button
-                onClick={() => {
-                  sounds.playClick();
-                  setSelectedMascot('chelsea_chess');
-                }}
-                className={`flex-1 flex items-center justify-center gap-2 py-2 px-3 rounded-lg font-bold transition-all text-xs ${
-                  selectedMascot === 'chelsea_chess'
-                    ? 'bg-blue-600 text-white font-black shadow-[0_0_15px_rgba(37,99,235,0.5)]'
-                    : 'text-slate-400 hover:text-white'
-                }`}
-              >
-                <span>🦁</span>
-                <span>LEO #26 (CHELSEA GM)</span>
-              </button>
-            </div>
-
-            {/* Mascot 3D Showcase Console */}
-            <div className={`relative w-full max-w-lg rounded-2xl p-5 sm:p-6 border shadow-titanium overflow-hidden transition-colors ${
-              selectedMascot === 'chelsea_chess'
-                ? 'bg-[#081329] border-blue-500/30 shadow-[0_0_30px_rgba(3,70,148,0.25)]'
-                : 'bg-[#101522] border-white/15'
-            }`}>
+            {/* Mascot Showcase Console */}
+            <div className="relative w-full max-w-lg rounded-2xl p-5 sm:p-6 border border-white/15 shadow-titanium overflow-hidden bg-[#101522]/90 backdrop-blur-md">
               {/* Header Badge */}
               <div className="flex items-center justify-between pb-3 border-b border-white/10 mb-2">
                 <div className="flex items-center gap-2.5 font-mono text-xs font-bold">
-                  <div className={`w-8 h-8 rounded-lg flex items-center justify-center p-1 border ${
-                    selectedMascot === 'chelsea_chess'
-                      ? 'bg-blue-900/60 border-blue-400/40 text-lg'
-                      : 'bg-white/10 border-white/15'
-                  }`}>
-                    {selectedMascot === 'chelsea_chess' ? (
-                      '🦁'
-                    ) : (
-                      <img src="/geekroom-logo.png" alt="Geekroom" className="w-full h-full object-contain" />
-                    )}
+                  <div className="w-8 h-8 rounded-lg bg-white/10 border border-white/15 flex items-center justify-center p-1">
+                    <img src="/geekroom-logo.png" alt="Geekroom" className="w-full h-full object-contain" />
                   </div>
                   <div>
                     <div className="leading-tight text-white font-display">
-                      {selectedMascot === 'chelsea_chess' ? 'LEO // CFC-26' : 'BITBYTE // GKR-01'}
+                      BITBYTE // GKR-01
                     </div>
                     <div className="text-[10px] text-slate-400 font-mono">
-                      {selectedMascot === 'chelsea_chess' ? 'CHELSEA CHESS GRANDMASTER' : 'CODER BOT COMPANION'}
+                      OFFICIAL CODER BOT COMPANION
                     </div>
                   </div>
                 </div>
 
-                <div className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-mono font-bold border ${
-                  selectedMascot === 'chelsea_chess'
-                    ? 'bg-blue-900/70 border-blue-400/40 text-blue-300'
-                    : 'bg-lime/10 border-lime/30 text-lime'
-                }`}>
-                  <span className={`w-2 h-2 rounded-full animate-pulse ${
-                    selectedMascot === 'chelsea_chess' ? 'bg-blue-400' : 'bg-lime'
-                  }`} />
-                  <span>{selectedMascot === 'chelsea_chess' ? 'MATCHDAY' : 'ONLINE'}</span>
+                <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-mono font-bold border bg-lime/10 border-lime/30 text-lime">
+                  <span className="w-2 h-2 rounded-full animate-pulse bg-lime" />
+                  <span>ONLINE</span>
                 </div>
               </div>
 
-              {/* Three.js 3D Living Mascot (Switches smoothly between Coder & Chelsea GM) */}
+              {/* Three.js 3D Living Mascot */}
               <BitByte3D
-                key={selectedMascot}
                 size="hero"
                 mood="welcome"
-                mascotType={selectedMascot}
                 showSpeech={true}
               />
 
               {/* Console Footer */}
               <div className="flex items-center justify-between pt-3 border-t border-white/10 text-[11px] font-mono text-slate-400">
                 <span className="text-slate-300 flex items-center gap-1.5">
-                  <Terminal className={`w-3.5 h-3.5 ${selectedMascot === 'chelsea_chess' ? 'text-blue-400' : 'text-lime'}`} />
-                  <span>Click mascot to trigger voice line</span>
+                  <Terminal className="w-3.5 h-3.5 text-lime" />
+                  <span>Click BitByte to interact</span>
                 </span>
                 <span className="text-slate-500 text-[10px]">WebGL 60FPS</span>
               </div>
@@ -400,17 +344,14 @@ export const LandingPage: React.FC = () => {
             </div>
           </div>
 
-          {/* Society & Mascot Duo Card */}
+          {/* Society Card */}
           <div className="md:col-span-4 rounded-2xl p-6 border border-white/15 bg-gradient-to-b from-[#10172A] to-[#0A0E18] flex flex-col justify-between text-center space-y-4 shadow-titanium">
             <div className="flex items-center justify-center gap-3 pt-2">
-              <div className="w-12 h-12 rounded-2xl bg-blue-600/20 border border-blue-500/40 flex items-center justify-center text-2xl shadow-lg">
-                🦁
-              </div>
-              <div className="relative w-12 h-12 rounded-2xl bg-white/5 border border-white/15 p-2 shadow-md">
+              <div className="w-14 h-14 rounded-2xl bg-white/5 border border-white/15 p-2.5 shadow-md">
                 <img src="/geekroom-logo.png" alt="Geekroom GTBIT" className="w-full h-full object-contain" />
               </div>
-              <div className="w-12 h-12 rounded-2xl bg-lime/10 border border-lime/30 flex items-center justify-center text-2xl shadow-lg">
-                🤖
+              <div className="w-14 h-14 rounded-2xl bg-lime/10 border border-lime/30 flex items-center justify-center text-3xl shadow-lg">
+                ♟
               </div>
             </div>
 
@@ -422,7 +363,7 @@ export const LandingPage: React.FC = () => {
                 CODE ARENA TOURNAMENT
               </h4>
               <p className="text-[11px] text-slate-300/80 mt-1 font-sans">
-                Engineered for speed, calculation depth, and technical excellence. Supported by BitByte and Leo #26.
+                Engineered for speed, calculation depth, and technical excellence. Think 3 moves ahead and conquer the board.
               </p>
             </div>
 
