@@ -18,7 +18,7 @@ import {
 } from 'lucide-react';
 import { api } from '../services/api';
 import { BitByte3D } from '../components/mascot/BitByte3D';
-import { BitByteMood } from '../components/mascot/bitbyteDialogue';
+import { BitByteMood, MascotType } from '../components/mascot/bitbyteDialogue';
 import { sounds } from '../utils/soundEffects';
 
 interface Question {
@@ -49,9 +49,10 @@ export const QuizArenaPage: React.FC = () => {
   const [isMuted, setIsMuted] = useState(sounds.getMuted());
 
   // Mascot dynamic state
+  const [arenaMascot, setArenaMascot] = useState<MascotType>('coder');
   const [mascotMood, setMascotMood] = useState<BitByteMood>('thinking');
   const [mascotMessage, setMascotMessage] = useState<string>(
-    'Tier 1 Recruit: Warm up with 2 Easy fundamentals.'
+    'Stage 1: Warm up with 2 Easy fundamentals.'
   );
   const questionStartTimeRef = useRef<number>(Date.now());
 
@@ -278,24 +279,24 @@ export const QuizArenaPage: React.FC = () => {
     <div className="min-h-[calc(100vh-4rem)] py-6 px-4 sm:px-6 chessboard-grid bg-carbon-950 text-carbon-50">
       <div className="max-w-4xl mx-auto space-y-4">
 
-        {/* ── TOP ARENA HUD BAR (Chelsea Matchday & Chess Blitz) ── */}
+        {/* ── TOP ARENA HUD BAR ── */}
         <div className="titanium-card px-5 py-3.5 flex items-center justify-between gap-4 flex-wrap border border-white/10">
-          {/* Challenger Identity + Chelsea Pride */}
+          {/* Challenger Identity */}
           <div className="flex items-center gap-3 min-w-0">
-            <div className="w-9 h-9 rounded-xl bg-blue-950/80 border border-blue-500/30 flex items-center justify-center font-mono text-sm font-bold text-blue-300 shrink-0">
-              🦁
+            <div className="w-9 h-9 rounded-xl bg-white/5 border border-white/15 flex items-center justify-center font-mono text-sm font-bold text-lime shrink-0">
+              <span className="text-base">{arenaMascot === 'chelsea_chess' ? '🦁' : '🤖'}</span>
             </div>
             <div className="min-w-0">
-              <div className="flex items-center gap-1.5 text-[10px] font-mono text-blue-400 uppercase font-bold">
-                <span>THE BLUES</span>
+              <div className="flex items-center gap-1.5 text-[10px] font-mono text-slate-400 uppercase font-bold">
+                <span>GTBIT ARENA</span>
                 <span className="text-slate-600">•</span>
-                <span>MATCHDAY 2026</span>
+                <span>SEAT VERIFIED</span>
               </div>
               <div className="text-sm font-bold text-white font-sans truncate">{participantName}</div>
             </div>
           </div>
 
-          {/* Question Stepper Indicator (Chess Move Order) */}
+          {/* Question Stepper Indicator */}
           <div className="flex items-center gap-2">
             {questions.map((q, idx) => {
               const isActive = currentIndex === idx;
@@ -325,7 +326,7 @@ export const QuizArenaPage: React.FC = () => {
             })}
           </div>
 
-          {/* Synchronized Countdown Timer (Dual Chess Blitz Clock) */}
+          {/* Synchronized Countdown Timer */}
           <div
             className={`flex items-center gap-2.5 px-4 py-2 rounded-xl font-mono border transition-all shrink-0 ${
               isUrgent
@@ -336,7 +337,7 @@ export const QuizArenaPage: React.FC = () => {
             <Clock className={`w-4 h-4 ${isUrgent ? 'text-rose-400' : 'text-lime'}`} />
             <div className="text-right">
               <div className="text-[9px] text-slate-400 uppercase leading-none font-bold">
-                {isUrgent ? 'TIME TROUBLE ⚡' : 'CHESS CLOCK // 5+0'}
+                {isUrgent ? 'TIME TROUBLE ⚡' : 'BLITZ CLOCK // 5:00'}
               </div>
               <div className="text-base font-extrabold tracking-wider leading-none mt-1 tabular-nums">
                 {secondsRemaining !== null ? formatTimer(secondsRemaining) : '--:--'}
@@ -345,15 +346,53 @@ export const QuizArenaPage: React.FC = () => {
           </div>
         </div>
 
-        {/* ── BITBYTE 3D COMPANION BANNER ── */}
-        <div className="titanium-card p-4 border border-white/10 flex flex-col md:flex-row items-center justify-between gap-4 bg-[#101522]">
-          <div className="w-full md:w-auto flex-1">
-            <BitByte3D
-              size="companion"
-              mood={mascotMood}
-              customMessage={mascotMessage}
-              showSpeech={true}
-            />
+        {/* ── 3D MASCOT COMPANION BANNER (With Mascot Switcher) ── */}
+        <div className={`titanium-card p-4 border flex flex-col md:flex-row items-center justify-between gap-4 transition-colors ${
+          arenaMascot === 'chelsea_chess'
+            ? 'bg-[#081329] border-blue-500/30'
+            : 'bg-[#101522] border-white/10'
+        }`}>
+          <div className="w-full md:w-auto flex-1 flex flex-col sm:flex-row items-center gap-3">
+            {/* Mascot Switcher Pill */}
+            <div className="flex sm:flex-col gap-1.5 shrink-0 font-mono text-[10px] w-full sm:w-auto justify-center">
+              <button
+                type="button"
+                onClick={() => setArenaMascot('coder')}
+                className={`px-3 py-1.5 rounded-lg border font-bold transition-all flex items-center justify-center gap-1.5 ${
+                  arenaMascot === 'coder'
+                    ? 'bg-lime text-carbon-950 border-lime font-black shadow-[0_0_10px_rgba(212,255,0,0.4)]'
+                    : 'bg-[#090D16] text-slate-400 border-white/10 hover:text-white'
+                }`}
+                title="Switch to BitByte (Coder Bot)"
+              >
+                <span>💻</span>
+                <span>BitByte</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setArenaMascot('chelsea_chess')}
+                className={`px-3 py-1.5 rounded-lg border font-bold transition-all flex items-center justify-center gap-1.5 ${
+                  arenaMascot === 'chelsea_chess'
+                    ? 'bg-blue-600 text-white border-blue-400 font-black shadow-[0_0_10px_rgba(37,99,235,0.5)]'
+                    : 'bg-[#090D16] text-slate-400 border-white/10 hover:text-white'
+                }`}
+                title="Switch to Leo #26 (Chelsea Chess GM)"
+              >
+                <span>🦁</span>
+                <span>Leo #26</span>
+              </button>
+            </div>
+
+            <div className="flex-1 w-full">
+              <BitByte3D
+                key={arenaMascot}
+                size="companion"
+                mood={mascotMood}
+                mascotType={arenaMascot}
+                customMessage={mascotMessage}
+                showSpeech={true}
+              />
+            </div>
           </div>
 
           <div className="hidden lg:flex flex-col items-end gap-1.5 text-xs font-mono text-slate-400 shrink-0 border-l border-white/10 pl-6">

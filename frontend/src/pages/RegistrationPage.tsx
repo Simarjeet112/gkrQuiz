@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Play, User, Hash, AlertCircle, ShieldAlert, Terminal, Sparkles, Cpu } from 'lucide-react';
 import { BitByte3D } from '../components/mascot/BitByte3D';
-import { BitByteMood } from '../components/mascot/bitbyteDialogue';
+import { BitByteMood, MascotType } from '../components/mascot/bitbyteDialogue';
 import { api } from '../services/api';
 import { sounds } from '../utils/soundEffects';
 
@@ -12,6 +12,7 @@ export const RegistrationPage: React.FC = () => {
 
   const [displayName, setDisplayName] = useState('');
   const [participantCode, setParticipantCode] = useState('');
+  const [selectedMascot, setSelectedMascot] = useState<MascotType>('coder');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [config, setConfig] = useState<{
@@ -91,15 +92,48 @@ export const RegistrationPage: React.FC = () => {
           </span>
         </div>
 
-        {/* 3D BitByte Greeting */}
-        <div className="py-2 border-b border-white/10">
+        {/* Mascot Duo Switcher + 3D Mascot Greeting */}
+        <div className="py-2 border-b border-white/10 space-y-2">
+          <div className="flex items-center justify-center gap-1.5 font-mono text-[11px]">
+            <button
+              type="button"
+              onClick={() => setSelectedMascot('coder')}
+              className={`px-3 py-1 rounded-lg border font-bold transition-all flex items-center gap-1.5 ${
+                selectedMascot === 'coder'
+                  ? 'bg-lime text-carbon-950 border-lime font-black shadow-[0_0_10px_rgba(212,255,0,0.4)]'
+                  : 'bg-[#101522] text-slate-400 border-white/10 hover:text-white'
+              }`}
+            >
+              <span>💻</span>
+              <span>BitByte</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => setSelectedMascot('chelsea_chess')}
+              className={`px-3 py-1 rounded-lg border font-bold transition-all flex items-center gap-1.5 ${
+                selectedMascot === 'chelsea_chess'
+                  ? 'bg-blue-600 text-white border-blue-400 font-black shadow-[0_0_10px_rgba(37,99,235,0.5)]'
+                  : 'bg-[#101522] text-slate-400 border-white/10 hover:text-white'
+              }`}
+            >
+              <span>🦁</span>
+              <span>Leo #26</span>
+            </button>
+          </div>
+
           <BitByte3D
+            key={selectedMascot}
             size="companion"
+            mascotType={selectedMascot}
             mood={displayName.length > 2 ? 'excited' : 'welcome'}
             customMessage={
               displayName.length > 2
-                ? `Yo ${displayName}! Think 3 moves ahead. Lock in your candidate moves!`
-                : 'Welcome Grandmaster! Enter your callsign below to take your seat at the board.'
+                ? selectedMascot === 'chelsea_chess'
+                  ? `Challenger ${displayName}! Think 3 moves ahead, play with the pride of #26!`
+                  : `Yo ${displayName}! Systems online. Let's write bug-free solutions!`
+                : selectedMascot === 'chelsea_chess'
+                ? 'Welcome to the match! Enter your callsign to claim your seat at the board.'
+                : 'Welcome, engineer! Enter your callsign below to take your terminal seat.'
             }
           />
         </div>
