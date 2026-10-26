@@ -68,23 +68,25 @@ export const RegistrationPage: React.FC = () => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-        className="cyber-card w-full max-w-lg p-6 sm:p-8 border border-arena-cyan/40 shadow-glow-cyan relative"
+        className="ticket-stub w-full max-w-lg p-6 sm:p-8 rounded-3xl border-2 border-cyan-400/40 shadow-[0_0_40px_rgba(0,240,255,0.2)] relative bg-gradient-to-b from-[#090E20]/95 via-[#060A16]/95 to-black"
       >
-        {/* Top HUD Brand Stripe */}
-        <div className="flex items-center justify-between pb-5 border-b border-arena-border">
+        {/* Top Stickers */}
+        <div className="flex items-center justify-between pb-4 border-b border-white/10">
           <div className="flex items-center gap-3">
-            <img src="/geekroom-logo.png" alt="Geekroom GTBIT" className="w-8 h-8 object-contain" />
+            <div className="w-10 h-10 rounded-xl bg-cyan-400/20 border border-cyan-400/40 p-1 flex items-center justify-center">
+              <img src="/geekroom-logo.png" alt="Geekroom GTBIT" className="w-full h-full object-contain" />
+            </div>
             <div>
-              <div className="text-[10px] font-mono text-arena-cyan uppercase tracking-widest">
-                PLAYER TERMINAL
-              </div>
-              <div className="text-xs font-bold text-white font-mono">
-                GEEKROOM CODE ARENA 2026
+              <span className="pinterest-sticker bg-cyan-400 text-slate-950 -rotate-1 text-[9px]">
+                PASS #GKR-2026
+              </span>
+              <div className="text-sm font-black text-white font-display mt-0.5">
+                GEEKROOM CODE ARENA
               </div>
             </div>
           </div>
-          <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-arena-green/10 text-arena-greenNeon border border-arena-green/30">
-            [ READY ]
+          <span className="text-[10px] font-mono px-2.5 py-1 rounded-full bg-emerald-400/10 text-emerald-400 border border-emerald-400/30 font-bold">
+            [ READY TO COMPETE ]
           </span>
         </div>
 
@@ -193,6 +195,11 @@ export const RegistrationPage: React.FC = () => {
               </>
             )}
           </motion.button>
+
+          {/* Barcode Strip */}
+          <div className="pt-2 text-center font-mono text-[9px] tracking-[0.25em] text-slate-500 select-none">
+            ||| |||| | ||||| || |||||| |||| | || [ADMIT-CHALLENGER-ONE]
+          </div>
         </form>
       </motion.div>
     </div>

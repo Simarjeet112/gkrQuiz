@@ -150,3 +150,68 @@ body {
 .neon-glow-active {
   animation: neonPulse 2.5s infinite ease-in-out;
 }
+
+/* Pinterest / Editorial Marquee Ticker */
+@keyframes marquee {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
+}
+.animate-marquee {
+  display: flex;
+  width: max-content;
+  animation: marquee 28s linear infinite;
+}
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
+
+/* Editorial Ticket Stub with Perforated Edge */
+.ticket-stub {
+  position: relative;
+  background: rgba(10, 15, 28, 0.9);
+  border: 1px solid rgba(0, 240, 255, 0.3);
+}
+.ticket-stub::before,
+.ticket-stub::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: 18px;
+  height: 18px;
+  background: #04060A;
+  border-radius: 50%;
+  transform: translateY(-50%);
+  border: 1px solid rgba(0, 240, 255, 0.3);
+  z-index: 10;
+}
+.ticket-stub::before { left: -10px; }
+.ticket-stub::after { right: -10px; }
+
+/* Pinterest Sticker Badge */
+.pinterest-sticker {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.25rem 0.625rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6875rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-radius: 0.375rem;
+  box-shadow: 2px 3px 0 rgba(0, 0, 0, 0.6);
+  transition: transform 0.2s ease;
+}
+.pinterest-sticker:hover {
+  transform: translateY(-2px) rotate(0deg) !important;
+}
+
+/* Audio Visualizer Equalizer */
+@keyframes eqBounce {
+  0%, 100% { height: 4px; }
+  50% { height: 16px; }
+}
+.eq-bar-1 { animation: eqBounce 0.8s ease-in-out infinite; }
+.eq-bar-2 { animation: eqBounce 0.6s ease-in-out infinite 0.15s; }
+.eq-bar-3 { animation: eqBounce 1.0s ease-in-out infinite 0.3s; }
+.eq-bar-4 { animation: eqBounce 0.7s ease-in-out infinite 0.2s; }

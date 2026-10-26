@@ -47,7 +47,7 @@ function BitByteModel({
   const leftLegRef = useRef<THREE.Group>(null);
   const rightLegRef = useRef<THREE.Group>(null);
   const antennaRef = useRef<THREE.Group>(null);
-  const soccerOrbRef = useRef<THREE.Group>(null);
+  const computerRef = useRef<THREE.Group>(null);
 
   // Animation references
   const spinAngle = useRef(0);
@@ -203,11 +203,11 @@ function BitByteModel({
       }
     }
 
-    // 7. Companion Soccer / Tech Orb Floating beside BitByte (from image 1)
-    if (soccerOrbRef.current) {
-      soccerOrbRef.current.position.y = -0.75 + Math.sin(t * 3.5) * 0.08;
-      soccerOrbRef.current.rotation.y += delta * 1.5;
-      soccerOrbRef.current.rotation.x += delta * 0.8;
+    // 7. Companion Mini Cyber Computer on Hover Stand
+    if (computerRef.current) {
+      computerRef.current.position.y = -0.38 + Math.sin(t * 3.0) * 0.03;
+      computerRef.current.rotation.y = -0.32 + Math.sin(t * 1.5) * 0.05;
+      computerRef.current.rotation.x = Math.sin(t * 2.0) * 0.03;
     }
 
     // 8. Overall Hover Stance
@@ -306,6 +306,29 @@ function BitByteModel({
               toneMapped={false}
             />
           </mesh>
+
+          {/* Cute Digital Kawaii Blush Cheeks (Under eyes) */}
+          <mesh position={[-0.26, 0.22, 0.53]}>
+            <circleGeometry args={[0.065, 16]} />
+            <meshBasicMaterial color="#FF3366" transparent opacity={0.65} />
+          </mesh>
+          <mesh position={[0.26, 0.22, 0.53]}>
+            <circleGeometry args={[0.065, 16]} />
+            <meshBasicMaterial color="#FF3366" transparent opacity={0.65} />
+          </mesh>
+
+          {/* Cute Digital Smile (Geekroom mascot friendly mouth) */}
+          {mood !== 'wrong_answer' && mood !== 'defeat' ? (
+            <mesh position={[0, 0.21, 0.53]} rotation={[0, 0, Math.PI]}>
+              <torusGeometry args={[0.08, 0.015, 8, 20, Math.PI * 0.9]} />
+              <meshBasicMaterial color="#00F0FF" />
+            </mesh>
+          ) : (
+            <mesh position={[0, 0.2, 0.53]} rotation={[0, 0, 0]}>
+              <torusGeometry args={[0.07, 0.015, 8, 20, Math.PI * 0.7]} />
+              <meshBasicMaterial color="#38BDF8" />
+            </mesh>
+          )}
 
           {/* Left Bracket Ear (<) with glowing cyan edge */}
           <group ref={leftEarRef} position={[-0.8, 0.36, 0]}>
@@ -576,20 +599,93 @@ function BitByteModel({
           </group>
         </group>
 
-        {/* ── 5. FLOATING TECH SOCCER ORB COMPANION (IMAGE 1) ── */}
-        <group ref={soccerOrbRef} position={[0.75, -0.75, 0.4]}>
-          <mesh>
-            <sphereGeometry args={[0.16, 20, 20]} />
-            <meshStandardMaterial color="#F8FAFC" roughness={0.3} metalness={0.2} />
+        {/* ── 5. MINI CYBER RETRO COMPUTER / LAPTOP (REPLACES BALL) ── */}
+        <group ref={computerRef} position={[0.68, -0.38, 0.35]}>
+          {/* Base / Keyboard Deck */}
+          <RoundedBox args={[0.55, 0.038, 0.42]} radius={0.04} smoothness={3}>
+            <meshStandardMaterial color="#1E293B" metalness={0.7} roughness={0.3} />
+          </RoundedBox>
+
+          {/* Keyboard Surface Plate */}
+          <mesh position={[0, 0.024, 0.04]}>
+            <boxGeometry args={[0.48, 0.008, 0.25]} />
+            <meshStandardMaterial color="#0B0F19" roughness={0.8} />
           </mesh>
-          {/* Cyan & Dark Hexagon Accents */}
-          <mesh rotation={[Math.PI / 4, 0, 0]}>
-            <torusGeometry args={[0.162, 0.012, 8, 24]} />
-            <meshBasicMaterial color="#00F0FF" />
+
+          {/* Glowing Keyboard Keys (Rows of cyan & orange key lights) */}
+          {[-0.18, -0.09, 0, 0.09, 0.18].map((x, i) => (
+            <mesh key={`k1-${i}`} position={[x, 0.032, 0.08]}>
+              <boxGeometry args={[0.06, 0.008, 0.04]} />
+              <meshBasicMaterial color={i % 2 === 0 ? '#00F0FF' : '#FF6B00'} />
+            </mesh>
+          ))}
+          {[-0.15, -0.05, 0.05, 0.15].map((x, i) => (
+            <mesh key={`k2-${i}`} position={[x, 0.032, 0.015]}>
+              <boxGeometry args={[0.07, 0.008, 0.04]} />
+              <meshBasicMaterial color={i % 2 === 1 ? '#00FF9D' : '#00F0FF'} />
+            </mesh>
+          ))}
+
+          {/* Mini Trackpad */}
+          <mesh position={[0, 0.024, 0.14]}>
+            <boxGeometry args={[0.16, 0.004, 0.07]} />
+            <meshBasicMaterial color="#00F0FF" wireframe />
           </mesh>
-          <mesh rotation={[-Math.PI / 4, 0, 0]}>
-            <torusGeometry args={[0.162, 0.012, 8, 24]} />
-            <meshBasicMaterial color="#101626" />
+
+          {/* Angled Laptop Display Screen Lid */}
+          <group position={[0, 0.17, -0.18]} rotation={[-0.42, 0, 0]}>
+            {/* Outer Lid Bezel */}
+            <RoundedBox args={[0.55, 0.38, 0.028]} radius={0.04} smoothness={3}>
+              <meshStandardMaterial color="#1E293B" metalness={0.7} roughness={0.3} />
+            </RoundedBox>
+
+            {/* Glowing Screen Glass */}
+            <mesh position={[0, 0, 0.018]}>
+              <planeGeometry args={[0.5, 0.32]} />
+              <meshBasicMaterial color="#040814" />
+            </mesh>
+
+            {/* Simulated Live Code lines on Screen */}
+            <mesh position={[-0.06, 0.08, 0.022]}>
+              <planeGeometry args={[0.32, 0.018]} />
+              <meshBasicMaterial color="#00FF9D" />
+            </mesh>
+            <mesh position={[-0.1, 0.03, 0.022]}>
+              <planeGeometry args={[0.22, 0.018]} />
+              <meshBasicMaterial color="#00F0FF" />
+            </mesh>
+            <mesh position={[-0.04, -0.02, 0.022]}>
+              <planeGeometry args={[0.34, 0.018]} />
+              <meshBasicMaterial color="#FF6B00" />
+            </mesh>
+
+            {/* Mini Geekroom Logo on screen */}
+            <group position={[0.15, 0.06, 0.022]} scale={0.4}>
+              <mesh rotation={[0, 0, -0.2]}>
+                <boxGeometry args={[0.04, 0.2, 0.01]} />
+                <meshBasicMaterial color="#FF6B00" />
+              </mesh>
+              <mesh position={[-0.1, 0, 0]} rotation={[0, 0, Math.PI / 4]}>
+                <boxGeometry args={[0.03, 0.1, 0.01]} />
+                <meshBasicMaterial color="#00F0FF" />
+              </mesh>
+              <mesh position={[0.1, 0, 0]} rotation={[0, 0, -Math.PI / 4]}>
+                <boxGeometry args={[0.03, 0.1, 0.01]} />
+                <meshBasicMaterial color="#00F0FF" />
+              </mesh>
+            </group>
+
+            {/* Blinking Terminal Cursor */}
+            <mesh position={[0.12, -0.07, 0.022]}>
+              <planeGeometry args={[0.04, 0.018]} />
+              <meshBasicMaterial color="#00F0FF" />
+            </mesh>
+          </group>
+
+          {/* Cute Holographic Mini Hover Ring under Laptop */}
+          <mesh position={[0, -0.04, 0]} rotation={[Math.PI / 2, 0, 0]}>
+            <torusGeometry args={[0.22, 0.01, 8, 24]} />
+            <meshBasicMaterial color="#00F0FF" transparent opacity={0.6} />
           </mesh>
         </group>
       </group>

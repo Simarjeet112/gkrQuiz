@@ -72,24 +72,36 @@ export const Navbar: React.FC = () => {
             );
           })}
 
-          {/* Sound Toggle */}
+          {/* Sound Toggle with Live Equalizer */}
           <button
             onClick={handleToggleSound}
-            className={`p-2 rounded-xl border transition-colors ${
+            className={`flex items-center gap-2 px-3 py-1.5 rounded-xl border transition-all ${
               isMuted
                 ? 'bg-white/5 text-slate-500 border-white/10 hover:text-slate-300'
-                : 'bg-arena-cyan/10 text-arena-cyan border-arena-cyan/30 shadow-glow-cyan'
+                : 'bg-cyan-500/10 text-cyan-400 border-cyan-400/40 shadow-[0_0_15px_rgba(0,240,255,0.25)]'
             }`}
             title={isMuted ? 'Unmute Sound' : 'Mute Sound'}
             aria-label="Toggle Sound"
           >
-            {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
+            {isMuted ? (
+              <VolumeX className="w-4 h-4" />
+            ) : (
+              <div className="flex items-end gap-0.5 h-3.5">
+                <span className="w-0.5 bg-cyan-400 rounded-full eq-bar-1" />
+                <span className="w-0.5 bg-cyan-400 rounded-full eq-bar-2" />
+                <span className="w-0.5 bg-cyan-400 rounded-full eq-bar-3" />
+                <span className="w-0.5 bg-cyan-400 rounded-full eq-bar-4" />
+              </div>
+            )}
+            <span className="text-[10px] font-mono uppercase font-bold">
+              {isMuted ? 'AUDIO: OFF' : 'AUDIO: ON'}
+            </span>
           </button>
 
           {/* Enter Arena CTA */}
           <Link
             to="/register"
-            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-arena-cyan to-arena-cyanDark hover:from-cyan-300 hover:to-arena-cyan text-slate-950 text-xs font-mono font-bold shadow-glow-cyan transition-all duration-200 hover:scale-105 active:scale-95"
+            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-cyan-400 to-cyan-300 hover:from-cyan-300 hover:to-cyan-200 text-slate-950 text-xs font-display font-black shadow-[0_0_20px_rgba(0,240,255,0.4)] arcade-btn transition-all duration-200"
           >
             <Play className="w-3.5 h-3.5 fill-slate-950" />
             <span>ENTER ARENA</span>
