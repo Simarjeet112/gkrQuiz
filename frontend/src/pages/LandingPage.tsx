@@ -17,6 +17,7 @@ import {
   Coins,
 } from 'lucide-react';
 import { BitByte3D } from '../components/mascot/BitByte3D';
+import { ChessBoardWidget } from '../components/ui/ChessBoardWidget';
 import { sounds } from '../utils/soundEffects';
 
 const tierCards = [
@@ -55,6 +56,7 @@ const tierCards = [
 export const LandingPage: React.FC = () => {
   const [tokenInserted, setTokenInserted] = useState(false);
   const [tokenToast, setTokenToast] = useState(false);
+  const [heroTab, setHeroTab] = useState<'chess' | 'mascot'>('chess');
 
   const handleInsertToken = () => {
     sounds.playTierUp();
@@ -65,6 +67,22 @@ export const LandingPage: React.FC = () => {
 
   return (
     <div className="relative min-h-[calc(100vh-4rem)] chessboard-grid overflow-hidden bg-carbon-950 text-carbon-50">
+      {/* ── CHELSEA FOOTBALL CLUB x CHESS.COM MATCHDAY ANNOUNCEMENT BAR ── */}
+      <div className="w-full bg-gradient-to-r from-[#031B4D] via-[#0A4BB8] to-[#031B4D] text-white py-2 px-4 border-b border-blue-400/30 flex flex-wrap items-center justify-center gap-3 font-mono text-xs shadow-lg select-none">
+        <span className="text-base animate-pulse">🦁</span>
+        <span className="font-extrabold uppercase tracking-wider text-amber-300 flex items-center gap-1.5">
+          <span>CHELSEA FC</span>
+          <span className="text-blue-200">×</span>
+          <span>CHESS.COM ARENA</span>
+        </span>
+        <span className="hidden sm:inline text-blue-300">•</span>
+        <span className="hidden sm:inline text-white font-bold">THE PRIDE OF GTBIT // THE BLUES #26</span>
+        <span className="text-blue-300">•</span>
+        <span className="px-2 py-0.5 rounded bg-blue-900/90 text-lime font-black border border-lime/40 text-[11px]">
+          5+0 BLITZ KICKOFF
+        </span>
+      </div>
+
       {/* Background Lighting Gradients - Chelsea Cobalt + Acid Lime */}
       <div className="absolute top-1/4 left-1/4 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-blue-600/10 rounded-full blur-[160px] pointer-events-none" />
       <div className="absolute bottom-20 right-10 w-[500px] h-[500px] bg-lime/5 rounded-full blur-[140px] pointer-events-none" />
@@ -206,43 +224,79 @@ export const LandingPage: React.FC = () => {
             </AnimatePresence>
           </motion.div>
 
-          {/* Hero Right: High-End Titanium Console Card with 3D BitByte */}
+          {/* Hero Right: Switchable Chelsea Chessboard & 3D BitByte Console */}
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-            className="lg:col-span-5 flex flex-col items-center justify-center relative"
+            className="lg:col-span-5 flex flex-col items-center justify-center relative w-full"
           >
-            <div className="relative w-full max-w-lg rounded-2xl p-5 sm:p-6 border border-white/15 shadow-titanium overflow-hidden bg-[#101522]">
-              {/* Header Badge */}
-              <div className="flex items-center justify-between pb-3 border-b border-white/10 mb-2">
-                <div className="flex items-center gap-2.5 font-mono text-xs font-bold">
-                  <div className="w-7 h-7 rounded-lg bg-white/10 border border-white/15 flex items-center justify-center p-0.5">
-                    <img src="/geekroom-logo.png" alt="Geekroom" className="w-full h-full object-contain" />
-                  </div>
-                  <div>
-                    <div className="leading-tight text-white font-display">BITBYTE // GKR-01</div>
-                    <div className="text-[10px] text-slate-400 font-mono">CODE ARENA COMPANION</div>
-                  </div>
-                </div>
-                <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-lime/10 border border-lime/30 text-[10px] font-mono text-lime font-bold">
-                  <span className="w-2 h-2 rounded-full bg-lime animate-pulse" />
-                  <span>ONLINE</span>
-                </div>
-              </div>
-
-              {/* Three.js 3D Living Mascot */}
-              <BitByte3D size="hero" mood="welcome" showSpeech={true} />
-
-              {/* Console Footer */}
-              <div className="flex items-center justify-between pt-3 border-t border-white/10 text-[11px] font-mono text-slate-400">
-                <span className="text-slate-300 flex items-center gap-1.5">
-                  <Terminal className="w-3.5 h-3.5 text-lime" />
-                  <span>Click BitByte to interact</span>
-                </span>
-                <span className="text-slate-500 text-[10px]">WebGL 60FPS</span>
-              </div>
+            {/* View Switcher */}
+            <div className="flex items-center gap-1.5 mb-3 bg-[#081020] p-1 rounded-xl border border-blue-500/30 font-mono text-xs w-full max-w-md justify-center">
+              <button
+                onClick={() => {
+                  sounds.playClick();
+                  setHeroTab('chess');
+                }}
+                className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg font-bold transition-all text-xs ${
+                  heroTab === 'chess'
+                    ? 'bg-blue-600 text-white shadow-[0_0_15px_rgba(37,99,235,0.5)]'
+                    : 'text-slate-400 hover:text-white'
+                }`}
+              >
+                <span>🦁</span>
+                <span>CHELSEA CHESSBOARD</span>
+              </button>
+              <button
+                onClick={() => {
+                  sounds.playClick();
+                  setHeroTab('mascot');
+                }}
+                className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg font-bold transition-all text-xs ${
+                  heroTab === 'mascot'
+                    ? 'bg-lime text-carbon-950 font-black shadow-[0_0_15px_rgba(212,255,0,0.5)]'
+                    : 'text-slate-400 hover:text-white'
+                }`}
+              >
+                <span>🤖</span>
+                <span>BITBYTE 3D</span>
+              </button>
             </div>
+
+            {heroTab === 'chess' ? (
+              <ChessBoardWidget />
+            ) : (
+              <div className="relative w-full max-w-lg rounded-2xl p-5 sm:p-6 border border-white/15 shadow-titanium overflow-hidden bg-[#101522]">
+                {/* Header Badge */}
+                <div className="flex items-center justify-between pb-3 border-b border-white/10 mb-2">
+                  <div className="flex items-center gap-2.5 font-mono text-xs font-bold">
+                    <div className="w-7 h-7 rounded-lg bg-white/10 border border-white/15 flex items-center justify-center p-0.5">
+                      <img src="/geekroom-logo.png" alt="Geekroom" className="w-full h-full object-contain" />
+                    </div>
+                    <div>
+                      <div className="leading-tight text-white font-display">BITBYTE // GKR-01</div>
+                      <div className="text-[10px] text-slate-400 font-mono">CODE ARENA COMPANION</div>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-lime/10 border border-lime/30 text-[10px] font-mono text-lime font-bold">
+                    <span className="w-2 h-2 rounded-full bg-lime animate-pulse" />
+                    <span>ONLINE</span>
+                  </div>
+                </div>
+
+                {/* Three.js 3D Living Mascot */}
+                <BitByte3D size="hero" mood="welcome" showSpeech={true} />
+
+                {/* Console Footer */}
+                <div className="flex items-center justify-between pt-3 border-t border-white/10 text-[11px] font-mono text-slate-400">
+                  <span className="text-slate-300 flex items-center gap-1.5">
+                    <Terminal className="w-3.5 h-3.5 text-lime" />
+                    <span>Click BitByte to interact</span>
+                  </span>
+                  <span className="text-slate-500 text-[10px]">WebGL 60FPS</span>
+                </div>
+              </div>
+            )}
           </motion.div>
         </div>
       </section>
@@ -338,23 +392,28 @@ export const LandingPage: React.FC = () => {
             </div>
           </div>
 
-          {/* Community Seal Card */}
-          <div className="md:col-span-4 rounded-2xl p-6 border border-white/10 bg-[#101522] flex flex-col justify-between text-center space-y-4 shadow-titanium">
-            <div className="flex items-center justify-center pt-2">
-              <div className="relative w-16 h-16 rounded-2xl bg-white/5 border border-white/15 p-2 shadow-md">
+          {/* Chelsea FC x Chess.com Community Seal Card */}
+          <div className="md:col-span-4 rounded-2xl p-6 border-2 border-blue-600/30 bg-gradient-to-b from-[#091730] to-[#050B17] flex flex-col justify-between text-center space-y-4 shadow-titanium">
+            <div className="flex items-center justify-center gap-3 pt-2">
+              <div className="w-14 h-14 rounded-2xl bg-blue-600/20 border border-blue-500/40 flex items-center justify-center text-3xl shadow-lg">
+                🦁
+              </div>
+              <div className="relative w-14 h-14 rounded-2xl bg-white/5 border border-white/15 p-2 shadow-md">
                 <img src="/geekroom-logo.png" alt="Geekroom GTBIT" className="w-full h-full object-contain" />
               </div>
             </div>
 
             <div>
-              <div className="text-xs font-mono text-lime font-bold uppercase tracking-wider">
-                BUILT BY GEEKROOM
+              <div className="text-xs font-mono text-amber-400 font-bold uppercase tracking-wider flex items-center justify-center gap-1.5">
+                <span>CHELSEA FC</span>
+                <span className="text-blue-400">×</span>
+                <span>CHESS.COM</span>
               </div>
               <h4 className="text-lg font-black text-white font-display mt-0.5">
-                GTBIT TECHNICAL SOCIETY
+                THE BLUES // ARENA #26
               </h4>
-              <p className="text-[11px] text-slate-400 mt-1 font-sans">
-                Empowering first-year students to code, build, and innovate.
+              <p className="text-[11px] text-blue-200/80 mt-1 font-sans">
+                Inspired by the relentless grit of Chelsea Football Club and the calculated depth of modern chess engines.
               </p>
             </div>
 
