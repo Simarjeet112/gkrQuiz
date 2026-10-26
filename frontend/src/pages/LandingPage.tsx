@@ -117,9 +117,6 @@ export const LandingPage: React.FC = () => {
               <span className="pinterest-sticker bg-[#101728] text-cyan-300 border border-cyan-400/40 rotate-1 shadow-[0_0_12px_rgba(0,240,255,0.2)]">
                 <Code2 className="w-3.5 h-3.5 text-orange-400" /> OFFICIAL GEEKROOM SOCIETY
               </span>
-              <span className="pinterest-sticker bg-rose-500 text-white -rotate-1 hidden sm:inline-flex">
-                ⚡ 100% PURE LOGIC • NO AI
-              </span>
             </div>
 
             {/* Giant Editorial Headline */}
@@ -236,7 +233,7 @@ export const LandingPage: React.FC = () => {
                   </div>
                   <div>
                     <div className="leading-tight text-white font-display">BITBYTE // GKR-01</div>
-                    <div className="text-[10px] text-cyan-400 font-normal">OFFICIAL JERSEY • RETRO TERMINAL</div>
+                    <div className="text-[10px] text-cyan-400 font-mono">CODE ARENA COMPANION</div>
                   </div>
                 </div>
                 <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-400/10 border border-emerald-400/30 text-[10px] font-mono text-emerald-400 font-bold">
@@ -245,14 +242,14 @@ export const LandingPage: React.FC = () => {
                 </div>
               </div>
 
-              {/* Three.js 3D Living Mascot with Mini Laptop */}
+              {/* Three.js 3D Living Mascot */}
               <BitByte3D size="hero" mood="welcome" showSpeech={true} />
 
               {/* Console Footer */}
               <div className="flex items-center justify-between pt-3 border-t border-white/10 text-[11px] font-mono text-slate-400">
                 <span className="text-cyan-400 flex items-center gap-1.5">
                   <Terminal className="w-3.5 h-3.5" />
-                  <span>Tap BitByte or speech to interact!</span>
+                  <span>Click BitByte to interact</span>
                 </span>
                 <span className="text-slate-500 text-[10px]">WebGL 60FPS</span>
               </div>
