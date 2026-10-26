@@ -1,4 +1,5 @@
-const API_BASE = '/api';
+const RAW_BASE = import.meta.env.VITE_API_URL || '';
+const API_BASE = RAW_BASE ? (RAW_BASE.endsWith('/api') ? RAW_BASE : `${RAW_BASE}/api`) : '/api';
 
 function getOrganizerHeader(): Record<string, string> {
   const code = typeof window !== 'undefined' ? sessionStorage.getItem('gkr_organizer_passcode') : null;
