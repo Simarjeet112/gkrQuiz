@@ -1,0 +1,50 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: geekroom_arena_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: geekroom
+      POSTGRES_PASSWORD: arena_secret_password_2025
+      POSTGRES_DB: geekroom_arena
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U geekroom -d geekroom_arena"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: geekroom_arena_api
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      PORT: 5001
+      DATABASE_URL: postgresql://geekroom:arena_secret_password_2025@postgres:5432/geekroom_arena
+      JWT_SECRET: geekroom_docker_production_jwt_key_2025
+      ADMIN_EMAIL: admin@geekroom.in
+      ADMIN_PASSWORD: GeekroomAdmin2025!
+    ports:
+      - "5001:5001"
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: geekroom_arena_ui
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - "80:80"
+
+volumes:
+  pgdata:
