@@ -71,16 +71,16 @@ export const LeaderboardPage: React.FC = () => {
           <div>
             <div className="inline-flex items-center gap-2 text-xs font-mono text-lime-400 uppercase tracking-widest mb-1.5">
               <span className="w-2 h-2 rounded-full bg-lime-400 animate-pulse" />
-              LIVE TELEMETRY // SECTOR RANKINGS
+              GRANDMASTER TELEMETRY // FIDE ARENA STANDINGS
             </div>
             <h1 className="text-3xl sm:text-5xl font-black font-display text-white tracking-wider">
               ARENA LEADERBOARD
             </h1>
             <p className="text-xs font-mono text-carbon-400 mt-1 flex flex-wrap items-center gap-2">
-              <span className="text-carbon-500">SORT PROTOCOL:</span>
-              <span className="text-lime-400 font-bold">SCORE [MAX 90]</span>
+              <span className="text-carbon-500">TIEBREAK PROTOCOL:</span>
+              <span className="text-lime-400 font-bold">MAX SCORE [90]</span>
               <span className="text-carbon-600">→</span>
-              <span className="text-ember-400 font-bold">TIME [ASC]</span>
+              <span className="text-ember-400 font-bold">RAPID CLOCK [ASC]</span>
               <span className="text-carbon-600">→</span>
               <span className="text-carbon-400">TIMESTAMP</span>
             </p>
@@ -139,11 +139,11 @@ export const LeaderboardPage: React.FC = () => {
                 transition={{ delay: 0.1 }}
                 className="titanium-card p-6 border border-slate-300/20 flex flex-col items-center text-center order-2 md:order-1 relative bg-gradient-to-b from-slate-300/10 via-carbon-900 to-carbon-950"
               >
-                <div className="w-13 h-13 rounded-2xl bg-slate-300/10 border border-slate-300/30 flex items-center justify-center text-slate-200 mb-3">
-                  <Medal className="w-7 h-7" />
+                <div className="w-13 h-13 rounded-2xl bg-slate-300/10 border border-slate-300/30 flex items-center justify-center text-slate-200 mb-3 text-2xl">
+                  ♞
                 </div>
                 <div className="text-[11px] font-mono text-slate-300 uppercase tracking-widest font-bold">
-                  RANK #02 // SILVER
+                  RANK #02 // INTERNATIONAL MASTER
                 </div>
                 <h3 className="text-xl font-bold font-display text-white mt-1 truncate max-w-full">
                   {top3[1].display_name}
@@ -172,14 +172,14 @@ export const LeaderboardPage: React.FC = () => {
                 animate={{ opacity: 1, y: 0 }}
                 className="titanium-card p-7 border-2 border-amber-400/40 flex flex-col items-center text-center order-1 md:order-2 bg-gradient-to-b from-amber-500/15 via-carbon-900 to-carbon-950 relative"
               >
-                <div className="absolute -top-3 px-3 py-1 bg-amber-400 text-carbon-950 font-black text-[10px] uppercase tracking-widest font-mono rounded-full">
-                  CURRENT LEADER
+                <div className="absolute -top-3 px-3 py-1 bg-amber-400 text-carbon-950 font-black text-[10px] uppercase tracking-widest font-mono rounded-full flex items-center gap-1">
+                  <span>♚</span> GRANDMASTER CHAMPION
                 </div>
-                <div className="w-16 h-16 rounded-2xl bg-amber-400/15 border border-amber-400/40 flex items-center justify-center text-amber-300 mb-3">
-                  <Crown className="w-8 h-8" />
+                <div className="w-16 h-16 rounded-2xl bg-amber-400/15 border border-amber-400/40 flex items-center justify-center text-amber-300 mb-3 text-3xl">
+                  ♚
                 </div>
                 <div className="text-xs font-mono text-amber-400 uppercase tracking-widest font-bold flex items-center gap-1.5">
-                  <Crown className="w-3.5 h-3.5" /> RANK #01 // GOLD
+                  RANK #01 // GRANDMASTER
                 </div>
                 <h3 className="text-2xl font-black font-display text-white mt-1 truncate max-w-full">
                   {top3[0].display_name}
@@ -209,11 +209,11 @@ export const LeaderboardPage: React.FC = () => {
                 transition={{ delay: 0.2 }}
                 className="titanium-card p-6 border border-amber-800/30 flex flex-col items-center text-center order-3 relative bg-gradient-to-b from-amber-900/10 via-carbon-900 to-carbon-950"
               >
-                <div className="w-13 h-13 rounded-2xl bg-amber-800/15 border border-amber-800/30 flex items-center justify-center text-amber-600 mb-3">
-                  <Medal className="w-7 h-7" />
+                <div className="w-13 h-13 rounded-2xl bg-amber-800/15 border border-amber-800/30 flex items-center justify-center text-amber-600 mb-3 text-2xl">
+                  ♜
                 </div>
                 <div className="text-[11px] font-mono text-amber-600 uppercase tracking-widest font-bold">
-                  RANK #03 // BRONZE
+                  RANK #03 // CANDIDATE MASTER
                 </div>
                 <h3 className="text-xl font-bold font-display text-white mt-1 truncate max-w-full">
                   {top3[2].display_name}

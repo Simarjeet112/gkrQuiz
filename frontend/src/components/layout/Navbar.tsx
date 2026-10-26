@@ -37,8 +37,8 @@ export const Navbar: React.FC = () => {
               <span className="font-extrabold tracking-wider text-base sm:text-lg text-white group-hover:text-lime transition-colors font-display">
                 GEEKROOM
               </span>
-              <span className="text-[10px] px-1.5 py-0.5 rounded bg-lime/10 text-lime font-mono border border-lime/30 font-bold">
-                GTBIT 2026
+              <span className="text-[10px] px-1.5 py-0.5 rounded bg-lime/10 text-lime font-mono border border-lime/30 font-bold flex items-center gap-1">
+                <span>♚</span> GTBIT 2026
               </span>
             </div>
             <div className="flex items-center gap-2 text-[10px] font-mono tracking-widest text-slate-400">
@@ -46,7 +46,7 @@ export const Navbar: React.FC = () => {
               <span className="text-slate-600">//</span>
               <span className="text-slate-300 font-semibold flex items-center gap-1">
                 <span className="w-1.5 h-1.5 rounded-full bg-lime animate-pulse" />
-                BITBYTE 3D
+                5+0 BLITZ FORMAT
               </span>
             </div>
           </div>

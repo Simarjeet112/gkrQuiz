@@ -252,9 +252,9 @@ export const QuizArenaPage: React.FC = () => {
   const isBossTier = currentQ.difficulty === 'tough';
 
   const getTierInfo = (diff: string) => {
-    if (diff === 'easy') return { label: 'TIER 1 // RECRUIT', pts: '10 PTS', color: 'text-emerald-400 border-emerald-500/40 bg-emerald-500/10' };
-    if (diff === 'medium') return { label: 'TIER 2 // WARRIOR', pts: '20 PTS', color: 'text-amber-400 border-amber-500/40 bg-amber-500/10' };
-    return { label: 'TIER 3 // BOSS CHALLENGE', pts: '30 PTS', color: 'text-red-400 border-red-500/50 bg-red-500/15' };
+    if (diff === 'easy') return { label: 'OPENING THEORY // ♟ MOVE 1-2', pts: '10 PTS', color: 'text-emerald-400 border-emerald-500/40 bg-emerald-500/10' };
+    if (diff === 'medium') return { label: 'TACTICAL MIDDLEGAME // ♞ MOVE 3-4', pts: '20 PTS', color: 'text-amber-400 border-amber-500/40 bg-amber-500/10' };
+    return { label: 'GRANDMASTER ENDGAME // ♚ MOVE 5', pts: '30 PTS', color: 'text-rose-400 border-rose-500/50 bg-rose-500/15' };
   };
 
   const tier = getTierInfo(currentQ.difficulty);
@@ -276,46 +276,50 @@ export const QuizArenaPage: React.FC = () => {
             </div>
           </div>
 
-          {/* Question Stepper Indicator */}
+          {/* Question Stepper Indicator (Chess Move Order) */}
           <div className="flex items-center gap-2">
             {questions.map((q, idx) => {
               const isActive = currentIndex === idx;
               const isAnswered = !!selectedAnswers[q.id];
               const isQBoss = q.difficulty === 'tough';
+              const pieceIcon = idx < 2 ? '♟' : idx < 4 ? '♞' : '♚';
 
               return (
                 <button
                   key={q.id}
                   onClick={() => navigateToQuestion(idx)}
-                  className={`w-8 h-8 rounded-lg font-mono text-xs font-bold transition-all flex items-center justify-center border ${
+                  className={`h-8 px-2.5 rounded-lg font-mono text-xs font-bold transition-all flex items-center justify-center gap-1 border ${
                     isActive
                       ? isQBoss
-                        ? 'bg-rose-500 text-white border-rose-400 scale-105'
-                        : 'bg-lime text-carbon-950 border-lime scale-105 font-black'
+                        ? 'bg-rose-500 text-white border-rose-400 scale-105 shadow-[0_0_12px_rgba(244,63,94,0.4)]'
+                        : 'bg-lime text-carbon-950 border-lime scale-105 font-black shadow-[0_0_12px_rgba(212,255,0,0.4)]'
                       : isAnswered
                       ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30'
                       : 'bg-[#090D16] text-slate-400 border-white/10 hover:text-white hover:border-white/20'
                   }`}
-                  title={`Question ${idx + 1} (${q.difficulty.toUpperCase()}): ${isAnswered ? 'Answered' : 'Unanswered'}`}
+                  title={`Move ${idx + 1} (${q.difficulty.toUpperCase()}): ${isAnswered ? 'Answered' : 'Unanswered'}`}
                 >
-                  {isQBoss ? <Flame className="w-3.5 h-3.5" /> : idx + 1}
+                  <span className="text-[11px] opacity-80">{pieceIcon}</span>
+                  <span>{idx + 1}</span>
                 </button>
               );
             })}
           </div>
 
-          {/* Synchronized Countdown Timer */}
+          {/* Synchronized Countdown Timer (Dual Chess Blitz Clock) */}
           <div
             className={`flex items-center gap-2.5 px-4 py-2 rounded-xl font-mono border transition-all shrink-0 ${
               isUrgent
-                ? 'bg-rose-500/20 text-rose-300 border-rose-500 animate-pulse'
+                ? 'bg-rose-500/20 text-rose-300 border-rose-500 animate-pulse shadow-[0_0_15px_rgba(244,63,94,0.3)]'
                 : 'bg-[#090D16] text-white border-white/10'
             }`}
           >
             <Clock className={`w-4 h-4 ${isUrgent ? 'text-rose-400' : 'text-lime'}`} />
             <div className="text-right">
-              <div className="text-[9px] text-slate-400 uppercase leading-none">TIME REMAINING</div>
-              <div className="text-base font-bold tracking-wider leading-none mt-1">
+              <div className="text-[9px] text-slate-400 uppercase leading-none font-bold">
+                {isUrgent ? 'TIME TROUBLE ⚡' : 'CHESS CLOCK // 5+0'}
+              </div>
+              <div className="text-base font-extrabold tracking-wider leading-none mt-1 tabular-nums">
                 {secondsRemaining !== null ? formatTimer(secondsRemaining) : '--:--'}
               </div>
             </div>
@@ -359,8 +363,8 @@ export const QuizArenaPage: React.FC = () => {
             {isBossTier && (
               <div className="mb-4 p-2.5 rounded-xl bg-rose-500/15 border border-rose-500/30 text-rose-200 text-xs font-mono flex items-center justify-between">
                 <span className="flex items-center gap-2 font-bold uppercase tracking-wider">
-                  <Flame className="w-4 h-4 text-rose-400 animate-pulse" />
-                  BOSS ENCOUNTER // MAXIMUM DIFFICULTY
+                  <span className="text-base text-rose-400">♚</span>
+                  CRITICAL ENDGAME POSITION // GRANDMASTER PUZZLE
                 </span>
                 <span className="text-rose-300 font-bold">30 POINTS</span>
               </div>
@@ -370,7 +374,7 @@ export const QuizArenaPage: React.FC = () => {
             <div className="flex items-center justify-between gap-3 pb-4 border-b border-white/10">
               <div className="flex items-center gap-2.5 font-mono text-xs">
                 <span className="px-2.5 py-1 rounded-md bg-white/5 border border-white/10 text-slate-300">
-                  QUESTION {currentIndex + 1} OF {questions.length}
+                  MOVE {currentIndex + 1} OF {questions.length} // {currentIndex < 2 ? 'OPENING' : currentIndex < 4 ? 'MIDDLEGAME' : 'ENDGAME'}
                 </span>
                 <span className="text-slate-500">•</span>
                 <span className="text-slate-400 uppercase">{currentQ.category}</span>

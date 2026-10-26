@@ -78,16 +78,16 @@ export const RegistrationPage: React.FC = () => {
               <img src="/geekroom-logo.png" alt="Geekroom GTBIT" className="w-full h-full object-contain" />
             </div>
             <div>
-              <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-lime/10 text-lime border border-lime/30 font-bold uppercase tracking-wider">
-                CHALLENGER SEAT #2026
+              <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-lime/10 text-lime border border-lime/30 font-bold uppercase tracking-wider flex items-center gap-1">
+                <span>♟</span> BOARD 01 // SEAT #2026
               </span>
               <div className="text-sm font-black text-white font-display mt-0.5">
                 GEEKROOM CODE ARENA
               </div>
             </div>
           </div>
-          <span className="text-[10px] font-mono px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 font-bold">
-            [ READY ]
+          <span className="text-[10px] font-mono px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 font-bold flex items-center gap-1">
+            <span>●</span> BLITZ READY
           </span>
         </div>
 
@@ -98,19 +98,20 @@ export const RegistrationPage: React.FC = () => {
             mood={displayName.length > 2 ? 'excited' : 'welcome'}
             customMessage={
               displayName.length > 2
-                ? `Yo ${displayName}! Ready to own the arena? Lock in your callsign!`
-                : 'Welcome challenger! Enter your name below to claim your arena seat.'
+                ? `Yo ${displayName}! Think 3 moves ahead. Lock in your candidate moves!`
+                : 'Welcome Grandmaster! Enter your callsign below to take your seat at the board.'
             }
           />
         </div>
 
         {/* Heading */}
         <div className="mt-4 mb-4 text-center sm:text-left">
-          <h1 className="text-2xl font-black text-white font-display tracking-tight">
-            CHALLENGER REGISTRATION
+          <h1 className="text-2xl font-black text-white font-display tracking-tight flex items-center gap-2">
+            <span>CHALLENGER ADMISSION</span>
+            <span className="text-sm font-mono text-lime font-normal">♚</span>
           </h1>
           <p className="text-slate-400 text-xs mt-1 font-mono">
-            5 questions: 2 Easy (10p) → 2 Medium (20p) → 1 Tough (30p). 5 minutes total.
+            5 Strategic Moves: ♟ Opening (10p) → ♞ Middlegame (20p) → ♚ The Endgame (30p). 5+0 Rapid Blitz.
           </p>
         </div>
 
@@ -171,11 +172,11 @@ export const RegistrationPage: React.FC = () => {
           <div className="p-3.5 rounded-xl bg-[#090D16] border border-white/10 text-[11px] font-mono text-slate-400 space-y-1">
             <div className="text-xs font-bold text-lime flex items-center gap-1.5 mb-1">
               <ShieldAlert className="w-3.5 h-3.5" />
-              <span>RULES OF ENGAGEMENT:</span>
+              <span>RULES OF THE BOARD:</span>
             </div>
-            <div>• Strict order: 2 Easy (10p) → 2 Medium (20p) → 1 Tough (30p)</div>
-            <div>• 5-Minute timer runs on server; progress auto-saves continuously</div>
-            <div>• Ties broken by: 1) Score 2) Time taken 3) Submission timestamp</div>
+            <div>• 5 Moves: 2 Opening (10p) → 2 Middlegame (20p) → 1 Endgame (30p)</div>
+            <div>• 5+0 Rapid Blitz clock; candidate moves auto-saved continuously</div>
+            <div>• Standings: 1) Game Score 2) Clock Time 3) Submission timestamp</div>
           </div>
 
           <motion.button
@@ -187,12 +188,12 @@ export const RegistrationPage: React.FC = () => {
             {loading ? (
               <span className="flex items-center gap-2">
                 <span className="w-4 h-4 border-2 border-carbon-950/30 border-t-carbon-950 rounded-full animate-spin" />
-                <span>INITIALIZING ARENA SESSION...</span>
+                <span>CALCULATING OPENING MOVES...</span>
               </span>
             ) : (
               <>
                 <Play className="w-4 h-4 fill-current" />
-                <span>INITIATE ARENA CHALLENGE</span>
+                <span>♟ 1. e4 // INITIATE ARENA CHALLENGE</span>
               </>
             )}
           </motion.button>

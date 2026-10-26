@@ -22,33 +22,33 @@ import { sounds } from '../utils/soundEffects';
 const tierCards = [
   {
     tier: 'STAGE 01',
-    level: 'RECRUIT WARMUP',
+    level: '♟ OPENING THEORY',
     points: '10 PTS EACH',
     color: 'border-white/10 hover:border-lime/40',
     bg: 'bg-[#101522]',
     tag: 'bg-lime text-carbon-950',
-    desc: '2 Random Easy questions on core algorithms, control flow, loops, and fundamental data structures.',
-    icon: <Sparkles className="w-5 h-5 text-lime" />,
+    desc: 'Move 1 & 2: Rapid opening tactics on algorithms, control flow, loops, and Python/SQL fundamentals.',
+    icon: <span className="text-xl text-lime font-bold">♟</span>,
   },
   {
     tier: 'STAGE 02',
-    level: 'WARRIOR TRIALS',
+    level: '♞ TACTICAL MIDDLEGAME',
     points: '20 PTS EACH',
     color: 'border-white/10 hover:border-ember/40',
     bg: 'bg-[#101522]',
     tag: 'bg-ember text-white',
-    desc: '2 Random Medium questions on OOP polymorphism, Tower of Hanoi recurrence, BFS/DFS, and dynamic allocation.',
-    icon: <Zap className="w-5 h-5 text-ember" />,
+    desc: 'Move 3 & 4: Deep calculations on OOP polymorphism, Tower of Hanoi recurrence, BFS/DFS, and data structures.',
+    icon: <span className="text-xl text-ember font-bold">♞</span>,
   },
   {
     tier: 'STAGE 03',
-    level: 'BOSS ENCOUNTER',
+    level: '♚ GRANDMASTER ENDGAME',
     points: '30 PTS',
     color: 'border-rose-500/30 hover:border-rose-500/60',
     bg: 'bg-[#15101A]',
     tag: 'bg-rose-500 text-white',
-    desc: '1 Random Tough challenge on LRU cache architecture, Dijkstra, CAP theorem trade-offs, and deadlock theory.',
-    icon: <Flame className="w-5 h-5 text-rose-400" />,
+    desc: 'Move 5: High-stakes checkmate move on cache architecture, graph shortest paths, or core data structures.',
+    icon: <span className="text-xl text-rose-400 font-bold">♚</span>,
   },
 ];
 
@@ -69,28 +69,22 @@ export const LandingPage: React.FC = () => {
       <div className="absolute top-1/4 left-1/4 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-lime/5 rounded-full blur-[140px] pointer-events-none" />
       <div className="absolute bottom-20 right-10 w-[500px] h-[500px] bg-ember/5 rounded-full blur-[120px] pointer-events-none" />
 
-      {/* ── 1. ARCHITECTURAL TOP TICKER TAPE ── */}
+      {/* ── 1. ARCHITECTURAL TOP TICKER TAPE (Chess Grandmaster Edition) ── */}
       <div className="w-full bg-[#101522] text-slate-300 py-2 overflow-hidden font-mono text-xs border-y border-white/10 select-none">
         <div className="animate-marquee whitespace-nowrap flex items-center gap-8">
-          <span className="text-lime font-bold">★ GEEKROOM CODE ARENA 2026</span>
+          <span className="text-lime font-bold">♟ 1. e4 THINK 3 MOVES AHEAD</span>
           <span className="text-slate-600">•</span>
-          <span>GTBIT ORIENTATION CODING EVENT</span>
+          <span>GEEKROOM GTBIT // THE CODING CHESSBOARD</span>
           <span className="text-slate-600">•</span>
-          <span>5 QUESTIONS // 5 MINUTES // 90 POINTS MAX</span>
+          <span>5+0 BLITZ FORMAT // 90 PTS MAX</span>
           <span className="text-slate-600">•</span>
-          <span className="text-ember font-bold">INSTANT TERMINAL ACCESS</span>
+          <span className="text-ember font-bold">♞ OPENING → MIDDLEGAME → ENDGAME</span>
           <span className="text-slate-600">•</span>
-          <span>THINK FAST • CODE SMART • OWN THE ARENA</span>
+          <span>CALCULATE DEEP • PRE-MOVE ACCURACY • OWN THE ARENA</span>
           <span className="text-slate-600">•</span>
-          <span className="text-lime font-bold">★ GEEKROOM CODE ARENA 2026</span>
+          <span className="text-lime font-bold">♚ CHECKMATE THE LEADERBOARD</span>
           <span className="text-slate-600">•</span>
-          <span>GTBIT ORIENTATION CODING EVENT</span>
-          <span className="text-slate-600">•</span>
-          <span>5 QUESTIONS // 5 MINUTES // 90 POINTS MAX</span>
-          <span className="text-slate-600">•</span>
-          <span className="text-ember font-bold">INSTANT TERMINAL ACCESS</span>
-          <span className="text-slate-600">•</span>
-          <span>THINK FAST • CODE SMART • OWN THE ARENA</span>
+          <span>FIDE ARENA PERFORMANCE RATING</span>
         </div>
       </div>
 

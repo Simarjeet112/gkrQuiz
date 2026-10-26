@@ -145,10 +145,10 @@ export const ResultsPage: React.FC = () => {
   }
 
   const getRankBadge = (score: number) => {
-    if (score >= 80) return { title: 'ARENA TITAN // S-TIER', color: 'text-lime-300 border-lime-400/40 bg-lime-400/10' };
-    if (score >= 60) return { title: 'CODE GLADIATOR // A-TIER', color: 'text-ember-300 border-ember-400/40 bg-ember-500/10' };
-    if (score >= 40) return { title: 'CORE ARCHITECT // B-TIER', color: 'text-cyan-300 border-cyan-400/40 bg-cyan-500/10' };
-    return { title: 'ARENA RECRUIT // INITIATE', color: 'text-slate-300 border-white/20 bg-white/5' };
+    if (score >= 80) return { title: 'GRANDMASTER (GM) // 2800+ ELO ♚', color: 'text-lime-300 border-lime-400/40 bg-lime-400/10' };
+    if (score >= 60) return { title: 'INTERNATIONAL MASTER (IM) // 2400+ ELO ♞', color: 'text-ember-300 border-ember-400/40 bg-ember-500/10' };
+    if (score >= 40) return { title: 'CANDIDATE MASTER (CM) // 2000+ ELO ♜', color: 'text-cyan-300 border-cyan-400/40 bg-cyan-500/10' };
+    return { title: 'CLUB TACTICIAN // 1500 ELO ♟', color: 'text-slate-300 border-white/20 bg-white/5' };
   };
 
   const rankBadge = getRankBadge(results.total_score);
@@ -251,28 +251,28 @@ export const ResultsPage: React.FC = () => {
             </div>
           </div>
 
-          {/* Difficulty Tier Performance Bars */}
+          {/* Difficulty Tier Performance Bars (Opening, Middlegame, Endgame) */}
           <div className="p-4 rounded-xl bg-carbon-900 border border-white/10 space-y-3 font-mono">
             <div className="text-xs uppercase tracking-wider text-carbon-400 flex justify-between">
-              <span>TIER PROGRESSION AUDIT</span>
+              <span>GAME EVALUATION // MOVES AUDIT</span>
               <span>POINTS EARNED</span>
             </div>
 
             {[
               {
-                label: 'Tier 1 // Easy (10 pts each)',
+                label: 'Move 1-2 // ♟ Opening Theory (10 pts each)',
                 b: bd.easy,
                 color: 'bg-lime-400',
                 text: 'text-lime-300',
               },
               {
-                label: 'Tier 2 // Medium (20 pts each)',
+                label: 'Move 3-4 // ♞ Tactical Middlegame (20 pts each)',
                 b: bd.medium,
                 color: 'bg-amber-400',
                 text: 'text-amber-300',
               },
               {
-                label: 'Tier 3 // Tough (30 pts)',
+                label: 'Move 5 // ♚ Grandmaster Endgame (30 pts)',
                 b: bd.tough,
                 color: 'bg-ember-500',
                 text: 'text-ember-300',
@@ -392,15 +392,20 @@ export const ResultsPage: React.FC = () => {
 
                   <div className="flex items-center gap-2 shrink-0 font-mono text-xs">
                     {q.is_correct ? (
-                      <span className="hidden sm:flex items-center gap-1 text-lime-400">
-                        <Check className="w-3.5 h-3.5" /> Correct
+                      <span className="hidden sm:inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md bg-lime-400/15 border border-lime-400/40 text-lime-300 font-bold font-mono text-[11px]">
+                        <span>{q.position === 5 ? '!!' : q.position >= 3 ? '!!' : '!'}</span>
+                        <span>{q.position === 5 ? 'BRILLIANT CHECKMATE' : q.position >= 3 ? 'BRILLIANT MOVE' : 'BEST MOVE'}</span>
                       </span>
                     ) : q.selected_answer ? (
-                      <span className="hidden sm:flex items-center gap-1 text-red-400">
-                        <X className="w-3.5 h-3.5" /> Incorrect
+                      <span className="hidden sm:inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md bg-red-500/15 border border-red-500/40 text-red-300 font-bold font-mono text-[11px]">
+                        <span>??</span>
+                        <span>BLUNDER</span>
                       </span>
                     ) : (
-                      <span className="hidden sm:block text-carbon-400">Unanswered</span>
+                      <span className="hidden sm:inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md bg-carbon-800 border border-white/10 text-carbon-400 font-mono text-[11px]">
+                        <span>?!</span>
+                        <span>MISSED MOVE</span>
+                      </span>
                     )}
                     {isOpen ? (
                       <ChevronUp className="w-4 h-4 text-carbon-400" />
