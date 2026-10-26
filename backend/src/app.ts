@@ -2,7 +2,6 @@ import express, { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import quizRoutes from './routes/quizRoutes.js';
 import leaderboardRoutes from './routes/leaderboardRoutes.js';
-import adminRoutes from './routes/adminRoutes.js';
 
 export const app = express();
 
@@ -22,7 +21,6 @@ app.get('/health', (_req: Request, res: Response) => {
 // Mount modular API routers
 app.use('/api/quiz', quizRoutes);
 app.use('/api/leaderboard', leaderboardRoutes);
-app.use('/api/admin', adminRoutes);
 
 // 404 handler
 app.use((_req: Request, res: Response) => {

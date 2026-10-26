@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Terminal, Trophy, Shield, Play, Menu, X, Code2 } from 'lucide-react';
+import { Terminal, Trophy, Play, Menu, X } from 'lucide-react';
 
 export const Navbar: React.FC = () => {
   const location = useLocation();
@@ -9,7 +9,6 @@ export const Navbar: React.FC = () => {
   const navLinks = [
     { label: 'Home', path: '/' },
     { label: 'Leaderboard', path: '/leaderboard', icon: Trophy },
-    { label: 'Organizer', path: '/admin', icon: Shield },
   ];
 
   return (

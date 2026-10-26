@@ -35,8 +35,8 @@ export class QuizService {
   async getPointsMap(): Promise<Record<QuestionDifficulty, number>> {
     const easy = parseInt(await this.getConfig('points_easy', '10'), 10) || 10;
     const medium = parseInt(await this.getConfig('points_medium', '20'), 10) || 20;
-    const hard = parseInt(await this.getConfig('points_hard', '30'), 10) || 30;
-    return { easy, medium, hard };
+    const tough = parseInt(await this.getConfig('points_tough', '30'), 10) || 30;
+    return { easy, medium, tough };
   }
 
   async startQuiz(
@@ -111,7 +111,7 @@ export class QuizService {
       }
     }
 
-    // Select questions: 2 Easy, 2 Medium, 1 Hard
+    // Select questions: 2 Easy, 2 Medium, 1 Tough
     const easyQuestions = await this.db.query<{
       id: string;
       text: string;
@@ -130,14 +130,14 @@ export class QuizService {
       code_snippet?: string | null;
     }>('SELECT id, text, difficulty, category, options, code_snippet FROM questions WHERE difficulty = "medium" AND is_active = 1');
 
-    const hardQuestions = await this.db.query<{
+    const toughQuestions = await this.db.query<{
       id: string;
       text: string;
       difficulty: QuestionDifficulty;
       category: string;
       options: string;
       code_snippet?: string | null;
-    }>('SELECT id, text, difficulty, category, options, code_snippet FROM questions WHERE difficulty = "hard" AND is_active = 1');
+    }>('SELECT id, text, difficulty, category, options, code_snippet FROM questions WHERE difficulty = "tough" AND is_active = 1');
 
     if (easyQuestions.length < 2) {
       throw new Error(`Insufficient Easy questions in bank. Required: 2, Available: ${easyQuestions.length}`);
@@ -145,16 +145,16 @@ export class QuizService {
     if (mediumQuestions.length < 2) {
       throw new Error(`Insufficient Medium questions in bank. Required: 2, Available: ${mediumQuestions.length}`);
     }
-    if (hardQuestions.length < 1) {
-      throw new Error(`Insufficient Hard questions in bank. Required: 1, Available: ${hardQuestions.length}`);
+    if (toughQuestions.length < 1) {
+      throw new Error(`Insufficient Tough questions in bank. Required: 1, Available: ${toughQuestions.length}`);
     }
 
     const selectedEasy = shuffleArray(easyQuestions).slice(0, 2);
     const selectedMed = shuffleArray(mediumQuestions).slice(0, 2);
-    const selectedHard = shuffleArray(hardQuestions).slice(0, 1);
+    const selectedTough = shuffleArray(toughQuestions).slice(0, 1);
 
     // Combine and shuffle the 5 questions
-    const selected5 = shuffleArray([...selectedEasy, ...selectedMed, ...selectedHard]);
+    const selected5 = shuffleArray([...selectedEasy, ...selectedMed, ...selectedTough]);
 
     const pointsMap = await this.getPointsMap();
     const attemptId = 'att_' + crypto.randomUUID().slice(0, 16);
@@ -439,7 +439,7 @@ export class QuizService {
     const breakdown = {
       easy: { correct: 0, total: 0, points: 0, max_points: 0 },
       medium: { correct: 0, total: 0, points: 0, max_points: 0 },
-      hard: { correct: 0, total: 0, points: 0, max_points: 0 },
+      tough: { correct: 0, total: 0, points: 0, max_points: 0 },
     };
 
     const questions: QuestionReviewItem[] = [];

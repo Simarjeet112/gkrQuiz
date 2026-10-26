@@ -7,7 +7,6 @@ import { RegistrationPage } from './pages/RegistrationPage';
 import { QuizArenaPage } from './pages/QuizArenaPage';
 import { ResultsPage } from './pages/ResultsPage';
 import { LeaderboardPage } from './pages/LeaderboardPage';
-import { AdminDashboardPage } from './pages/AdminDashboardPage';
 
 export const App: React.FC = () => {
   return (
@@ -21,7 +20,6 @@ export const App: React.FC = () => {
             <Route path="/arena/:attemptId" element={<QuizArenaPage />} />
             <Route path="/results/:attemptId" element={<ResultsPage />} />
             <Route path="/leaderboard" element={<LeaderboardPage />} />
-            <Route path="/admin" element={<AdminDashboardPage />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </main>

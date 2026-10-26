@@ -54,17 +54,6 @@ export async function initDatabase(db?: IDatabase): Promise<void> {
   `);
 
   await targetDb.run(`
-    CREATE TABLE IF NOT EXISTS admins (
-      id VARCHAR(64) PRIMARY KEY,
-      username VARCHAR(64) UNIQUE NOT NULL,
-      email VARCHAR(128) UNIQUE NOT NULL,
-      password_hash TEXT NOT NULL,
-      role VARCHAR(32) NOT NULL DEFAULT 'admin',
-      created_at TIMESTAMP NOT NULL
-    );
-  `);
-
-  await targetDb.run(`
     CREATE TABLE IF NOT EXISTS event_config (
       config_key VARCHAR(64) PRIMARY KEY,
       config_value TEXT NOT NULL
@@ -89,7 +78,7 @@ export async function initDatabase(db?: IDatabase): Promise<void> {
     event_title: 'GEEKROOM // CODE ARENA',
     points_easy: '10',
     points_medium: '20',
-    points_hard: '30',
+    points_tough: '30',
   };
 
   for (const [key, value] of Object.entries(defaultConfigs)) {

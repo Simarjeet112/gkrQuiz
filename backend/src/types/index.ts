@@ -1,4 +1,4 @@
-export type QuestionDifficulty = 'easy' | 'medium' | 'hard';
+export type QuestionDifficulty = 'easy' | 'medium' | 'tough';
 
 export interface Participant {
   id: string;
@@ -93,7 +93,7 @@ export interface QuizResultResponse {
   difficulty_breakdown: {
     easy: { correct: number; total: number; points: number; max_points: number };
     medium: { correct: number; total: number; points: number; max_points: number };
-    hard: { correct: number; total: number; points: number; max_points: number };
+    tough: { correct: number; total: number; points: number; max_points: number };
   };
   rank?: number;
   total_participants?: number;
@@ -112,15 +112,6 @@ export interface LeaderboardEntry {
   status: AttemptStatus;
 }
 
-export interface AdminUser {
-  id: string;
-  username: string;
-  email: string;
-  password_hash: string;
-  role: 'admin' | 'organizer';
-  created_at: string;
-}
-
 export interface EventConfig {
   quiz_duration_minutes: number;
   allow_multiple_attempts: boolean;
@@ -128,5 +119,5 @@ export interface EventConfig {
   event_title: string;
   points_easy: number;
   points_medium: number;
-  points_hard: number;
+  points_tough: number;
 }

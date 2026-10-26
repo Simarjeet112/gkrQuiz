@@ -4,7 +4,6 @@ import { QuizService } from '../src/services/quizService.js';
 import { LeaderboardService } from '../src/services/leaderboardService.js';
 import { seedDatabase } from '../src/db/seed.js';
 import { getDB } from '../src/db/connection.js';
-import { generateAdminToken } from '../src/middleware/auth.js';
 
 test('GEEKROOM CODE ARENA - Comprehensive Test Suite', async (t) => {
   const db = getDB();
@@ -30,16 +29,16 @@ test('GEEKROOM CODE ARENA - Comprehensive Test Suite', async (t) => {
     assert.equal(res.questions.length, 5);
   });
 
-  await t.test('3. Question distribution is exactly 2 Easy, 2 Medium, and 1 Hard', async () => {
+  await t.test('3. Question distribution is exactly 2 Easy, 2 Medium, and 1 Tough', async () => {
     const res = await quizService.startQuiz('Bruce Wayne', 'GTBIT-2025-03');
     const difficulties = res.questions.map((q) => q.difficulty);
     const easyCount = difficulties.filter((d) => d === 'easy').length;
     const medCount = difficulties.filter((d) => d === 'medium').length;
-    const hardCount = difficulties.filter((d) => d === 'hard').length;
+    const toughCount = difficulties.filter((d) => d === 'tough').length;
 
     assert.equal(easyCount, 2, 'Must have exactly 2 Easy questions');
     assert.equal(medCount, 2, 'Must have exactly 2 Medium questions');
-    assert.equal(hardCount, 1, 'Must have exactly 1 Hard question');
+    assert.equal(toughCount, 1, 'Must have exactly 1 Tough question');
   });
 
   await t.test('4. No duplicate questions within an attempt', async () => {
@@ -92,7 +91,7 @@ test('GEEKROOM CODE ARENA - Comprehensive Test Suite', async (t) => {
     assert.equal(refreshed.selectedAnswers[secondQ.id], secondQ.options[1]);
   });
 
-  await t.test('8. Server-side scoring source of truth (10 Easy, 20 Med, 30 Hard = 90 max)', async () => {
+  await t.test('8. Server-side scoring source of truth (10 Easy, 20 Med, 30 Tough = 90 max)', async () => {
     const res = await quizService.startQuiz('Barry Allen', 'GTBIT-2025-09');
 
     // Fetch the secret correct answers directly from DB to verify perfect score
@@ -173,24 +172,18 @@ test('GEEKROOM CODE ARENA - Comprehensive Test Suite', async (t) => {
     assert.ok(indexA < indexC, 'A (higher score) must rank before C');
   });
 
-  await t.test('12. Admin authentication tokens and protected access', async () => {
-    const token = generateAdminToken({ id: 'test_admin', email: 'admin@geekroom.in', role: 'admin' });
-    assert.ok(token);
-    assert.ok(token.length > 20);
-  });
-
-  await t.test('13. Insufficient question pool error handling', async () => {
-    // Temporarily deactivate hard questions
-    await db.run("UPDATE questions SET is_active = 0 WHERE difficulty = 'hard'");
+  await t.test('12. Insufficient question pool error handling', async () => {
+    // Temporarily deactivate tough questions
+    await db.run("UPDATE questions SET is_active = 0 WHERE difficulty = 'tough'");
 
     await assert.rejects(
       async () => {
         await quizService.startQuiz('Unlucky Player', 'GTBIT-FAIL');
       },
-      /Insufficient Hard questions/i
+      /Insufficient Tough questions/i
     );
 
-    // Restore hard questions
-    await db.run("UPDATE questions SET is_active = 1 WHERE difficulty = 'hard'");
+    // Restore tough questions
+    await db.run("UPDATE questions SET is_active = 1 WHERE difficulty = 'tough'");
   });
 });
