@@ -194,6 +194,36 @@ test('GEEKROOM CODE ARENA - Comprehensive Test Suite', async (t) => {
     await db.run("UPDATE questions SET is_active = 1 WHERE difficulty = 'tough'");
   });
 
+  await t.test('14. Batch 2026 algorithm: Enrollment numbers ending with 26 get targeted Easy Python, Easy SQL, Medium OOP, and Basic DS in Tough slot', async () => {
+    // Example from user: 06213202726
+    const res = await quizService.startQuiz('Freshman Rohit', '06213202726');
+    assert.equal(res.questions.length, 5);
+
+    // Q1 & Q2: Easy (Python and SQL)
+    assert.equal(res.questions[0].difficulty, 'easy');
+    assert.equal(res.questions[1].difficulty, 'easy');
+    const easyCategories = [res.questions[0].category, res.questions[1].category];
+    assert.ok(easyCategories.includes('Python'), 'Must include Basic Python question in easy section');
+    assert.ok(easyCategories.includes('SQL'), 'Must include Basic SQL question in easy section');
+
+    // Q3 & Q4: Medium (OOP and mixed)
+    assert.equal(res.questions[2].difficulty, 'medium');
+    assert.equal(res.questions[3].difficulty, 'medium');
+    const medCategories = [res.questions[2].category, res.questions[3].category];
+    assert.ok(medCategories.includes('OOP'), 'Must include OOP in medium section');
+
+    // Q5: Tough (Basic Data Structures)
+    assert.equal(res.questions[4].difficulty, 'tough');
+    assert.equal(res.questions[4].category, 'Data Structures', 'Tough section must be Data Structures question');
+
+    // Verify scoring integrity: 10 + 10 + 20 + 20 + 30 = 90
+    assert.equal(res.questions[0].points, 10);
+    assert.equal(res.questions[1].points, 10);
+    assert.equal(res.questions[2].points, 20);
+    assert.equal(res.questions[3].points, 20);
+    assert.equal(res.questions[4].points, 30);
+  });
+
   await t.test('13. Organizer passcode security & clean state', async () => {
     const passcode = process.env.ORGANIZER_PASSCODE || 'geekroom2026';
     assert.equal(typeof passcode, 'string');

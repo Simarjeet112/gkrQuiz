@@ -8,6 +8,12 @@ import {
   QuestionDifficulty,
 } from '../types/index.js';
 
+export function isBatch2026(code?: string | null): boolean {
+  if (!code) return false;
+  const clean = String(code).trim().replace(/\s+/g, '');
+  return clean.endsWith('26');
+}
+
 function shuffleArray<T>(array: T[]): T[] {
   const arr = [...array];
   for (let i = arr.length - 1; i > 0; i--) {
@@ -112,46 +118,180 @@ export class QuizService {
     }
 
     // Select questions: 2 Easy, 2 Medium, 1 Tough
-    const easyQuestions = await this.db.query<{
+    let selectedEasy: Array<{
       id: string;
       text: string;
       difficulty: QuestionDifficulty;
       category: string;
       options: string;
       code_snippet?: string | null;
-    }>('SELECT id, text, difficulty, category, options, code_snippet FROM questions WHERE difficulty = "easy" AND is_active = 1');
+    }> = [];
 
-    const mediumQuestions = await this.db.query<{
+    let selectedMed: Array<{
       id: string;
       text: string;
       difficulty: QuestionDifficulty;
       category: string;
       options: string;
       code_snippet?: string | null;
-    }>('SELECT id, text, difficulty, category, options, code_snippet FROM questions WHERE difficulty = "medium" AND is_active = 1');
+    }> = [];
 
-    const toughQuestions = await this.db.query<{
+    let selectedTough: Array<{
       id: string;
       text: string;
       difficulty: QuestionDifficulty;
       category: string;
       options: string;
       code_snippet?: string | null;
-    }>('SELECT id, text, difficulty, category, options, code_snippet FROM questions WHERE difficulty = "tough" AND is_active = 1');
+    }> = [];
 
-    if (easyQuestions.length < 2) {
-      throw new Error(`Insufficient Easy questions in bank. Required: 2, Available: ${easyQuestions.length}`);
-    }
-    if (mediumQuestions.length < 2) {
-      throw new Error(`Insufficient Medium questions in bank. Required: 2, Available: ${mediumQuestions.length}`);
-    }
-    if (toughQuestions.length < 1) {
-      throw new Error(`Insufficient Tough questions in bank. Required: 1, Available: ${toughQuestions.length}`);
+    if (isBatch2026(participantCode)) {
+      // ── BATCH '26 ADAPTIVE ALGORITHM ──
+      // Freshmen (enrollment ending in 26):
+      // Q1: Basic Python (Easy) | Q2: Basic SQL (Easy) | Q3: Basic OOP (Medium) | Q4: Basic OOP/Python/SQL (Medium) | Q5: Basic DS (Tough slot)
+
+      // 1. Easy Python & Easy SQL
+      const pythonEasy = await this.db.query<{
+        id: string;
+        text: string;
+        difficulty: QuestionDifficulty;
+        category: string;
+        options: string;
+        code_snippet?: string | null;
+      }>('SELECT id, text, difficulty, category, options, code_snippet FROM questions WHERE category = "Python" AND difficulty = "easy" AND is_active = 1');
+
+      const sqlEasy = await this.db.query<{
+        id: string;
+        text: string;
+        difficulty: QuestionDifficulty;
+        category: string;
+        options: string;
+        code_snippet?: string | null;
+      }>('SELECT id, text, difficulty, category, options, code_snippet FROM questions WHERE category = "SQL" AND difficulty = "easy" AND is_active = 1');
+
+      const allEasy = await this.db.query<{
+        id: string;
+        text: string;
+        difficulty: QuestionDifficulty;
+        category: string;
+        options: string;
+        code_snippet?: string | null;
+      }>('SELECT id, text, difficulty, category, options, code_snippet FROM questions WHERE difficulty = "easy" AND is_active = 1');
+
+      const pEasy = shuffleArray(pythonEasy)[0] || shuffleArray(allEasy)[0];
+      const sEasy =
+        shuffleArray(sqlEasy.filter((q) => q.id !== pEasy?.id))[0] ||
+        shuffleArray(allEasy.filter((q) => q.id !== pEasy?.id))[0];
+
+      if (pEasy && sEasy) {
+        selectedEasy = [pEasy, sEasy];
+      }
+
+      // 2. Medium OOP + Medium Python/SQL/OOP
+      const oopMed = await this.db.query<{
+        id: string;
+        text: string;
+        difficulty: QuestionDifficulty;
+        category: string;
+        options: string;
+        code_snippet?: string | null;
+      }>('SELECT id, text, difficulty, category, options, code_snippet FROM questions WHERE category = "OOP" AND difficulty = "medium" AND is_active = 1');
+
+      const mixMed = await this.db.query<{
+        id: string;
+        text: string;
+        difficulty: QuestionDifficulty;
+        category: string;
+        options: string;
+        code_snippet?: string | null;
+      }>('SELECT id, text, difficulty, category, options, code_snippet FROM questions WHERE category IN ("OOP", "Python", "SQL") AND difficulty = "medium" AND is_active = 1');
+
+      const allMed = await this.db.query<{
+        id: string;
+        text: string;
+        difficulty: QuestionDifficulty;
+        category: string;
+        options: string;
+        code_snippet?: string | null;
+      }>('SELECT id, text, difficulty, category, options, code_snippet FROM questions WHERE difficulty = "medium" AND is_active = 1');
+
+      const oMed = shuffleArray(oopMed)[0] || shuffleArray(allMed)[0];
+      const mMed =
+        shuffleArray(mixMed.filter((q) => q.id !== oMed?.id))[0] ||
+        shuffleArray(allMed.filter((q) => q.id !== oMed?.id))[0];
+
+      if (oMed && mMed) {
+        selectedMed = [oMed, mMed];
+      }
+
+      // 3. Tough Data Structures (Basic DS questions configured in Tough slot)
+      const dsTough = await this.db.query<{
+        id: string;
+        text: string;
+        difficulty: QuestionDifficulty;
+        category: string;
+        options: string;
+        code_snippet?: string | null;
+      }>('SELECT id, text, difficulty, category, options, code_snippet FROM questions WHERE category = "Data Structures" AND difficulty = "tough" AND is_active = 1');
+
+      const allTough = await this.db.query<{
+        id: string;
+        text: string;
+        difficulty: QuestionDifficulty;
+        category: string;
+        options: string;
+        code_snippet?: string | null;
+      }>('SELECT id, text, difficulty, category, options, code_snippet FROM questions WHERE difficulty = "tough" AND is_active = 1');
+
+      const tTough = shuffleArray(dsTough)[0] || shuffleArray(allTough)[0];
+      if (tTough) {
+        selectedTough = [tTough];
+      }
     }
 
-    const selectedEasy = shuffleArray(easyQuestions).slice(0, 2);
-    const selectedMed = shuffleArray(mediumQuestions).slice(0, 2);
-    const selectedTough = shuffleArray(toughQuestions).slice(0, 1);
+    // Standard question selection (if not Batch '26 or fallback)
+    if (selectedEasy.length < 2 || selectedMed.length < 2 || selectedTough.length < 1) {
+      const easyQuestions = await this.db.query<{
+        id: string;
+        text: string;
+        difficulty: QuestionDifficulty;
+        category: string;
+        options: string;
+        code_snippet?: string | null;
+      }>('SELECT id, text, difficulty, category, options, code_snippet FROM questions WHERE difficulty = "easy" AND is_active = 1');
+
+      const mediumQuestions = await this.db.query<{
+        id: string;
+        text: string;
+        difficulty: QuestionDifficulty;
+        category: string;
+        options: string;
+        code_snippet?: string | null;
+      }>('SELECT id, text, difficulty, category, options, code_snippet FROM questions WHERE difficulty = "medium" AND is_active = 1');
+
+      const toughQuestions = await this.db.query<{
+        id: string;
+        text: string;
+        difficulty: QuestionDifficulty;
+        category: string;
+        options: string;
+        code_snippet?: string | null;
+      }>('SELECT id, text, difficulty, category, options, code_snippet FROM questions WHERE difficulty = "tough" AND is_active = 1');
+
+      if (easyQuestions.length < 2) {
+        throw new Error(`Insufficient Easy questions in bank. Required: 2, Available: ${easyQuestions.length}`);
+      }
+      if (mediumQuestions.length < 2) {
+        throw new Error(`Insufficient Medium questions in bank. Required: 2, Available: ${mediumQuestions.length}`);
+      }
+      if (toughQuestions.length < 1) {
+        throw new Error(`Insufficient Tough questions in bank. Required: 1, Available: ${toughQuestions.length}`);
+      }
+
+      selectedEasy = shuffleArray(easyQuestions).slice(0, 2);
+      selectedMed = shuffleArray(mediumQuestions).slice(0, 2);
+      selectedTough = shuffleArray(toughQuestions).slice(0, 1);
+    }
 
     // Enforce strict difficulty progression:
     // Q1 & Q2: Easy | Q3 & Q4: Medium | Q5: Tough

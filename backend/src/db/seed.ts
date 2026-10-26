@@ -662,6 +662,189 @@ export const seedQuestions = [
     explanation:
       'The CAP theorem (Brewer, 2000) states that during a network partition (P), a distributed system must choose between consistency (C — all nodes see the same data) and availability (A — every request receives a response). All three cannot be guaranteed simultaneously.',
   },
+
+  // ── ORIENTATION 2026 TAILORED QUESTIONS (Batch '26 Algorithm) ───────────────────
+  // Basic Python (Easy & Medium)
+  {
+    text: 'Which keyword is used to define a function in Python?',
+    difficulty: 'easy',
+    category: 'Python',
+    code_snippet: null,
+    options: ['def', 'function', 'fun', 'define'],
+    correct_answer: 'def',
+    explanation:
+      'In Python, functions are defined using the def keyword followed by the function name and parentheses.',
+  },
+  {
+    text: 'What is the correct file extension for Python source files?',
+    difficulty: 'easy',
+    category: 'Python',
+    code_snippet: null,
+    options: ['.py', '.python', '.pt', '.pyt'],
+    correct_answer: '.py',
+    explanation: 'Python source code files traditionally use the .py file extension.',
+  },
+  {
+    text: 'Which built-in function is used to output text to the console in Python?',
+    difficulty: 'easy',
+    category: 'Python',
+    code_snippet: null,
+    options: ['print()', 'echo()', 'console.log()', 'System.out.println()'],
+    correct_answer: 'print()',
+    explanation:
+      'The built-in print() function outputs the specified message to the screen or standard console in Python.',
+  },
+  {
+    text: 'How do you create a single-line comment in Python code?',
+    difficulty: 'easy',
+    category: 'Python',
+    code_snippet: null,
+    options: ['# This is a comment', '// This is a comment', '/* This is a comment */', '<!-- This is a comment -->'],
+    correct_answer: '# This is a comment',
+    explanation: 'Python uses the hash character # to indicate that the remainder of the line is a comment.',
+  },
+  {
+    text: 'Which method adds an element to the end of a list in Python?',
+    difficulty: 'medium',
+    category: 'Python',
+    code_snippet: null,
+    options: ['append()', 'add()', 'push()', 'insert()'],
+    correct_answer: 'append()',
+    explanation: 'The append() method adds a single item to the end of an existing Python list.',
+  },
+  {
+    text: 'Which of the following data types in Python is immutable?',
+    difficulty: 'medium',
+    category: 'Python',
+    code_snippet: null,
+    options: ['Tuple', 'List', 'Dictionary', 'Set'],
+    correct_answer: 'Tuple',
+    explanation: 'A tuple is an immutable sequence in Python. Once created, elements of a tuple cannot be changed.',
+  },
+
+  // Basic SQL (Easy & Medium)
+  {
+    text: 'Which SQL statement is used to retrieve data from a database?',
+    difficulty: 'easy',
+    category: 'SQL',
+    code_snippet: null,
+    options: ['SELECT', 'GET', 'EXTRACT', 'OPEN'],
+    correct_answer: 'SELECT',
+    explanation: 'The SELECT statement is used to query and extract data records from one or more tables in a database.',
+  },
+  {
+    text: 'Which SQL clause is used to filter records based on a specified condition?',
+    difficulty: 'easy',
+    category: 'SQL',
+    code_snippet: null,
+    options: ['WHERE', 'FILTER', 'HAVING', 'ORDER BY'],
+    correct_answer: 'WHERE',
+    explanation: 'The WHERE clause filters rows in SQL queries based on specified boolean conditions.',
+  },
+  {
+    text: 'What does SQL stand for in database systems?',
+    difficulty: 'easy',
+    category: 'SQL',
+    code_snippet: null,
+    options: ['Structured Query Language', 'Simple Question Language', 'Standard Query Logic', 'System Quality Language'],
+    correct_answer: 'Structured Query Language',
+    explanation: 'SQL stands for Structured Query Language, the standardized language used to manage relational databases.',
+  },
+  {
+    text: 'Which SQL constraint uniquely identifies each record in a database table?',
+    difficulty: 'medium',
+    category: 'SQL',
+    code_snippet: null,
+    options: ['PRIMARY KEY', 'FOREIGN KEY', 'UNIQUE NOT NULL', 'CHECK'],
+    correct_answer: 'PRIMARY KEY',
+    explanation: 'A PRIMARY KEY uniquely identifies each row in a database table and cannot contain NULL values.',
+  },
+  {
+    text: 'Which SQL command is used to insert new rows into a database table?',
+    difficulty: 'medium',
+    category: 'SQL',
+    code_snippet: null,
+    options: ['INSERT INTO', 'ADD RECORD', 'UPDATE', 'CREATE ROW'],
+    correct_answer: 'INSERT INTO',
+    explanation: 'The INSERT INTO statement is used to add new data rows into a database table.',
+  },
+
+  // Basic OOP (Medium)
+  {
+    text: 'What is an instantiated instance of a class called in Object-Oriented Programming?',
+    difficulty: 'medium',
+    category: 'OOP',
+    code_snippet: null,
+    options: ['An Object', 'A Function', 'A Module', 'A Pointer'],
+    correct_answer: 'An Object',
+    explanation: 'An object is a specific, concrete instance of a class containing its own state and methods.',
+  },
+  {
+    text: 'Which OOP principle bundles data and methods together while restricting direct external access?',
+    difficulty: 'medium',
+    category: 'OOP',
+    code_snippet: null,
+    options: ['Encapsulation', 'Polymorphism', 'Overloading', 'Recursion'],
+    correct_answer: 'Encapsulation',
+    explanation:
+      'Encapsulation bundles data and methods operating on that data inside a class and restricts direct access to internal state.',
+  },
+  {
+    text: 'Which OOP concept allows the same interface or method name to behave differently for different object types?',
+    difficulty: 'medium',
+    category: 'OOP',
+    code_snippet: null,
+    options: ['Polymorphism', 'Inheritance', 'Compilation', 'Iteration'],
+    correct_answer: 'Polymorphism',
+    explanation:
+      'Polymorphism allows one interface or function signature to exhibit different behaviors depending on the runtime object type.',
+  },
+
+  // Basic Data Structures in Tough Section (Slot 5)
+  {
+    text: 'Which fundamental data structure operates strictly on a Last-In, First-Out (LIFO) basis?',
+    difficulty: 'tough',
+    category: 'Data Structures',
+    code_snippet: null,
+    options: ['Stack', 'Queue', 'Array', 'Binary Tree'],
+    correct_answer: 'Stack',
+    explanation: 'A Stack uses the LIFO principle: elements pushed last are the first to be popped from the top.',
+  },
+  {
+    text: 'Which fundamental data structure operates strictly on a First-In, First-Out (FIFO) basis?',
+    difficulty: 'tough',
+    category: 'Data Structures',
+    code_snippet: null,
+    options: ['Queue', 'Stack', 'Heap', 'Graph'],
+    correct_answer: 'Queue',
+    explanation:
+      'A Queue follows First-In, First-Out: the first element inserted at the rear is the first to be removed from the front.',
+  },
+  {
+    text: 'What is the average time complexity to access an element by its index in a standard Array?',
+    difficulty: 'tough',
+    category: 'Data Structures',
+    code_snippet: null,
+    options: ['O(1)', 'O(N)', 'O(log N)', 'O(N²)'],
+    correct_answer: 'O(1)',
+    explanation:
+      'Because array elements are stored in contiguous memory addresses, random access by index takes constant time O(1).',
+  },
+  {
+    text: 'In a singly linked list, what does each node store besides its data payload?',
+    difficulty: 'tough',
+    category: 'Data Structures',
+    code_snippet: null,
+    options: [
+      'A pointer/reference to the next node',
+      'An integer index',
+      'A duplicate copy of the list',
+      'The total number of elements',
+    ],
+    correct_answer: 'A pointer/reference to the next node',
+    explanation:
+      'Each node in a singly linked list contains its data payload and a pointer/reference to the next node in the sequence.',
+  },
 ];
 
 export async function seedDatabase(db?: IDatabase): Promise<void> {
