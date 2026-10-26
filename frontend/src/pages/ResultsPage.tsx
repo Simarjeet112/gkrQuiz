@@ -19,7 +19,8 @@ import {
   Flame,
 } from 'lucide-react';
 import { api } from '../services/api';
-import { GeekroomMascotReaction, MascotMood } from '../components/mascot/GeekroomMascotReaction';
+import { BitByte3D } from '../components/mascot/BitByte3D';
+import { BitByteMood } from '../components/mascot/bitbyteDialogue';
 import { sounds } from '../utils/soundEffects';
 
 interface QuestionReviewItem {
@@ -152,7 +153,7 @@ export const ResultsPage: React.FC = () => {
 
   const rankBadge = getRankBadge(results.total_score);
 
-  const mascotMood: MascotMood = results.total_score >= 70 ? 'victory' : results.total_score >= 40 ? 'correct' : 'idle';
+  const mascotMood: BitByteMood = results.total_score >= 60 ? 'victory' : results.total_score >= 40 ? 'excited' : 'defeat';
   const mascotMsg =
     results.total_score >= 70
       ? `Phenomenal performance, ${results.participant.display_name}! You dominated the Arena with ${results.total_score} points!`
@@ -174,7 +175,9 @@ export const ResultsPage: React.FC = () => {
         >
           {/* Top Banner: Mascot + Score Gauge */}
           <div className="flex flex-col sm:flex-row items-center justify-between gap-6 pb-6 border-b border-arena-border">
-            <GeekroomMascotReaction mood={mascotMood} size="lg" message={mascotMsg} />
+            <div className="w-full sm:w-auto flex-1 max-w-md">
+              <BitByte3D mood={mascotMood} customMessage={mascotMsg} size="companion" showSpeech={true} />
+            </div>
 
             <div className="text-center sm:text-right shrink-0">
               <span className={`inline-block px-3 py-1 rounded-md text-[10px] font-mono font-bold uppercase tracking-widest border mb-2 ${rankBadge.color}`}>
@@ -304,7 +307,7 @@ export const ResultsPage: React.FC = () => {
             <Link
               to="/leaderboard"
               onClick={() => sounds.playSelect()}
-              className="flex-1 flex items-center justify-center gap-2 py-3.5 rounded-xl bg-arena-cyan text-slate-950 font-bold uppercase tracking-wider shadow-glow-cyan hover:bg-cyan-300 transition-all hover:scale-[1.01]"
+              className="flex-1 flex items-center justify-center gap-2 py-3.5 rounded-xl bg-cyan-400 text-slate-950 font-black uppercase tracking-wider font-display shadow-[0_0_20px_rgba(0,240,255,0.4)] hover:bg-cyan-300 arcade-btn transition-all"
             >
               <Trophy className="w-4 h-4" />
               <span>VIEW LIVE LEADERBOARD</span>

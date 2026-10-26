@@ -17,7 +17,8 @@ import {
   HelpCircle,
 } from 'lucide-react';
 import { api } from '../services/api';
-import { GeekroomMascotReaction, MascotMood } from '../components/mascot/GeekroomMascotReaction';
+import { BitByte3D } from '../components/mascot/BitByte3D';
+import { BitByteMood } from '../components/mascot/bitbyteDialogue';
 import { sounds } from '../utils/soundEffects';
 
 interface Question {
@@ -48,10 +49,11 @@ export const QuizArenaPage: React.FC = () => {
   const [isMuted, setIsMuted] = useState(sounds.getMuted());
 
   // Mascot dynamic state
-  const [mascotMood, setMascotMood] = useState<MascotMood>('quiz');
+  const [mascotMood, setMascotMood] = useState<BitByteMood>('thinking');
   const [mascotMessage, setMascotMessage] = useState<string>(
     'Tier 1 Recruit: Warm up with 2 Easy fundamentals.'
   );
+  const questionStartTimeRef = useRef<number>(Date.now());
 
   const isSubmittingRef = useRef(false);
 
@@ -93,9 +95,9 @@ export const QuizArenaPage: React.FC = () => {
       const rem = Math.max(0, Math.floor((deadlineAt.getTime() - Date.now()) / 1000));
       setSecondsRemaining(rem);
 
-      if (rem <= 60 && rem > 0) {
-        setMascotMood('urgent');
-        setMascotMessage('CRITICAL ALERT: Under 60 seconds remaining! Submit now!');
+      if (rem <= 45 && rem > 0) {
+        setMascotMood('low_time');
+        setMascotMessage('3 seconds left. LOCK IN. CLOCK IS TICKING BRO!');
       }
 
       if (rem === 0 && !isSubmittingRef.current) {
@@ -139,6 +141,7 @@ export const QuizArenaPage: React.FC = () => {
   const navigateToQuestion = (targetIndex: number) => {
     sounds.playClick();
     setCurrentIndex(targetIndex);
+    questionStartTimeRef.current = Date.now();
 
     const targetQ = questions[targetIndex];
     if (!targetQ) return;
@@ -147,27 +150,37 @@ export const QuizArenaPage: React.FC = () => {
     if (targetQ.difficulty === 'tough') {
       sounds.playBossWarning();
       setMascotMood('tough');
-      setMascotMessage('⚠️ BOSS CHALLENGE INITIATED: 30 Points on the line! Stay sharp!');
+      setMascotMessage('FINAL BOSS BATTLE! TOUGH QUESTION INCOMING!');
     } else if (targetQ.difficulty === 'medium') {
       sounds.playTierUp();
-      setMascotMood('quiz');
-      setMascotMessage('Leveling up to Tier 2: Warrior challenges (20 pts each)!');
+      setMascotMood('thinking');
+      setMascotMessage('Warrior Trials: 20 pts on the line. Examine the logic carefully.');
     } else {
-      setMascotMood('quiz');
-      setMascotMessage('Tier 1 Recruit: 10 pts per question. Keep your momentum!');
+      setMascotMood('thinking');
+      setMascotMessage('easy one. don’t overthink it.');
     }
   };
 
   const handleSelectOption = (questionId: string, option: string) => {
     sounds.playSelect();
+    const elapsed = (Date.now() - questionStartTimeRef.current) / 1000;
+
+    if (elapsed < 5) {
+      setMascotMood('speed_mode');
+      setMascotMessage('WHOA speed demon! ⚡ Instant lock-in!');
+    } else {
+      setMascotMood('excited');
+      setMascotMessage('okayyy that was clean! 🔥 Option locked!');
+    }
+
     setSelectedAnswers((prev) => {
       const updated = { ...prev, [questionId]: option };
       api.saveProgress(attemptId!, { [questionId]: option }).catch(console.warn);
 
       const answeredCount = Object.keys(updated).length;
       if (answeredCount === questions.length) {
-        setMascotMood('quiz');
-        setMascotMessage('All 5 challenges locked in! Verify or submit for your final score.');
+        setMascotMood('excited');
+        setMascotMessage("THAT'S MY CHALLENGER! All 5 locked in. Ready to submit?");
       }
       return updated;
     });
@@ -311,21 +324,24 @@ export const QuizArenaPage: React.FC = () => {
           </div>
         </div>
 
-        {/* ── BITBYTE COMPANION BANNER ── */}
-        <div className="cyber-card p-3 border border-arena-border flex items-center justify-between gap-4">
-          <GeekroomMascotReaction
-            size="sm"
-            mood={mascotMood}
-            message={mascotMessage}
-            showSpeech={true}
-          />
+        {/* ── BITBYTE 3D COMPANION BANNER ── */}
+        <div className="cyber-card p-4 border border-cyan-400/30 shadow-[0_0_25px_rgba(0,240,255,0.15)] flex flex-col md:flex-row items-center justify-between gap-4 bg-gradient-to-r from-black/90 via-[#090E22]/80 to-black/90">
+          <div className="w-full md:w-auto flex-1">
+            <BitByte3D
+              size="companion"
+              mood={mascotMood}
+              customMessage={mascotMessage}
+              showSpeech={true}
+            />
+          </div>
 
-          <div className="hidden sm:flex items-center gap-3 text-xs font-mono text-slate-400 shrink-0">
+          <div className="hidden lg:flex flex-col items-end gap-1.5 text-xs font-mono text-slate-400 shrink-0 border-l border-white/10 pl-6">
+            <span className="text-[10px] text-cyan-400 font-bold uppercase tracking-wider">HUD TELEMETRY</span>
             <span>
-              STATUS: <strong className="text-arena-cyan">{answeredTotal}/5 LOCKED</strong>
+              STATUS: <strong className="text-emerald-400 font-display text-sm">{answeredTotal}/5 LOCKED</strong>
             </span>
-            <span>•</span>
-            <span>MAX: 90 PTS</span>
+            <span>TIER: <strong className="text-white uppercase font-bold">{currentQ.difficulty}</strong></span>
+            <span className="text-slate-500 text-[10px]">MAX POSSIBLE: 90 PTS</span>
           </div>
         </div>
 
@@ -389,12 +405,12 @@ export const QuizArenaPage: React.FC = () => {
                       key={optIdx}
                       whileTap={{ scale: 0.985 }}
                       onClick={() => handleSelectOption(currentQ.id, option)}
-                      className={`w-full text-left p-4 rounded-xl border transition-all duration-150 flex items-center justify-between group ${
+                      className={`w-full text-left p-4 rounded-xl border arcade-btn transition-all duration-150 flex items-center justify-between group ${
                         isSelected
                           ? isBossTier
                             ? 'bg-red-500/20 border-red-500 shadow-glow-crimson text-white'
-                            : 'bg-arena-cyan/20 border-arena-cyan shadow-glow-cyan text-white'
-                          : 'bg-[#080C14] border-arena-border hover:border-slate-500 hover:bg-white/[0.03] text-slate-300'
+                            : 'bg-cyan-500/20 border-cyan-400 shadow-[0_0_20px_rgba(0,240,255,0.3)] text-white'
+                          : 'bg-[#080C14] border-arena-border hover:border-cyan-400/50 hover:bg-white/[0.04] text-slate-300'
                       }`}
                     >
                       <div className="flex items-center gap-3.5">

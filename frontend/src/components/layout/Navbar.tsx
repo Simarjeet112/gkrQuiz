@@ -33,15 +33,20 @@ export const Navbar: React.FC = () => {
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <span className="font-extrabold tracking-wider text-base sm:text-lg text-white group-hover:text-arena-cyan transition-colors font-sans">
+              <span className="font-extrabold tracking-wider text-base sm:text-lg text-white group-hover:text-cyan-400 transition-colors font-display">
                 GEEKROOM
               </span>
-              <span className="text-[10px] px-1.5 py-0.5 rounded bg-arena-cyan/15 text-arena-cyan font-mono border border-arena-cyan/30">
+              <span className="text-[10px] px-1.5 py-0.5 rounded bg-cyan-400/15 text-cyan-400 font-mono border border-cyan-400/30">
                 GTBIT 2026
               </span>
             </div>
-            <div className="text-[10px] font-mono tracking-widest text-arena-greenNeon">
-              CODE ARENA
+            <div className="flex items-center gap-2 text-[10px] font-mono tracking-widest text-emerald-400">
+              <span>CODE ARENA</span>
+              <span className="text-slate-600">//</span>
+              <span className="text-cyan-300 font-semibold flex items-center gap-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                BITBYTE 3D
+              </span>
             </div>
           </div>
         </Link>

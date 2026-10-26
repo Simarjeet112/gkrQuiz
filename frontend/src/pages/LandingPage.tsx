@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Play, Sparkles, Trophy, Zap, ArrowRight, Terminal, Award, Flame, Skull } from 'lucide-react';
-import { Geekroom3DMascot } from '../components/mascot/Geekroom3DMascot';
+import { BitByte3D } from '../components/mascot/BitByte3D';
 import { sounds } from '../utils/soundEffects';
 
 const tierCards = [
@@ -132,20 +132,27 @@ export const LandingPage: React.FC = () => {
             transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
             className="lg:col-span-5 flex flex-col items-center justify-center relative"
           >
-            <div className="relative w-full max-w-md cyber-card p-4 border border-arena-cyan/40 shadow-glow-cyan overflow-hidden">
-              <div className="absolute top-3 left-4 flex items-center gap-2 font-mono text-[11px] text-arena-cyan">
-                <img src="/geekroom-logo.png" alt="Geekroom" className="w-4 h-4 object-contain" />
-                <span>BITBYTE // COMPANION BOT</span>
-              </div>
-              <div className="absolute top-3 right-4 font-mono text-[10px] text-slate-500">
-                CLICK TO INTERACT
+            <div className="relative w-full max-w-lg cyber-card p-4 sm:p-6 border-2 border-cyan-400/40 shadow-[0_0_40px_rgba(0,240,255,0.2)] overflow-hidden bg-gradient-to-b from-[#090E22]/90 via-[#060914]/95 to-black">
+              {/* Header Badge */}
+              <div className="flex items-center justify-between pb-3 border-b border-white/10 mb-2">
+                <div className="flex items-center gap-2 font-mono text-xs text-cyan-400 font-bold">
+                  <img src="/geekroom-logo.png" alt="Geekroom" className="w-5 h-5 object-contain" />
+                  <span>BITBYTE // GKR-01</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_8px_#10B981]" />
+                  <span className="text-[10px] font-mono text-emerald-400 font-bold uppercase tracking-wider">
+                    LIVING MASCOT
+                  </span>
+                </div>
               </div>
 
-              {/* Three.js 3D Viewport */}
-              <Geekroom3DMascot />
+              {/* Three.js 3D Living Mascot */}
+              <BitByte3D size="hero" mood="welcome" showSpeech={true} />
 
-              <div className="text-center text-xs text-slate-400 mt-2 font-mono">
-                Meet BitByte — Geekroom GTBIT’s interactive cyber mascot!
+              <div className="flex items-center justify-between pt-3 border-t border-white/10 text-[11px] font-mono text-slate-400">
+                <span className="text-cyan-400">✨ Click or poke to talk!</span>
+                <span className="text-slate-500">Interactive WebGL</span>
               </div>
             </div>
           </motion.div>

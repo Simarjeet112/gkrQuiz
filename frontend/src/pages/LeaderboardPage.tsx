@@ -6,6 +6,7 @@ import {
 } from 'lucide-react';
 import { api } from '../services/api';
 import { soundEffects } from '../utils/soundEffects';
+import { BitByte3D } from '../components/mascot/BitByte3D';
 
 interface LeaderboardEntry {
   rank: number;
@@ -115,6 +116,15 @@ export const LeaderboardPage: React.FC = () => {
               <Play className="w-3.5 h-3.5 fill-slate-950" /> Enter Arena
             </Link>
           </div>
+        </div>
+
+        {/* ── BITBYTE 3D LEADERBOARD HOST ── */}
+        <div className="cyber-card p-4 border border-amber-400/30 shadow-[0_0_25px_rgba(251,191,36,0.12)] bg-gradient-to-r from-black/90 via-[#130E07]/70 to-black/90">
+          <BitByte3D
+            size="companion"
+            mood="leaderboard"
+            showSpeech={true}
+          />
         </div>
 
         {/* ── Top 3 Podium (Only shown if real entries exist) ── */}

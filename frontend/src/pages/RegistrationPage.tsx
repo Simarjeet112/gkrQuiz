@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Play, User, Hash, AlertCircle, ShieldAlert, Terminal, Sparkles } from 'lucide-react';
-import { GeekroomMascotReaction } from '../components/mascot/GeekroomMascotReaction';
+import { BitByte3D } from '../components/mascot/BitByte3D';
+import { BitByteMood } from '../components/mascot/bitbyteDialogue';
 import { api } from '../services/api';
 import { sounds } from '../utils/soundEffects';
 
@@ -87,12 +88,16 @@ export const RegistrationPage: React.FC = () => {
           </span>
         </div>
 
-        {/* Mascot Greeting */}
-        <div className="py-4 border-b border-arena-border">
-          <GeekroomMascotReaction
-            mood="welcome"
-            size="md"
-            message="Welcome to the Arena! Enter your name below to claim your terminal seat."
+        {/* 3D BitByte Greeting */}
+        <div className="py-2 border-b border-arena-border">
+          <BitByte3D
+            size="companion"
+            mood={displayName.length > 2 ? 'excited' : 'welcome'}
+            customMessage={
+              displayName.length > 2
+                ? `Yo ${displayName}! Ready to own the arena? Lock in your callsign!`
+                : 'Welcome challenger! Enter your name below to claim your arena seat.'
+            }
           />
         </div>
 
@@ -174,7 +179,7 @@ export const RegistrationPage: React.FC = () => {
             type="submit"
             disabled={loading}
             whileTap={{ scale: 0.98 }}
-            className="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl bg-gradient-to-r from-arena-cyan to-arena-cyanDark hover:from-cyan-300 hover:to-arena-cyan text-slate-950 font-bold text-xs font-mono uppercase tracking-wider shadow-glow-cyan transition-all duration-200 disabled:opacity-50"
+            className="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl bg-gradient-to-r from-cyan-400 to-cyan-300 hover:from-cyan-300 hover:to-cyan-200 text-slate-950 font-black text-xs font-display uppercase tracking-wider shadow-[0_0_25px_rgba(0,240,255,0.4)] arcade-btn transition-all duration-200 disabled:opacity-50"
           >
             {loading ? (
               <span className="flex items-center gap-2">
