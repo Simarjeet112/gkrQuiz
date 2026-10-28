@@ -288,8 +288,23 @@ export class QuizService {
         throw new Error(`Insufficient Tough questions in bank. Required: 1, Available: ${toughQuestions.length}`);
       }
 
-      selectedEasy = shuffleArray(easyQuestions).slice(0, 2);
-      selectedMed = shuffleArray(mediumQuestions).slice(0, 2);
+      // Category-diverse selection for maximum question variety in every attempt
+      const shuffledEasy = shuffleArray(easyQuestions);
+      const e1 = shuffledEasy[0];
+      const e2 =
+        shuffledEasy.find((q) => q.id !== e1.id && q.category !== e1.category) ||
+        shuffledEasy.find((q) => q.id !== e1.id) ||
+        shuffledEasy[1];
+      selectedEasy = [e1, e2];
+
+      const shuffledMed = shuffleArray(mediumQuestions);
+      const m1 = shuffledMed[0];
+      const m2 =
+        shuffledMed.find((q) => q.id !== m1.id && q.category !== m1.category) ||
+        shuffledMed.find((q) => q.id !== m1.id) ||
+        shuffledMed[1];
+      selectedMed = [m1, m2];
+
       selectedTough = shuffleArray(toughQuestions).slice(0, 1);
     }
 
