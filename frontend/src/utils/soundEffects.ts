@@ -137,6 +137,37 @@ class SoundManager {
       });
     } catch {}
   }
+
+  // Epic Ronaldo Ballon d'Or SIUUU! Stadium Celebration Chime
+  public playSiuuu() {
+    if (this.isMuted) return;
+    try {
+      const ctx = this.getContext();
+      if (!ctx) return;
+      const now = ctx.currentTime;
+      // Majestic ascending stadium trumpet fanfare
+      const chords = [
+        [261.63, 329.63, 392.00], // C
+        [329.63, 392.00, 523.25], // E
+        [392.00, 493.88, 587.33], // G
+        [523.25, 659.25, 783.99, 1046.5], // High C Triumph SIUUU!
+      ];
+      chords.forEach((chord, step) => {
+        chord.forEach((freq) => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(freq, now + step * 0.12);
+          gain.gain.setValueAtTime(0.07, now + step * 0.12);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + step * 0.12 + 0.55);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(now + step * 0.12);
+          osc.stop(now + step * 0.12 + 0.55);
+        });
+      });
+    } catch {}
+  }
 }
 
 export const sounds = new SoundManager();

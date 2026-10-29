@@ -69,6 +69,19 @@ export const ResultsPage: React.FC = () => {
   const [results, setResults] = useState<ResultsData | null>(null);
   const [animatedScore, setAnimatedScore] = useState(0);
   const [expanded, setExpanded] = useState<Record<string, boolean>>({});
+  const [siuuuActive, setSiuuuActive] = useState(false);
+
+  const handleSiuuuCelebration = () => {
+    sounds.playSiuuu();
+    setSiuuuActive(true);
+    confetti({
+      particleCount: 120,
+      spread: 100,
+      origin: { y: 0.6 },
+      colors: ['#F59E0B', '#FBBF24', '#D97706', '#FFFFFF', '#D4FF00'],
+    });
+    setTimeout(() => setSiuuuActive(false), 3000);
+  };
 
   useEffect(() => {
     if (!attemptId) {
@@ -322,6 +335,75 @@ export const ResultsPage: React.FC = () => {
               <Home className="w-4 h-4" />
               <span>ARENA HOME</span>
             </Link>
+          </div>
+        </motion.div>
+
+        {/* ── CR7 BALLON D'OR GOAT OF CODE SHOWCASE ── */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+          className="relative overflow-hidden rounded-2xl border border-amber-500/30 bg-gradient-to-r from-[#181308] via-[#120F08] to-[#0A0D14] p-6 shadow-2xl"
+        >
+          <div className="absolute top-0 right-0 -mr-16 -mt-16 w-64 h-64 rounded-full bg-amber-500/10 blur-3xl pointer-events-none" />
+          
+          <div className="flex flex-col sm:flex-row items-center gap-6 relative z-10">
+            {/* Ronaldo Ballon d'Or Image with Golden Aura */}
+            <div className="relative group shrink-0">
+              <div className="absolute -inset-1 bg-gradient-to-r from-amber-400 to-yellow-600 rounded-2xl blur-md opacity-75 group-hover:opacity-100 transition duration-500 animate-pulse" />
+              <div className="relative w-36 h-36 sm:w-40 sm:h-40 rounded-xl overflow-hidden border-2 border-amber-400/80 shadow-2xl bg-black">
+                <img
+                  src="/ronaldo-ballondor.jpg"
+                  alt="Cristiano Ronaldo Ballon d'Or"
+                  className="w-full h-full object-cover object-top hover:scale-105 transition-transform duration-500"
+                />
+                <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent p-1.5 text-center">
+                  <span className="text-[10px] font-mono font-black text-amber-300 uppercase tracking-widest">
+                    CR7 5x BALLON D'OR
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Showcase Message & Stats */}
+            <div className="flex-1 text-center sm:text-left space-y-2.5">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/20 border border-amber-400/40 text-amber-300 font-mono text-[10px] font-bold uppercase tracking-wider">
+                <span>🏆 GOAT OF CODE ARENA CELEBRATION</span>
+              </div>
+
+              <h3 className="text-xl sm:text-2xl font-black text-white font-display">
+                {results.total_score >= 60 ? "CHAMPIONS MENTALITY // SIUUUU!" : "CALMA, CALMA! ARENA COMPLETED!"}
+              </h3>
+
+              <p className="text-xs text-slate-300 font-sans leading-relaxed max-w-xl">
+                {results.total_score >= 60
+                  ? "You delivered a world-class Ballon d'Or worthy performance in the Geekroom Arena! Unleash the celebration!"
+                  : "Every champion starts with rigorous practice. Sharpen your algorithmic reflexes and return stronger!"}
+              </p>
+
+              {/* Siuuu Action Button */}
+              <div className="pt-2 flex flex-wrap items-center justify-center sm:justify-start gap-3">
+                <button
+                  onClick={handleSiuuuCelebration}
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-500 text-carbon-950 font-mono text-xs font-black uppercase tracking-wider shadow-[0_0_20px_rgba(245,158,11,0.5)] hover:shadow-[0_0_25px_rgba(245,158,11,0.8)] active:scale-95 transition-all"
+                >
+                  <span className="text-base">⚽</span>
+                  <span>CELEBRATE SIUUUU! 🏆</span>
+                </button>
+
+                {siuuuActive && (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0 }}
+                    className="px-3.5 py-2 rounded-xl bg-black/90 border border-amber-400 text-amber-300 font-mono text-xs font-bold animate-pulse flex items-center gap-1.5"
+                  >
+                    <span>🔥</span>
+                    <span>SIUUUUUU! 5x BALLON D'OR ENERGY!</span>
+                  </motion.div>
+                )}
+              </div>
+            </div>
           </div>
         </motion.div>
 

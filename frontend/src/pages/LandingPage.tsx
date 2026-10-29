@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
+import confetti from 'canvas-confetti';
 import {
   Play,
   Trophy,
@@ -8,6 +9,8 @@ import {
   ShieldCheck,
   Code2,
   Coins,
+  Flame,
+  Award,
 } from 'lucide-react';
 import { BitByte3D } from '../components/mascot/BitByte3D';
 import { ChessBackground } from '../components/ui/ChessBackground';
@@ -49,12 +52,25 @@ const tierCards = [
 export const LandingPage: React.FC = () => {
   const [tokenInserted, setTokenInserted] = useState(false);
   const [tokenToast, setTokenToast] = useState(false);
+  const [siuuuActive, setSiuuuActive] = useState(false);
 
   const handleInsertToken = () => {
     sounds.playTierUp();
     setTokenInserted(true);
     setTokenToast(true);
     setTimeout(() => setTokenToast(false), 2400);
+  };
+
+  const handleSiuuu = () => {
+    sounds.playSiuuu();
+    setSiuuuActive(true);
+    confetti({
+      particleCount: 140,
+      spread: 100,
+      origin: { y: 0.6 },
+      colors: ['#FFD700', '#F59E0B', '#D4FF00', '#FFFFFF', '#38BDF8'],
+    });
+    setTimeout(() => setSiuuuActive(false), 3000);
   };
 
   return (
@@ -250,6 +266,105 @@ export const LandingPage: React.FC = () => {
               </div>
             </div>
           </motion.div>
+        </div>
+      </section>
+
+      {/* ── CR7 BALLON D'OR GOAT OF CODE SHOWCASE ── */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div className="relative rounded-3xl p-6 sm:p-10 border-2 border-amber-400/40 bg-gradient-to-br from-[#1A1405] via-[#0E1322] to-[#0A0D18] shadow-[0_0_60px_rgba(251,191,36,0.22)] overflow-hidden">
+          {/* Golden Ambient Particle Glow */}
+          <div className="absolute top-0 right-0 w-[450px] h-[450px] bg-amber-400/10 rounded-full blur-[140px] pointer-events-none" />
+          <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-lime/10 rounded-full blur-[130px] pointer-events-none" />
+
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center relative z-10">
+            {/* Left: Ronaldo Ballon d'Or Photo Card */}
+            <div className="lg:col-span-5 relative group">
+              <div className="relative rounded-2xl overflow-hidden border-2 border-amber-400/60 shadow-[0_0_35px_rgba(251,191,36,0.35)] transition-transform duration-500 group-hover:scale-[1.02]">
+                <img
+                  src="/ronaldo-ballondor.jpg"
+                  alt="Cristiano Ronaldo Ballon d'Or"
+                  className="w-full h-[320px] sm:h-[400px] object-cover object-top filter brightness-105 contrast-110"
+                />
+                {/* Golden Badge overlay on image */}
+                <div className="absolute top-4 left-4 px-3 py-1.5 rounded-xl bg-black/80 backdrop-blur-md border border-amber-400/60 font-mono text-xs font-black text-amber-300 flex items-center gap-2 shadow-xl">
+                  <span className="text-base animate-bounce">🏆</span>
+                  <span>5× BALLON D'OR WINNER</span>
+                </div>
+
+                <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black via-black/80 to-transparent p-5 text-center sm:text-left">
+                  <div className="text-[10px] font-mono text-amber-400 uppercase tracking-widest font-black">
+                    CR7 GOAT MENTALITY
+                  </div>
+                  <div className="text-lg font-black text-white font-display">
+                    CRISTIANO RONALDO
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Right: GOAT Motivation, Stats, and Interactive SIUUU celebration */}
+            <div className="lg:col-span-7 space-y-5 text-center lg:text-left">
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-400/15 border border-amber-400/40 text-amber-300 font-mono text-xs font-bold uppercase tracking-wider">
+                <span className="animate-pulse">⚽</span>
+                <span>BALLON D'OR STANDARD // 50,000+ QUESTION VARIATIONS</span>
+              </div>
+
+              <h2 className="text-3xl sm:text-5xl font-black text-white font-display tracking-tight leading-none">
+                CALMA. THINK DEEP. <br />
+                <span className="text-amber-400 drop-shadow-[0_0_20px_rgba(251,191,36,0.4)]">
+                  LIFT THE BALLON D'OR.
+                </span>
+              </h2>
+
+              <p className="text-sm sm:text-base text-slate-300 leading-relaxed font-sans max-w-xl">
+                “Talent without hard work is nothing.” Like Cristiano raising the Golden Ball at the Bernabéu, this arena tests relentless preparation, precision under time pressure, and zero excuses.
+              </p>
+
+              {/* 4 Stat Cards */}
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2 font-mono text-xs">
+                <div className="p-3 rounded-xl bg-white/5 border border-white/10 text-center">
+                  <div className="text-xl font-black text-amber-400 font-display">850+</div>
+                  <div className="text-[10px] text-slate-400 mt-0.5">CAREER GOALS</div>
+                </div>
+                <div className="p-3 rounded-xl bg-white/5 border border-amber-400/30 text-center">
+                  <div className="text-xl font-black text-amber-300 font-display">5×</div>
+                  <div className="text-[10px] text-slate-400 mt-0.5">BALLON D'OR</div>
+                </div>
+                <div className="p-3 rounded-xl bg-white/5 border border-lime/30 text-center">
+                  <div className="text-xl font-black text-lime font-display">600M+</div>
+                  <div className="text-[10px] text-slate-400 mt-0.5">TEST COMBOS</div>
+                </div>
+                <div className="p-3 rounded-xl bg-white/5 border border-white/10 text-center">
+                  <div className="text-xl font-black text-white font-display">100%</div>
+                  <div className="text-[10px] text-slate-400 mt-0.5">CALMA FOCUS</div>
+                </div>
+              </div>
+
+              {/* Interactive SIUUU Button with Gold Confetti + Audio */}
+              <div className="pt-2 flex flex-col sm:flex-row items-center gap-4 justify-center lg:justify-start">
+                <button
+                  type="button"
+                  onClick={handleSiuuu}
+                  className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-500 text-carbon-950 font-black font-display text-sm uppercase tracking-wider shadow-[0_0_30px_rgba(251,191,36,0.5)] hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-3"
+                >
+                  <span className="text-xl">⚽</span>
+                  <span>CELEBRATE SIUUUU! 🏆</span>
+                </button>
+
+                {siuuuActive && (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0 }}
+                    className="px-4 py-2 rounded-xl bg-black/90 border border-amber-400 text-amber-300 font-mono text-xs font-black animate-pulse flex items-center gap-2"
+                  >
+                    <span>🔥</span>
+                    <span>SIUUUUUU! 5x BALLON D'OR ENERGY UNLEASHED!</span>
+                  </motion.div>
+                )}
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 

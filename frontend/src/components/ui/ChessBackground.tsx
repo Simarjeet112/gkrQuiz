@@ -80,6 +80,15 @@ export const ChessBackground: React.FC = () => {
         ♟
       </motion.div>
 
+      {/* Golden Ballon d'Or Trophy Floating Aura */}
+      <motion.div
+        animate={{ y: [0, -18, 0], scale: [1, 1.05, 1] }}
+        transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut' }}
+        className="absolute top-1/3 left-1/2 -translate-x-1/2 text-[150px] sm:text-[230px] opacity-[0.025] filter blur-[1px] leading-none text-amber-300 pointer-events-none"
+      >
+        🏆
+      </motion.div>
+
       {/* 4. Subtle Grandmaster Coordinate Ranks & Files Faded Along Margins */}
       <div className="absolute left-3 top-1/4 flex flex-col gap-8 font-mono text-[10px] text-white/[0.06] font-bold">
         <span>8</span>
