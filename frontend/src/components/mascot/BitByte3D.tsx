@@ -169,7 +169,7 @@ export const BitByte3D: React.FC<BitByte3DProps> = ({
             >
               <div className="relative aspect-[3/4] w-full rounded-xl overflow-hidden border border-blue-400/60 mb-2 bg-black shadow-md">
                 <img
-                  src="/hazard.jpg"
+                  src="/hazard-snow.jpg"
                   alt="Eden Hazard"
                   className="w-full h-full object-cover object-top filter brightness-105 group-hover:scale-108 transition-transform duration-500"
                 />
@@ -209,7 +209,7 @@ export const BitByte3D: React.FC<BitByte3DProps> = ({
 
               <div className="relative aspect-[3/4] w-full rounded-xl overflow-hidden border-2 border-amber-400/80 mb-2 mt-3 bg-black shadow-lg">
                 <img
-                  src="/ronaldo-ballondor.jpg"
+                  src="/ronaldo-ucl.jpg"
                   alt="Cristiano Ronaldo"
                   className="w-full h-full object-cover object-top filter brightness-110 contrast-105 group-hover:scale-108 transition-transform duration-500"
                 />
@@ -244,7 +244,7 @@ export const BitByte3D: React.FC<BitByte3DProps> = ({
             >
               <div className="relative aspect-[3/4] w-full rounded-xl overflow-hidden border border-emerald-400/60 mb-2 bg-black shadow-md">
                 <img
-                  src="/kante.jpg"
+                  src="/kante-explosion.jpg"
                   alt="N'Golo Kanté"
                   className="w-full h-full object-cover object-top filter brightness-105 group-hover:scale-108 transition-transform duration-500"
                 />
@@ -278,11 +278,11 @@ export const BitByte3D: React.FC<BitByte3DProps> = ({
             title="Eden Hazard (Chelsea #10) - Click for Magic Chime"
           >
             <div className="w-10 h-10 rounded-xl overflow-hidden border border-blue-400 shadow-md shrink-0">
-              <img src="/hazard.jpg" alt="Hazard" className="w-full h-full object-cover object-top" />
+              <img src="/hazard-snow.jpg" alt="Hazard" className="w-full h-full object-cover object-top" />
             </div>
             <div className="hidden sm:block">
-              <div className="text-[11px] font-bold text-white leading-tight font-display">Hazard #10</div>
-              <div className="text-[9px] font-mono text-blue-300">Dribble Flow 🪄</div>
+              <div className="text-[11px] font-bold text-white leading-tight font-display">Hazard #17</div>
+              <div className="text-[9px] font-mono text-blue-300">Snow Magic 🪄</div>
             </div>
           </button>
 
@@ -294,11 +294,11 @@ export const BitByte3D: React.FC<BitByte3DProps> = ({
             title="Cristiano Ronaldo (5x Ballon d'Or) - Click for SIUUU!"
           >
             <div className="w-10 h-10 rounded-xl overflow-hidden border-2 border-amber-400 shadow-md shrink-0">
-              <img src="/ronaldo-ballondor.jpg" alt="CR7" className="w-full h-full object-cover object-top" />
+              <img src="/ronaldo-ucl.jpg" alt="CR7" className="w-full h-full object-cover object-top" />
             </div>
             <div className="hidden sm:block">
               <div className="text-[11px] font-black text-amber-300 leading-tight font-display">CR7 ⚽</div>
-              <div className="text-[9px] font-mono text-white">Ballon d'Or 🏆</div>
+              <div className="text-[9px] font-mono text-white">UCL King 🏆</div>
             </div>
           </button>
 
@@ -310,11 +310,11 @@ export const BitByte3D: React.FC<BitByte3DProps> = ({
             title="N'Golo Kanté (Chelsea Engine) - Click for Energy Pulse"
           >
             <div className="w-10 h-10 rounded-xl overflow-hidden border border-emerald-400 shadow-md shrink-0">
-              <img src="/kante.jpg" alt="Kanté" className="w-full h-full object-cover object-top" />
+              <img src="/kante-explosion.jpg" alt="Kanté" className="w-full h-full object-cover object-top" />
             </div>
             <div className="hidden sm:block">
-              <div className="text-[11px] font-bold text-white leading-tight font-display">Kanté ⚡</div>
-              <div className="text-[9px] font-mono text-emerald-300">100% Stamina</div>
+              <div className="text-[11px] font-bold text-white leading-tight font-display">Kanté 💥</div>
+              <div className="text-[9px] font-mono text-emerald-300">Explosion Tank</div>
             </div>
           </button>
         </div>
@@ -322,13 +322,13 @@ export const BitByte3D: React.FC<BitByte3DProps> = ({
         /* MINI SIZE: COMPACT OVERLAPPING TRIO AVATARS */
         <div className="flex -space-x-2 items-center justify-center p-1 cursor-pointer" onClick={handleRonaldoClick}>
           <div className="w-8 h-8 rounded-full overflow-hidden border-2 border-blue-400 shadow-md">
-            <img src="/hazard.jpg" alt="Hazard" className="w-full h-full object-cover" />
+            <img src="/hazard-snow.jpg" alt="Hazard" className="w-full h-full object-cover" />
           </div>
           <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-amber-400 shadow-lg z-10">
-            <img src="/ronaldo-ballondor.jpg" alt="Ronaldo" className="w-full h-full object-cover" />
+            <img src="/ronaldo-ucl.jpg" alt="Ronaldo" className="w-full h-full object-cover" />
           </div>
           <div className="w-8 h-8 rounded-full overflow-hidden border-2 border-emerald-400 shadow-md">
-            <img src="/kante.jpg" alt="Kanté" className="w-full h-full object-cover" />
+            <img src="/kante-explosion.jpg" alt="Kanté" className="w-full h-full object-cover" />
           </div>
         </div>
       )}

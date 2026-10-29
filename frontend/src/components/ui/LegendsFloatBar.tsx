@@ -93,17 +93,17 @@ export const LegendsFloatBar: React.FC = () => {
                 className="group relative flex flex-col items-center p-2 rounded-xl border border-blue-500/30 bg-blue-950/30 hover:bg-blue-900/40 hover:border-blue-400 transition-all active:scale-95 text-center"
               >
                 <div className="relative w-12 h-12 rounded-full overflow-hidden border-2 border-blue-400 shadow-md mb-1.5 group-hover:scale-105 transition-transform">
-                  <img src="/hazard.jpg" alt="Eden Hazard" className="w-full h-full object-cover object-top" />
+                  <img src="/hazard-snow.jpg" alt="Eden Hazard" className="w-full h-full object-cover object-top" />
                   <span className="absolute bottom-0 right-0 w-3 h-3 bg-blue-500 rounded-full border border-white" />
                 </div>
                 <span className="text-[11px] font-bold text-blue-200 font-sans leading-tight">
                   Eden Hazard
                 </span>
                 <span className="text-[9px] font-mono text-blue-300 font-semibold mt-0.5">
-                  #10 Magician 🪄
+                  #17 In Snow 🪄
                 </span>
                 <span className="text-[8px] font-mono text-slate-400 leading-tight">
-                  2x PL • 110 Goals
+                  Chelsea Maestro
                 </span>
               </button>
 
@@ -113,17 +113,17 @@ export const LegendsFloatBar: React.FC = () => {
                 className="group relative flex flex-col items-center p-2 rounded-xl border border-emerald-500/30 bg-emerald-950/30 hover:bg-emerald-900/40 hover:border-emerald-400 transition-all active:scale-95 text-center"
               >
                 <div className="relative w-12 h-12 rounded-full overflow-hidden border-2 border-emerald-400 shadow-md mb-1.5 group-hover:scale-105 transition-transform">
-                  <img src="/kante.jpg" alt="N'Golo Kanté" className="w-full h-full object-cover object-top" />
+                  <img src="/kante-explosion.jpg" alt="N'Golo Kanté" className="w-full h-full object-cover object-top" />
                   <span className="absolute bottom-0 right-0 w-3 h-3 bg-emerald-500 rounded-full border border-white" />
                 </div>
                 <span className="text-[11px] font-bold text-emerald-200 font-sans leading-tight">
                   N'Golo Kanté
                 </span>
                 <span className="text-[9px] font-mono text-emerald-300 font-semibold mt-0.5">
-                  100% Engine ⚡
+                  Shades & Explosion 💥
                 </span>
                 <span className="text-[8px] font-mono text-slate-400 leading-tight">
-                  70% Earth • UCL MOTM
+                  70% Earth · 100% Tank
                 </span>
               </button>
 
@@ -133,14 +133,14 @@ export const LegendsFloatBar: React.FC = () => {
                 className="group relative flex flex-col items-center p-2 rounded-xl border border-amber-500/30 bg-amber-950/30 hover:bg-amber-900/40 hover:border-amber-400 transition-all active:scale-95 text-center"
               >
                 <div className="relative w-12 h-12 rounded-full overflow-hidden border-2 border-amber-400 shadow-md mb-1.5 group-hover:scale-105 transition-transform">
-                  <img src="/ronaldo-ballondor.jpg" alt="Cristiano Ronaldo" className="w-full h-full object-cover object-top" />
+                  <img src="/ronaldo-ucl.jpg" alt="Cristiano Ronaldo" className="w-full h-full object-cover object-top" />
                   <span className="absolute bottom-0 right-0 w-3 h-3 bg-amber-400 rounded-full border border-white" />
                 </div>
                 <span className="text-[11px] font-bold text-amber-200 font-sans leading-tight">
                   Cristiano
                 </span>
                 <span className="text-[9px] font-mono text-amber-300 font-semibold mt-0.5">
-                  5x Ballon d'Or 🏆
+                  UCL King 🏆
                 </span>
                 <span className="text-[8px] font-mono text-slate-400 leading-tight">
                   Real Madrid 450G

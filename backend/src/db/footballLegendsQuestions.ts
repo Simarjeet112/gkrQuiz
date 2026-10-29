@@ -384,4 +384,200 @@ export const footballLegendsQuestions: FootballQuestion[] = [
     explanation:
       'Ronaldo scored an all-time record 17 goals in the 2013-14 Champions League season, finishing with the 120th-minute penalty in the Lisbon final against Atletico Madrid.',
   },
+  // ── MORE FOOTBALL LEGENDS & FOOTBALL-CODE HYBRIDS ──
+  {
+    text: 'Who scored the winning penalty for Chelsea FC in the 2012 UEFA Champions League Final against Bayern Munich in Munich?',
+    difficulty: 'easy',
+    category: 'Chelsea FC',
+    code_snippet: null,
+    options: ['Didier Drogba', 'Frank Lampard', 'John Terry', 'Ashley Cole'],
+    correct_answer: 'Didier Drogba',
+    explanation: 'Didier Drogba scored the final penalty in the Allianz Arena shootout to win Chelsea their historic first UEFA Champions League title.'
+  },
+  {
+    text: 'How many UEFA Champions League titles has Real Madrid won in its history as of 2024?',
+    difficulty: 'easy',
+    category: 'Real Madrid',
+    code_snippet: null,
+    options: ['15', '10', '12', '14'],
+    correct_answer: '15',
+    explanation: 'Real Madrid is the undisputed king of European football, having won an unprecedented 15 UEFA Champions League / European Cup titles.'
+  },
+  {
+    text: "Which underdog club did N'Golo Kanté win the miraculous 2015-16 Premier League title with before joining Chelsea?",
+    difficulty: 'easy',
+    category: "N'Golo Kante",
+    code_snippet: null,
+    options: ['Leicester City', 'Southampton', 'Watford', 'Everton'],
+    correct_answer: 'Leicester City',
+    explanation: 'Kanté was the heartbeat of Claudio Ranieri’s 5000-to-1 underdog Leicester City team that captured the 2015-16 Premier League championship.'
+  },
+  {
+    text: 'What iconic squad number did Cristiano Ronaldo wear at Real Madrid after Raúl departed in 2010?',
+    difficulty: 'easy',
+    category: 'Cristiano Ronaldo',
+    code_snippet: null,
+    options: ['#7', '#9', '#10', '#11'],
+    correct_answer: '#7',
+    explanation: 'After initially wearing #9 in his debut 2009-10 season, Ronaldo took the iconic #7 jersey and built the CR7 global empire.'
+  },
+  {
+    text: 'What is Real Madrid’s world-famous home stadium called in Madrid, Spain?',
+    difficulty: 'easy',
+    category: 'Real Madrid',
+    code_snippet: null,
+    options: ['Santiago Bernabéu', 'Camp Nou', 'Metropolitano', 'San Siro'],
+    correct_answer: 'Santiago Bernabéu',
+    explanation: 'The Santiago Bernabéu stadium has been the legendary fortress of Real Madrid since 1947.'
+  },
+  {
+    text: 'What is Chelsea FC’s historic home ground in London called?',
+    difficulty: 'easy',
+    category: 'Chelsea FC',
+    code_snippet: null,
+    options: ['Stamford Bridge', 'Emirates Stadium', 'White Hart Lane', 'Anfield'],
+    correct_answer: 'Stamford Bridge',
+    explanation: 'Stamford Bridge in Fulham, London, has been Chelsea FC’s home ground since the club was founded in 1905.'
+  },
+  {
+    text: 'Which legendary French manager led Real Madrid to an unprecedented 3 consecutive UEFA Champions League trophies from 2016 to 2018?',
+    difficulty: 'easy',
+    category: 'Real Madrid',
+    code_snippet: null,
+    options: ['Zinedine Zidane', 'Carlo Ancelotti', 'José Mourinho', 'Vicente del Bosque'],
+    correct_answer: 'Zinedine Zidane',
+    explanation: 'Zinedine Zidane made history as the first manager ever to win three consecutive Champions League trophies in the modern era.'
+  },
+  {
+    text: 'Which vehicle did the humble multi-millionaire N’Golo Kanté famously drive to Chelsea training every single day?',
+    difficulty: 'easy',
+    category: "N'Golo Kante",
+    code_snippet: null,
+    options: ['A white Mini Cooper', 'A red Ferrari 488', 'A Lamborghini Aventador', 'A gold Bugatti'],
+    correct_answer: 'A white Mini Cooper',
+    explanation: 'Despite earning hundreds of thousands of pounds per week, the famously modest Kanté drove a pre-owned white Mini Cooper to Cobham training ground.'
+  },
+  {
+    text: 'In programming, if Cristiano Ronaldo’s match goals are stored in an array goals = [1, 2], which method adds another goal to the end in JavaScript?',
+    difficulty: 'easy',
+    category: 'Football & Code',
+    code_snippet: 'const goals = [1, 2];\ngoals.push(3); // Result: [1, 2, 3]',
+    options: ['goals.push(3)', 'goals.pop()', 'goals.shift()', 'goals.slice()'],
+    correct_answer: 'goals.push(3)',
+    explanation: 'The push() method in JavaScript and Python appends an element to the end of a list or array.'
+  },
+  {
+    text: 'If N’Golo Kanté recovers the ball in O(1) time complexity, what does this denote in computational algorithm theory?',
+    difficulty: 'easy',
+    category: 'Football & Code',
+    code_snippet: null,
+    options: ['Constant time complexity regardless of pitch size', 'Exponential time complexity', 'Linear time O(N)', 'Quadratic slowdown O(N²)'],
+    correct_answer: 'Constant time complexity regardless of pitch size',
+    explanation: 'O(1) signifies constant time complexity — Kanté executes the tackle instantaneously without relying on input size.'
+  },
+  {
+    text: 'In 2017, Eden Hazard scored one of the most famous solo goals in Premier League history against Arsenal. How did he initiate the move?',
+    difficulty: 'medium',
+    category: 'Eden Hazard',
+    code_snippet: null,
+    options: [
+      'Received the ball at the halfway line, spun past Coquelin, and danced past 3 defenders',
+      'Scored directly from a 40-yard free kick',
+      'Headed in a corner kick at the near post',
+      'Converted a stoppage-time penalty'
+    ],
+    correct_answer: 'Received the ball at the halfway line, spun past Coquelin, and danced past 3 defenders',
+    explanation: 'Hazard picked up the ball inside the center circle, famously spun past Francis Coquelin, shimmied through Koscielny, and chipped Petr Cech.'
+  },
+  {
+    text: 'Against which legendary goalkeeper did Cristiano Ronaldo score his iconic 2.38m overhead bicycle kick in the 2018 UCL Quarter-Final?',
+    difficulty: 'medium',
+    category: 'Cristiano Ronaldo',
+    code_snippet: null,
+    options: ['Gianluigi Buffon', 'Manuel Neuer', 'Thibaut Courtois', 'David de Gea'],
+    correct_answer: 'Gianluigi Buffon',
+    explanation: 'Ronaldo leapt 2.38 meters into the Turin sky to volley past Gianluigi Buffon, receiving a standing ovation from the entire Juventus stadium.'
+  },
+  {
+    text: 'Which Chelsea legend holds the club’s all-time record with 211 goals despite operating as a central midfielder?',
+    difficulty: 'medium',
+    category: 'Chelsea FC',
+    code_snippet: null,
+    options: ['Frank Lampard', 'Didier Drogba', 'Gianfranco Zola', 'Michael Ballack'],
+    correct_answer: 'Frank Lampard',
+    explanation: 'Super Frank Lampard scored 211 goals in 648 games for Chelsea, cementing his status as the highest-scoring midfielder in Premier League history.'
+  },
+  {
+    text: 'In Real Madrid’s "La Décima" 2014 Champions League Final against Atlético Madrid, in which exact minute did Sergio Ramos head in the equalizer?',
+    difficulty: 'medium',
+    category: 'Real Madrid',
+    code_snippet: null,
+    options: ['92:48 (93rd minute)', '89:12 (90th minute)', '94:55 (95th minute)', '119:00 (120th minute)'],
+    correct_answer: '92:48 (93rd minute)',
+    explanation: 'At 92:48, Luka Modrić whipped in a corner and Sergio Ramos buried a header into the bottom corner, sparking Real Madrid’s 4-1 extra-time triumph.'
+  },
+  {
+    text: 'If N’Golo Kanté runs a background task scanning every opponent passing lane without blocking the main game loop, which concurrency pattern does this reflect?',
+    difficulty: 'medium',
+    category: 'Football & Code',
+    code_snippet: null,
+    options: [
+      'Asynchronous Event Loop / Non-blocking Worker Thread',
+      'Synchronous blocking I/O bottleneck',
+      'Infinite recursion with no base condition',
+      'Single-threaded deadlocked process'
+    ],
+    correct_answer: 'Asynchronous Event Loop / Non-blocking Worker Thread',
+    explanation: 'Kanté operates like an asynchronous event loop worker: intercepting signals continuously in the background without freezing the team’s forward momentum.'
+  },
+  {
+    text: 'Consider simulating Eden Hazard’s dribble in code: while(defenders.length > 0) { defenders.pop(); }. When the loop terminates, what is defenders.length?',
+    difficulty: 'medium',
+    category: 'Football & Code',
+    code_snippet: 'const defenders = ["Koscielny", "Mustafi", "Coquelin"];\nwhile(defenders.length > 0) {\n  defenders.pop();\n}\nconsole.log(defenders.length);',
+    options: ['0', '1', '3', 'Undefined'],
+    correct_answer: '0',
+    explanation: 'Hazard removes every defender one by one with pop() until the array is completely empty (length = 0).'
+  },
+  {
+    text: 'During the 2016-17 Premier League title race under Antonio Conte, which formation switch sparked Chelsea’s 13-game winning streak?',
+    difficulty: 'tough',
+    category: 'Chelsea FC',
+    code_snippet: null,
+    options: ['3-4-3 with Alonso & Moses as wing-backs', '4-4-2 diamond with twin strikers', '5-4-1 ultra defensive low block', '4-2-4 Brazilian attack formation'],
+    correct_answer: '3-4-3 with Alonso & Moses as wing-backs',
+    explanation: 'Conte switched to 3-4-3 at half-time against Arsenal, and Chelsea proceeded to win 13 consecutive league games with Kanté dominating the midfield.'
+  },
+  {
+    text: 'Cristiano Ronaldo holds the record for the most goals in UEFA Champions League history. What is his total tally?',
+    difficulty: 'tough',
+    category: 'Cristiano Ronaldo',
+    code_snippet: null,
+    options: ['140 goals', '120 goals', '128 goals', '152 goals'],
+    correct_answer: '140 goals',
+    explanation: 'Cristiano Ronaldo scored 140 UEFA Champions League goals (105 for Real Madrid, 21 for Manchester United, 14 for Juventus), making him the all-time top scorer.'
+  },
+  {
+    text: 'In a graph where vertices represent footballers and weighted edges represent passing difficulty, which algorithm finds the optimal path from Hazard to Ronaldo’s boots?',
+    difficulty: 'tough',
+    category: 'Football & Code',
+    code_snippet: null,
+    options: [
+      'Dijkstra’s Shortest Path Algorithm',
+      'Bubble Sort',
+      'Binary Search on Unsorted Array',
+      'Brute Force Random Walk'
+    ],
+    correct_answer: 'Dijkstra’s Shortest Path Algorithm',
+    explanation: 'Dijkstra’s algorithm computes shortest paths on weighted graphs, matching how world-class playmakers calculate the optimal trajectory for an assist.'
+  },
+  {
+    text: 'What was the world-record transfer fee Real Madrid paid Manchester United in 2009 to sign Cristiano Ronaldo?',
+    difficulty: 'tough',
+    category: 'Real Madrid',
+    code_snippet: null,
+    options: ['£80 million (€94 million)', '£50 million (€60 million)', '£100 million (€120 million)', '£150 million (€180 million)'],
+    correct_answer: '£80 million (€94 million)',
+    explanation: 'Real Madrid paid £80 million (€94 million) in July 2009, smashing the previous world record and kicking off the greatest era in modern club history.'
+  }
 ];

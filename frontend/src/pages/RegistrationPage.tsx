@@ -14,6 +14,7 @@ export const RegistrationPage: React.FC = () => {
   const [displayName, setDisplayName] = useState('');
   const [participantCode, setParticipantCode] = useState('');
   const [selectedTrack, setSelectedTrack] = useState<'ronaldo' | 'code'>('ronaldo');
+  const [selectedDifficulty, setSelectedDifficulty] = useState<'easy' | 'tough' | 'balanced'>('balanced');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [config, setConfig] = useState<{
@@ -51,10 +52,11 @@ export const RegistrationPage: React.FC = () => {
     sounds.playSelect();
 
     try {
-      const data = await api.startQuiz(name, participantCode.trim() || undefined, selectedTrack);
+      const data = await api.startQuiz(name, participantCode.trim() || undefined, selectedTrack, selectedDifficulty);
       localStorage.setItem('gkr_active_attempt_id', data.attemptId);
       localStorage.setItem('gkr_player_name', name);
       localStorage.setItem('gkr_active_track', selectedTrack);
+      localStorage.setItem('gkr_active_difficulty', selectedDifficulty);
       navigate(`/arena/${data.attemptId}`);
     } catch (err: any) {
       setError(err.message || 'Failed to start quiz. Please try again.');
@@ -194,6 +196,66 @@ export const RegistrationPage: React.FC = () => {
                 <div className="text-[10px] text-slate-300 font-sans mt-0.5 line-clamp-1">
                   DSA, Python, SQL, Recurrences & Chess Logic
                 </div>
+              </button>
+            </div>
+          </div>
+
+          {/* Difficulty Selector: Easy vs Tough vs Balanced */}
+          <div className="space-y-1.5 pt-1">
+            <label className="block text-xs font-mono uppercase tracking-wider text-slate-300 flex items-center justify-between">
+              <span>MATCH DIFFICULTY</span>
+              <span className="text-[10px] text-amber-400 font-bold">CHOOSE YOUR TIER</span>
+            </label>
+            <div className="grid grid-cols-3 gap-2">
+              <button
+                type="button"
+                onClick={() => {
+                  setSelectedDifficulty('easy');
+                  sounds.playClick();
+                }}
+                className={`p-2.5 rounded-xl border text-center transition-all ${
+                  selectedDifficulty === 'easy'
+                    ? 'bg-emerald-500/20 border-emerald-400 text-emerald-300 shadow-[0_0_15px_rgba(16,185,129,0.3)]'
+                    : 'bg-[#090D16] border-white/10 text-slate-400 hover:border-white/20'
+                }`}
+              >
+                <div className="text-base mb-0.5">🟢</div>
+                <div className="text-xs font-black uppercase tracking-wider">EASY</div>
+                <div className="text-[9px] font-mono text-slate-400 mt-0.5">PL Debut (10-20p)</div>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  setSelectedDifficulty('balanced');
+                  sounds.playSelect();
+                }}
+                className={`p-2.5 rounded-xl border text-center transition-all ${
+                  selectedDifficulty === 'balanced'
+                    ? 'bg-gradient-to-r from-blue-900/40 to-amber-900/40 border-[#FEBE10] text-[#FEBE10] shadow-[0_0_15px_rgba(254,190,16,0.3)]'
+                    : 'bg-[#090D16] border-white/10 text-slate-400 hover:border-white/20'
+                }`}
+              >
+                <div className="text-base mb-0.5">⚡</div>
+                <div className="text-xs font-black uppercase tracking-wider">BALANCED</div>
+                <div className="text-[9px] font-mono text-slate-400 mt-0.5">2E + 2M + 1T</div>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  setSelectedDifficulty('tough');
+                  sounds.playSiuuu();
+                }}
+                className={`p-2.5 rounded-xl border text-center transition-all ${
+                  selectedDifficulty === 'tough'
+                    ? 'bg-rose-500/25 border-rose-500 text-rose-300 shadow-[0_0_15px_rgba(244,63,94,0.4)]'
+                    : 'bg-[#090D16] border-white/10 text-slate-400 hover:border-white/20'
+                }`}
+              >
+                <div className="text-base mb-0.5">🔴</div>
+                <div className="text-xs font-black uppercase tracking-wider">TOUGH</div>
+                <div className="text-[9px] font-mono text-slate-400 mt-0.5">UCL Final (30p)</div>
               </button>
             </div>
           </div>

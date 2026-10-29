@@ -106,41 +106,43 @@ export const LandingPage: React.FC = () => {
       {/* ── AMBIENT CHESS VIBES IN THE BACKGROUND ── */}
       <ChessBackground />
 
-      {/* ── 1. ARCHITECTURAL TOP TICKER TAPE (CR7, HAZARD, KANTÉ, CHELSEA, MADRID, GEEKROOM, CHESS) ── */}
-      <div className="w-full bg-[#0A0E1A]/95 backdrop-blur-md text-slate-300 py-2.5 overflow-hidden font-mono text-xs border-y border-white/10 select-none">
-        <div className="animate-marquee whitespace-nowrap flex items-center gap-8">
-          <span className="text-amber-400 font-bold flex items-center gap-1.5">
-            <span>⚽</span> CR7 450 GOALS AT REAL MADRID // 5x BALLON D'OR
+      {/* ── 1. ARCHITECTURAL TOP TICKER TAPE (PREMIER LEAGUE × UCL × REAL MADRID × CHELSEA) ── */}
+      <div className="w-full bg-[#070b14]/95 backdrop-blur-md text-slate-300 py-3 overflow-hidden font-mono text-xs border-y border-white/10 select-none shadow-lg">
+        <div className="animate-marquee whitespace-nowrap flex items-center gap-8 font-black tracking-wider">
+          <span className="text-[#FEBE10] flex items-center gap-1.5">
+            <img src="/real-madrid-logo.svg" alt="" className="w-4 h-4 object-contain inline" />
+            REAL MADRID 15x CHAMPIONS // SANTIAGO BERNABÉU
           </span>
-          <span className="text-slate-600">•</span>
-          <span className="text-blue-400 font-bold flex items-center gap-1.5">
-            <span>🪄</span> EDEN HAZARD // STAMFORD BRIDGE MAGICIAN #10
+          <span className="text-[#00ff85]">•</span>
+          <span className="text-[#00a5ff] flex items-center gap-1.5">
+            <img src="/chelsea-logo.svg" alt="" className="w-4 h-4 object-contain inline" />
+            CHELSEA FC // STAMFORD BRIDGE PRIDE OF LONDON
           </span>
-          <span className="text-slate-600">•</span>
-          <span className="text-emerald-400 font-bold flex items-center gap-1.5">
-            <span>⚡</span> N'GOLO KANTÉ COVERS 70% OF THE EARTH
+          <span className="text-[#00ff85]">•</span>
+          <span className="text-amber-300 flex items-center gap-1.5">
+            <span>⚽</span> CR7 900+ GOALS // SIUUUUUU!
           </span>
-          <span className="text-slate-600">•</span>
-          <span className="text-white font-bold flex items-center gap-1.5">
-            <img src="/real-madrid-logo.svg" alt="" className="w-3.5 h-3.5 inline object-contain" />
-            REAL MADRID 15x KINGS OF EUROPE
+          <span className="text-[#00ff85]">•</span>
+          <span className="text-blue-300 flex items-center gap-1.5">
+            <span>🪄</span> EDEN HAZARD DANCING PAST 5 DEFENDERS
           </span>
-          <span className="text-slate-600">•</span>
-          <span className="text-blue-400 font-bold flex items-center gap-1.5">
-            <img src="/chelsea-logo.svg" alt="" className="w-3.5 h-3.5 inline object-contain" />
-            CHELSEA FC 2x UCL KINGS
+          <span className="text-[#00ff85]">•</span>
+          <span className="text-emerald-400 flex items-center gap-1.5">
+            <span>💥</span> N'GOLO KANTÉ COVERS 70% OF EARTH
           </span>
-          <span className="text-slate-600">•</span>
-          <span className="text-lime font-bold">♚ 1. e4 THINK 3 MOVES AHEAD</span>
-          <span className="text-slate-600">•</span>
-          <span>GEEKROOM GTBIT // CODE ARENA 2026</span>
-          <span className="text-slate-600">•</span>
-          <span className="text-amber-300 font-bold">🔥 SIUUUUUU!</span>
+          <span className="text-[#00ff85]">•</span>
+          <span className="text-[#00ff85] uppercase">
+            ⚡ PREMIER LEAGUE VIBES // CODING KI MKC, PURE FOOTBALL CODE CARNAGE
+          </span>
+          <span className="text-[#00ff85]">•</span>
+          <span className="text-white flex items-center gap-1.5">
+            <span>🎵</span> OASIS - WONDERWALL ON REPEAT
+          </span>
         </div>
       </div>
 
       {/* ── 2. HERO EDITORIAL SECTION ── */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-14 lg:pt-16 lg:pb-20">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-14 lg:pt-14 lg:pb-20">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
           
           {/* Hero Left Content */}
@@ -150,83 +152,80 @@ export const LandingPage: React.FC = () => {
             transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
             className="lg:col-span-7 space-y-6 text-center lg:text-left"
           >
-            {/* Badges: Geekroom, Real Madrid, Chelsea FC, Chess GM */}
-            <div className="flex flex-wrap items-center justify-center lg:justify-start gap-2 pt-1">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-lime/10 text-lime font-mono text-xs font-bold border border-lime/30">
-                <Code2 className="w-3.5 h-3.5 text-lime" />
-                <span>GEEKROOM GTBIT</span>
-              </span>
-              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-900/30 text-blue-300 font-mono text-xs font-bold border border-blue-500/40">
-                <img src="/chelsea-logo.svg" alt="" className="w-3.5 h-3.5 object-contain" />
+            {/* Giant Club Badges Header Row */}
+            <div className="flex flex-wrap items-center justify-center lg:justify-start gap-2.5 pt-1">
+              <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-gradient-to-r from-[#034694]/40 to-[#034694]/20 text-white font-mono text-xs font-black border border-blue-500/50 shadow-md">
+                <img src="/chelsea-logo.svg" alt="Chelsea FC" className="w-5 h-5 object-contain" />
                 <span>CHELSEA FC</span>
               </span>
-              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-500/20 text-amber-300 font-mono text-xs font-bold border border-amber-400/40">
-                <img src="/real-madrid-logo.svg" alt="" className="w-3.5 h-3.5 object-contain" />
-                <span>REAL MADRID 15x</span>
+              <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-gradient-to-r from-amber-500/30 to-[#FEBE10]/20 text-amber-300 font-mono text-xs font-black border border-[#FEBE10]/50 shadow-md">
+                <img src="/real-madrid-logo.svg" alt="Real Madrid" className="w-5 h-5 object-contain" />
+                <span>REAL MADRID 15× UCL</span>
               </span>
-              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/5 text-slate-200 font-mono text-xs font-bold border border-white/10">
-                <span className="text-lime">♟</span>
-                <span>CHESS GM ELO</span>
+              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#38003c]/80 text-[#00ff85] font-mono text-xs font-black border border-[#00ff85]/40 shadow-md">
+                <span>🦁</span>
+                <span>PREMIER LEAGUE ARENA</span>
+              </span>
+              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/5 text-slate-200 font-mono text-xs font-bold border border-white/10">
+                <span className="text-[#00ff85]">♟</span>
+                <span>TACTICAL CHESS</span>
               </span>
             </div>
 
             {/* Editorial Headline */}
-            <div className="space-y-1">
-              <div className="text-xs font-mono text-lime tracking-[0.25em] uppercase font-bold flex items-center justify-center lg:justify-start gap-2">
-                <span>[ CR7 × HAZARD × KANTÉ // THE ARENA OF KINGS ]</span>
+            <div className="space-y-2">
+              <div className="text-xs font-mono text-[#00ff85] tracking-[0.25em] uppercase font-black flex items-center justify-center lg:justify-start gap-2">
+                <span>[ REAL MADRID × CHELSEA FC × GEEKROOM GTBIT ]</span>
               </div>
-              <h1 className="text-4xl sm:text-6xl md:text-7xl font-black tracking-tight text-white leading-[0.95] font-display">
-                CR7 × LEGENDS <br />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-lime to-blue-400">
-                  CODE ARENA.
+              <h1 className="text-4xl sm:text-6xl md:text-7xl font-black tracking-tight text-white leading-[0.92] font-display">
+                FOOTBALL <br />
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FEBE10] via-[#00ff85] to-[#00a5ff]">
+                  CODE CARNAGE.
                 </span>
               </h1>
             </div>
 
             {/* Tagline */}
             <div className="space-y-2">
-              <p className="text-base sm:text-lg font-bold text-slate-200 font-mono tracking-wide">
-                “Think 3 Moves Ahead like Kasparov. Dribble like Eden Hazard. Intercept like N'Golo Kanté. Finish like Cristiano Ronaldo.”
+              <p className="text-base sm:text-xl font-black text-white font-mono tracking-wide leading-snug">
+                “Coding ki mkc, ball ball hoti hai! Dribble past defenders like Eden Hazard, intercept every packet like N'Golo Kanté, finish like Cristiano Ronaldo!”
               </p>
-              <div className="font-mono text-[9px] tracking-[0.25em] text-slate-500 select-none hidden sm:block">
-                ||| |||| | ||||| || |||||| |||| | || [GTBIT-GEEKROOM-CHELSEA-MADRID-ARENA-2026]
+              <div className="font-mono text-[10px] tracking-[0.25em] text-slate-400 select-none hidden sm:block font-bold">
+                ||| |||| | ||||| || [BERNABÉU-STAMFORD-BRIDGE-GTBIT-2026] // OASIS WONDERWALL ON BLAST
               </div>
             </div>
 
-            <p className="text-sm sm:text-base text-slate-300 max-w-xl mx-auto lg:mx-0 leading-relaxed font-sans">
-              The premier competitive coding challenge for first-year engineering students. 
-              Five algorithmic moves, opening theory through the endgame, and a 5-minute blitz clock. 
-              Solve with precision, calculate before you commit, and lift the trophy at the top of the leaderboard.
+            <p className="text-sm sm:text-base text-slate-300 max-w-xl mx-auto lg:mx-0 leading-relaxed font-sans font-medium">
+              The grand football & algorithmic stadium where legends collide. Five high-octane moves, 
+              from tactical opening theory to the final stoppage-time winner. Pick your difficulty (Casual Debut vs UCL Final), 
+              blast Wonderwall by Oasis, and crown yourself champion!
             </p>
 
-            {/* Progression Pills (Opening, Middlegame, Endgame) */}
+            {/* Progression & Difficulty Pills */}
             <div className="flex flex-wrap items-center justify-center lg:justify-start gap-2.5 pt-1 font-mono text-xs">
-              <div className="px-3.5 py-1.5 rounded-xl bg-[#101522] border border-white/10 text-slate-300 flex items-center gap-2">
-                <span className="text-sm text-lime">♟</span>
-                <span>2 Opening (20p)</span>
+              <div className="px-3 py-1.5 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 flex items-center gap-1.5 font-bold">
+                <span>🟢 EASY (Debut)</span>
               </div>
-              <div className="px-3.5 py-1.5 rounded-xl bg-[#101522] border border-white/10 text-slate-300 flex items-center gap-2">
-                <span className="text-sm text-ember">♞</span>
-                <span>2 Middlegame (40p)</span>
+              <div className="px-3 py-1.5 rounded-xl bg-[#FEBE10]/15 border border-[#FEBE10]/30 text-[#FEBE10] flex items-center gap-1.5 font-bold">
+                <span>⚡ BALANCED (Standard)</span>
               </div>
-              <div className="px-3.5 py-1.5 rounded-xl bg-[#101522] border border-rose-500/30 text-rose-300 flex items-center gap-2">
-                <span className="text-sm text-rose-400">♚</span>
-                <span>1 Endgame (30p)</span>
+              <div className="px-3 py-1.5 rounded-xl bg-rose-500/20 border border-rose-500/40 text-rose-300 flex items-center gap-1.5 font-bold">
+                <span>🔴 TOUGH (UCL Final)</span>
               </div>
               <div className="px-3.5 py-1.5 rounded-xl bg-lime/10 border border-lime/40 text-lime font-bold">
-                MAX 90 PTS // LIVE TELEMETRY
+                MAX 90 PTS // 5-MIN CLOCK
               </div>
             </div>
 
             {/* Call to Action Buttons + Interactive Arcade Coin */}
-            <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-3">
+            <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3 pt-3">
               <Link
                 to="/register"
-                onClick={() => sounds.playSelect()}
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-3 px-8 py-4 rounded-xl btn-primary text-sm uppercase tracking-wider"
+                onClick={() => sounds.playSiuuu()}
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-3 px-8 py-4 rounded-xl bg-gradient-to-r from-[#034694] via-[#00a5ff] to-[#FEBE10] text-black font-black text-sm uppercase tracking-wider shadow-xl hover:scale-105 active:scale-95 transition-all"
               >
                 <Play className="w-4 h-4 fill-current" />
-                <span>ENTER THE ARENA</span>
+                <span>ENTER THE STADIUM ⚽</span>
               </Link>
 
               <Link

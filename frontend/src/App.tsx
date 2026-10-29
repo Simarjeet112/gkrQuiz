@@ -9,6 +9,7 @@ import { ResultsPage } from './pages/ResultsPage';
 import { LeaderboardPage } from './pages/LeaderboardPage';
 import { OrganizerPage } from './pages/OrganizerPage';
 import { LegendsFloatBar } from './components/ui/LegendsFloatBar';
+import { WonderwallPlayer } from './components/audio/WonderwallPlayer';
 
 export const App: React.FC = () => {
   return (
@@ -28,6 +29,7 @@ export const App: React.FC = () => {
         </main>
         <Footer />
         <LegendsFloatBar />
+        <WonderwallPlayer />
       </div>
     </Router>
   );

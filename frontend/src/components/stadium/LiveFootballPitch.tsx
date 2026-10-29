@@ -2,10 +2,11 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import confetti from 'canvas-confetti';
 import { sounds } from '../../utils/soundEffects';
-import { ChevronLeft, ChevronRight, Volume2, VolumeX, Play, Pause } from 'lucide-react';
+import { wonderwallAudio } from '../../utils/audioPlayer';
+import { ChevronLeft, ChevronRight, Volume2, VolumeX, Play, Pause, Film, Image as ImageIcon, Flame, Trophy } from 'lucide-react';
 
-// ─── Frame Definitions ────────────────────────────────────────────────────────
-interface Frame {
+// ─── Frame Definitions (Photos) ──────────────────────────────────────────────
+interface PhotoFrame {
   id: number;
   photo: string;
   player: string;
@@ -18,122 +19,148 @@ interface Frame {
   confettiColors: string[];
 }
 
-const FRAMES: Frame[] = [
+const PHOTO_FRAMES: PhotoFrame[] = [
   {
     id: 0,
-    photo: '/ronaldo-ballondor.jpg',
-    player: 'CRISTIANO RONALDO',
-    tagline: '⚽ GOAAALL! SIUUUUU! ⚽',
-    sub: "5× Ballon d'Or · Real Madrid Legend · 900+ Career Goals",
+    photo: '/ronaldo-ucl.jpg',
+    player: 'CRISTIANO RONALDO // REAL MADRID',
+    tagline: '🏆 UCL KINGS · 5× BALLON D\'OR 🏆',
+    sub: '450 Goals in 438 Real Madrid Games · 5 Champions League Titles · Pure GOAT',
     badge: '/real-madrid-logo.svg',
     accent: '#FEBE10',
     accentDark: '#b8860b',
     sound: () => sounds.playSiuuu(),
-    confettiColors: ['#FEBE10', '#ffffff', '#d4ff00'],
+    confettiColors: ['#FEBE10', '#ffffff', '#000000'],
   },
   {
     id: 1,
-    photo: '/hazard.jpg',
-    player: 'EDEN HAZARD',
-    tagline: '🪄 SILKY MAGIC 🪄',
-    sub: 'Chelsea FC Icon · PL Player of the Season · Pure Footballer',
+    photo: '/hazard-snow.jpg',
+    player: 'EDEN HAZARD // CHELSEA FC',
+    tagline: '🪄 STAMFORD BRIDGE MAESTRO 🪄',
+    sub: 'Ice in his veins · 2× Premier League Champion · The Most Silky Dribbler in PL History',
     badge: '/chelsea-logo.svg',
     accent: '#034694',
     accentDark: '#022a5a',
     sound: () => sounds.playHazardMagic(),
-    confettiColors: ['#034694', '#ffffff', '#d4ff00'],
+    confettiColors: ['#034694', '#ffffff', '#00ff85'],
   },
   {
     id: 2,
-    photo: '/kante.jpg',
-    player: "N'GOLO KANTÉ",
-    tagline: '⚡ 100% KANTÉ ⚡',
-    sub: '70% of Earth is water · The rest is covered by Kanté · PL Champion',
+    photo: '/kante-explosion.jpg',
+    player: 'N\'GOLO KANTÉ // THE TANK',
+    tagline: '💥 70% OF EARTH IS WATER 💥',
+    sub: 'The rest 30% is covered by Kanté · UCL Final 2021 MOTM · Premier League Engine',
     badge: '/chelsea-logo.svg',
-    accent: '#00a550',
+    accent: '#00ff85',
     accentDark: '#005a2b',
     sound: () => sounds.playKanteTackle(),
-    confettiColors: ['#00a550', '#034694', '#ffffff'],
+    confettiColors: ['#00ff85', '#034694', '#ffffff'],
+  },
+  {
+    id: 3,
+    photo: '/ronaldo-shades.jpg',
+    player: 'CR7 // THE ICONIC AESTHETIC',
+    tagline: '⚡ SIUUUUUUUUUUUUUU! ⚡',
+    sub: 'From Old Trafford to the Bernabéu · 900+ Career Goals · Total Football Legend',
+    badge: '/real-madrid-logo.svg',
+    accent: '#FEBE10',
+    accentDark: '#997500',
+    sound: () => sounds.playSiuuu(),
+    confettiColors: ['#FEBE10', '#ffffff', '#ff2d55'],
+  },
+  {
+    id: 4,
+    photo: '/hazard.jpg',
+    player: 'EDEN HAZARD // THE MAGICIAN',
+    tagline: '🎩 UNSTOPPABLE BALLER 🎩',
+    sub: 'Destroyed Arsenal, Tottenham & West Ham alone · True Stamford Bridge Royalty',
+    badge: '/chelsea-logo.svg',
+    accent: '#0080ff',
+    accentDark: '#004080',
+    sound: () => sounds.playHazardMagic(),
+    confettiColors: ['#0080ff', '#ffffff', '#034694'],
+  },
+  {
+    id: 5,
+    photo: '/ronaldo-ballondor.jpg',
+    player: 'CRISTIANO RONALDO // GOLDEN LEGEND',
+    tagline: '👑 5× BALLON D\'OR WINNER 👑',
+    sub: 'Real Madrid All-Time Top Scorer · Calma at Camp Nou · The Ultimate Machine',
+    badge: '/real-madrid-logo.svg',
+    accent: '#FEBE10',
+    accentDark: '#806000',
+    sound: () => sounds.playSiuuu(),
+    confettiColors: ['#FEBE10', '#ffffff', '#ffd700'],
   },
 ];
 
-const SLIDE_DURATION = 5500; // ms per frame
-
-// ─── Wonderwall Synth (Web Audio API) ─────────────────────────────────────────
-// Am7 → G → Dsus4 → A7sus4 acoustic guitar triangle-wave approximation
-let _wonderCtx: AudioContext | null = null;
-let _wonderTimer: ReturnType<typeof setTimeout> | null = null;
-let _wonderActive = false;
-
-function getWonderCtx(): AudioContext | null {
-  try {
-    if (!_wonderCtx) {
-      const AC = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
-      _wonderCtx = new AC();
-    }
-    if (_wonderCtx.state === 'suspended') _wonderCtx.resume().catch(() => {});
-    return _wonderCtx;
-  } catch {
-    return null;
-  }
+// ─── Football Video Clips ────────────────────────────────────────────────────
+interface VideoClip {
+  id: string;
+  title: string;
+  legend: string;
+  club: string;
+  youtubeId: string;
+  badge: string;
+  accent: string;
 }
 
-function playWonderwallLoop() {
-  if (_wonderActive) return;
-  _wonderActive = true;
-  const chords: number[][] = [
-    [220.00, 261.63, 329.63, 392.00], // Am7
-    [196.00, 246.94, 293.66, 392.00], // G
-    [293.66, 370.00, 440.00, 493.88], // Dsus4
-    [220.00, 277.18, 329.63, 415.30], // A7sus4
-  ];
-  let ci = 0;
+const VIDEO_CLIPS: VideoClip[] = [
+  {
+    id: 'cr7-siu',
+    title: 'CR7 Iconic Siuu & Real Madrid Rockets',
+    legend: 'Cristiano Ronaldo',
+    club: 'Real Madrid',
+    youtubeId: '9cqEp3qDuG4',
+    badge: '/real-madrid-logo.svg',
+    accent: '#FEBE10',
+  },
+  {
+    id: 'hazard-solo',
+    title: 'Hazard Solo Wonder Goal vs Arsenal',
+    legend: 'Eden Hazard',
+    club: 'Chelsea FC',
+    youtubeId: 'wIWqvf60NhM',
+    badge: '/chelsea-logo.svg',
+    accent: '#034694',
+  },
+  {
+    id: 'kante-engine',
+    title: 'Kanté Defensive Masterclass & UCL Final',
+    legend: "N'Golo Kanté",
+    club: 'Chelsea FC',
+    youtubeId: 'bNxHkUXNaBI',
+    badge: '/chelsea-logo.svg',
+    accent: '#00ff85',
+  },
+];
 
-  function tick() {
-    if (!_wonderActive) return;
-    const ctx = getWonderCtx();
-    if (!ctx) return;
-    const chord = chords[ci % chords.length];
-    const now = ctx.currentTime;
-    chord.forEach((freq, i) => {
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      const t = now + i * 0.14;
-      osc.type = 'triangle';
-      osc.frequency.setValueAtTime(freq, t);
-      gain.gain.setValueAtTime(0, t);
-      gain.gain.linearRampToValueAtTime(0.055, t + 0.025);
-      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.72);
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-      osc.start(t);
-      osc.stop(t + 0.74);
-    });
-    ci++;
-    _wonderTimer = setTimeout(tick, 820);
-  }
-  tick();
-}
+const SLIDE_DURATION = 5000;
 
-function stopWonderwallLoop() {
-  _wonderActive = false;
-  if (_wonderTimer) { clearTimeout(_wonderTimer); _wonderTimer = null; }
-}
-
-// ─── Main Component ────────────────────────────────────────────────────────────
 export const LiveFootballPitch: React.FC = () => {
+  const [viewMode, setViewMode] = useState<'photos' | 'videos'>('photos');
   const [frameIdx, setFrameIdx] = useState(0);
+  const [selectedVideo, setSelectedVideo] = useState(0);
   const [progress, setProgress] = useState(0);
   const [isPlaying, setIsPlaying] = useState(true);
-  const [audioOn, setAudioOn] = useState(false);
+  const [wonderwallActive, setWonderwallActive] = useState(false);
   const [showFlash, setShowFlash] = useState(false);
+
   const progressRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const slideRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const playingRef = useRef(true);
 
-  const currentFrame = FRAMES[frameIdx];
+  const currentFrame = PHOTO_FRAMES[frameIdx];
+  const activeVideo = VIDEO_CLIPS[selectedVideo];
 
-  // ── Start progress bar tick ───────────────────────────────────────────────
+  // ── Sync with Wonderwall global audio ─────────────────────────────────────
+  useEffect(() => {
+    const unsub = wonderwallAudio.subscribe((playing) => {
+      setWonderwallActive(playing);
+    });
+    return unsub;
+  }, []);
+
+  // ── Progress bar tick ─────────────────────────────────────────────────────
   const startProgress = useCallback(() => {
     setProgress(0);
     if (progressRef.current) clearInterval(progressRef.current);
@@ -143,293 +170,330 @@ export const LiveFootballPitch: React.FC = () => {
     }, 50);
   }, []);
 
-  // ── Go to frame ───────────────────────────────────────────────────────────
-  const goTo = useCallback((idx: number, playSound = true) => {
-    const target = ((idx % FRAMES.length) + FRAMES.length) % FRAMES.length;
-    setShowFlash(true);
-    setTimeout(() => setShowFlash(false), 130);
-    setFrameIdx(target);
-    startProgress();
-    if (playSound) {
-      if (audioOn) { try { FRAMES[target].sound(); } catch {} }
-      confetti({
-        particleCount: 28,
-        spread: 55,
-        origin: { y: 0.55, x: 0.3 + Math.random() * 0.4 },
-        colors: FRAMES[target].confettiColors,
-        scalar: 0.75,
-      });
-    }
-  }, [audioOn, startProgress]);
+  // ── Frame transition ──────────────────────────────────────────────────────
+  const goTo = useCallback(
+    (idx: number, playSound = true) => {
+      const target = ((idx % PHOTO_FRAMES.length) + PHOTO_FRAMES.length) % PHOTO_FRAMES.length;
+      setShowFlash(true);
+      setTimeout(() => setShowFlash(false), 120);
+      setFrameIdx(target);
+      startProgress();
+      if (playSound) {
+        try {
+          PHOTO_FRAMES[target].sound();
+        } catch {}
+        confetti({
+          particleCount: 25,
+          spread: 60,
+          origin: { y: 0.5, x: 0.3 + Math.random() * 0.4 },
+          colors: PHOTO_FRAMES[target].confettiColors,
+          scalar: 0.8,
+        });
+      }
+    },
+    [startProgress]
+  );
 
-  // ── Auto-advance ──────────────────────────────────────────────────────────
+  // ── Auto advance photos ───────────────────────────────────────────────────
   useEffect(() => {
-    if (!isPlaying) return;
+    if (viewMode !== 'photos' || !isPlaying) return;
     if (slideRef.current) clearTimeout(slideRef.current);
     slideRef.current = setTimeout(() => goTo(frameIdx + 1), SLIDE_DURATION);
-    return () => { if (slideRef.current) clearTimeout(slideRef.current); };
-  }, [frameIdx, isPlaying, goTo]);
+    return () => {
+      if (slideRef.current) clearTimeout(slideRef.current);
+    };
+  }, [frameIdx, isPlaying, viewMode, goTo]);
 
-  // ── Mount / unmount ───────────────────────────────────────────────────────
   useEffect(() => {
     startProgress();
     return () => {
       if (progressRef.current) clearInterval(progressRef.current);
       if (slideRef.current) clearTimeout(slideRef.current);
-      stopWonderwallLoop();
     };
   }, [startProgress]);
 
-  // ── Toggle Wonderwall audio ───────────────────────────────────────────────
-  const toggleAudio = () => {
-    if (audioOn) { stopWonderwallLoop(); setAudioOn(false); }
-    else { playWonderwallLoop(); setAudioOn(true); }
-  };
-
-  // ── Toggle play/pause ─────────────────────────────────────────────────────
-  const togglePlay = () => {
-    playingRef.current = !playingRef.current;
-    setIsPlaying((p) => {
-      if (p) {
-        if (slideRef.current) clearTimeout(slideRef.current);
-        if (progressRef.current) clearInterval(progressRef.current);
-      } else {
-        startProgress();
-      }
-      return !p;
-    });
+  const toggleWonderwall = () => {
+    wonderwallAudio.toggle();
   };
 
   return (
     <div
-      className="relative w-full h-full min-h-[420px] rounded-2xl overflow-hidden select-none"
-      style={{ background: '#0a0a0a' }}
+      className="relative w-full h-full min-h-[460px] rounded-3xl overflow-hidden select-none border-2 border-white/10 shadow-2xl"
+      style={{ background: '#070a10' }}
     >
-      {/* ── White flash on transition ── */}
-      <AnimatePresence>
-        {showFlash && (
-          <motion.div
-            key="flash"
-            className="absolute inset-0 z-50 pointer-events-none"
-            style={{ background: 'rgba(255,255,255,0.45)' }}
-            initial={{ opacity: 1 }}
-            animate={{ opacity: 0 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.13 }}
-          />
-        )}
-      </AnimatePresence>
-
-      {/* ── Full-bleed photo with Ken Burns zoom ── */}
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={frameIdx}
-          className="absolute inset-0"
-          initial={{ opacity: 0, scale: 1.08 }}
-          animate={{ opacity: 1, scale: 1.16 }}
-          exit={{ opacity: 0, scale: 1.02 }}
-          transition={{
-            opacity: { duration: 0.65, ease: 'easeInOut' },
-            scale: { duration: SLIDE_DURATION / 1000, ease: 'linear' },
+      {/* ── Mode Switcher Tab Bar (Top Left) ── */}
+      <div className="absolute top-4 left-4 z-40 flex items-center gap-1.5 p-1 rounded-2xl bg-black/70 border border-white/20 backdrop-blur-xl">
+        <button
+          onClick={() => {
+            setViewMode('photos');
+            startProgress();
           }}
+          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all ${
+            viewMode === 'photos'
+              ? 'bg-gradient-to-r from-[#034694] to-[#FEBE10] text-black shadow-md'
+              : 'text-slate-300 hover:text-white'
+          }`}
         >
-          <img
-            src={currentFrame.photo}
-            alt={currentFrame.player}
-            className="w-full h-full object-cover object-top"
-            draggable={false}
-          />
+          <ImageIcon className="w-3.5 h-3.5" />
+          <span>CINEMATICA</span>
+        </button>
 
-          {/* Bottom gradient */}
-          <div
-            className="absolute inset-0"
-            style={{
-              background:
-                'linear-gradient(to top, rgba(0,0,0,0.94) 0%, rgba(0,0,0,0.52) 38%, rgba(0,0,0,0.1) 62%, transparent 100%)',
-            }}
-          />
-          {/* Radial vignette */}
-          <div
-            className="absolute inset-0"
-            style={{ background: 'radial-gradient(ellipse at center, transparent 48%, rgba(0,0,0,0.65) 100%)' }}
-          />
-          {/* Accent color glow at bottom */}
-          <div
-            className="absolute bottom-0 left-0 right-0 h-28 opacity-35"
-            style={{ background: `linear-gradient(to top, ${currentFrame.accent}, transparent)` }}
-          />
-          {/* Film grain */}
-          <div
-            className="absolute inset-0 opacity-[0.035] pointer-events-none"
-            style={{
-              backgroundImage:
-                "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")",
-              backgroundSize: '128px',
-            }}
-          />
-          {/* Scanlines */}
-          <div
-            className="absolute inset-0 opacity-[0.055] pointer-events-none"
-            style={{
-              backgroundImage:
-                'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,1) 2px, rgba(0,0,0,1) 4px)',
-            }}
-          />
-        </motion.div>
-      </AnimatePresence>
-
-      {/* ── Top bar ── */}
-      <div className="absolute top-3 left-0 right-0 flex items-center justify-between px-4 z-20">
-        <motion.img
-          key={`badge-${frameIdx}`}
-          src={currentFrame.badge}
-          alt="Club"
-          className="h-8 w-8 object-contain drop-shadow-lg"
-          initial={{ opacity: 0, x: -10 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 0.3, duration: 0.35 }}
-        />
-
-        <div className="flex gap-[6px] items-center">
-          {FRAMES.map((f, i) => (
-            <button
-              key={f.id}
-              onClick={() => goTo(i)}
-              className="rounded-full transition-all duration-300"
-              style={{
-                width: i === frameIdx ? 22 : 8,
-                height: 8,
-                background: i === frameIdx ? currentFrame.accent : 'rgba(255,255,255,0.28)',
-                boxShadow: i === frameIdx ? `0 0 8px ${currentFrame.accent}` : 'none',
-              }}
-            />
-          ))}
-        </div>
-
-        <span
-          className="text-[9px] font-black uppercase tracking-widest px-2 py-[3px] rounded"
-          style={{ background: 'rgba(0,0,0,0.65)', color: '#d4ff00', border: '1px solid #d4ff00' }}
+        <button
+          onClick={() => {
+            setViewMode('videos');
+            if (slideRef.current) clearTimeout(slideRef.current);
+            if (progressRef.current) clearInterval(progressRef.current);
+          }}
+          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all ${
+            viewMode === 'videos'
+              ? 'bg-[#00ff85] text-black shadow-md shadow-[#00ff85]/40'
+              : 'text-slate-300 hover:text-white'
+          }`}
         >
-          GEEKROOM
-        </span>
+          <Film className="w-3.5 h-3.5" />
+          <span>VIDEOS ⚽</span>
+        </button>
       </div>
 
-      {/* ── Text overlay ── */}
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={`text-${frameIdx}`}
-          className="absolute bottom-16 left-0 right-0 px-5 z-20"
-          initial={{ opacity: 0, y: 22 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -10 }}
-          transition={{ duration: 0.48, ease: 'easeOut' }}
-        >
-          <motion.p
-            className="text-[10px] font-black uppercase tracking-[0.3em] mb-[3px]"
-            style={{ color: currentFrame.accent, textShadow: `0 0 14px ${currentFrame.accent}` }}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.18 }}
-          >
-            {currentFrame.player}
-          </motion.p>
-
-          <motion.h2
-            className="text-2xl md:text-[28px] font-black uppercase leading-tight"
-            style={{
-              color: '#ffffff',
-              textShadow: `0 0 22px ${currentFrame.accent}, 2px 2px 0 rgba(0,0,0,0.85)`,
-              WebkitTextStroke: `0.5px ${currentFrame.accentDark}`,
-            }}
-            initial={{ opacity: 0, x: -18 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.28, duration: 0.38 }}
-          >
-            {currentFrame.tagline}
-          </motion.h2>
-
-          <motion.p
-            className="text-[11px] text-white/65 mt-[5px] font-medium tracking-wide max-w-[280px]"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.48 }}
-          >
-            {currentFrame.sub}
-          </motion.p>
-        </motion.div>
-      </AnimatePresence>
-
-      {/* ── Bottom controls ── */}
-      <div className="absolute bottom-0 left-0 right-0 z-20 px-4 pb-3">
-        {/* Progress bar */}
-        <div className="w-full h-[3px] bg-white/15 rounded-full mb-3 overflow-hidden">
-          <div
-            className="h-full rounded-full transition-none"
-            style={{
-              width: `${progress}%`,
-              background: `linear-gradient(to right, ${currentFrame.accent}, #fff)`,
-              boxShadow: `0 0 6px ${currentFrame.accent}`,
-              transition: 'width 0.05s linear',
-            }}
-          />
+      {/* ── Club Badges & Wonderwall Quick Play (Top Right) ── */}
+      <div className="absolute top-4 right-4 z-40 flex items-center gap-2">
+        {/* Real Madrid + Chelsea Crests */}
+        <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-black/70 border border-white/20 backdrop-blur-xl">
+          <img src="/real-madrid-logo.svg" alt="Real Madrid" className="w-6 h-6 object-contain drop-shadow-md" />
+          <span className="text-[10px] font-mono text-slate-400 font-bold">vs</span>
+          <img src="/chelsea-logo.svg" alt="Chelsea FC" className="w-6 h-6 object-contain drop-shadow-md" />
         </div>
 
-        {/* Buttons row */}
-        <div className="flex items-center justify-between">
-          {/* Left: prev/next */}
-          <div className="flex gap-2">
-            <button
-              onClick={() => goTo(frameIdx - 1)}
-              className="w-7 h-7 rounded-full flex items-center justify-center hover:scale-110 transition-transform"
-              style={{ background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.18)' }}
+        {/* Wonderwall Audio Button */}
+        <button
+          onClick={toggleWonderwall}
+          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all border ${
+            wonderwallActive
+              ? 'bg-[#FEBE10] text-black border-[#FEBE10] shadow-lg shadow-[#FEBE10]/30 animate-pulse'
+              : 'bg-black/70 text-white border-white/20 hover:border-white/40'
+          }`}
+          title="Play user-uploaded Wonderwall by Oasis"
+        >
+          {wonderwallActive ? <Volume2 className="w-3.5 h-3.5" /> : <VolumeX className="w-3.5 h-3.5" />}
+          <span className="hidden sm:inline">Wonderwall</span>
+        </button>
+      </div>
+
+      {/* ────────────────────────────────────────────────────────────────────────
+          MODE 1: CINEMATIC PHOTOS
+         ──────────────────────────────────────────────────────────────────────── */}
+      {viewMode === 'photos' && (
+        <>
+          {/* White flash on transition */}
+          <AnimatePresence>
+            {showFlash && (
+              <motion.div
+                key="flash"
+                className="absolute inset-0 z-30 pointer-events-none"
+                style={{ background: 'rgba(255,255,255,0.45)' }}
+                initial={{ opacity: 1 }}
+                animate={{ opacity: 0 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.12 }}
+              />
+            )}
+          </AnimatePresence>
+
+          {/* Full-bleed Photo with Ken Burns */}
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={frameIdx}
+              className="absolute inset-0"
+              initial={{ opacity: 0, scale: 1.05 }}
+              animate={{ opacity: 1, scale: 1.15 }}
+              exit={{ opacity: 0, scale: 1.0 }}
+              transition={{
+                opacity: { duration: 0.65, ease: 'easeInOut' },
+                scale: { duration: SLIDE_DURATION / 1000, ease: 'linear' },
+              }}
             >
-              <ChevronLeft size={14} color="#fff" />
-            </button>
-            <button
-              onClick={() => goTo(frameIdx + 1)}
-              className="w-7 h-7 rounded-full flex items-center justify-center hover:scale-110 transition-transform"
-              style={{ background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.18)' }}
+              <img
+                src={currentFrame.photo}
+                alt={currentFrame.player}
+                className="w-full h-full object-cover object-center"
+                draggable={false}
+              />
+
+              {/* Cinematic Vignette + Dynamic Color Glow */}
+              <div
+                className="absolute inset-0"
+                style={{
+                  background:
+                    'linear-gradient(to top, rgba(7,10,16,0.95) 0%, rgba(7,10,16,0.5) 45%, rgba(7,10,16,0.15) 75%, transparent 100%)',
+                }}
+              />
+              <div
+                className="absolute inset-0"
+                style={{
+                  background: 'radial-gradient(ellipse at center, transparent 40%, rgba(7,10,16,0.7) 100%)',
+                }}
+              />
+              <div
+                className="absolute bottom-0 left-0 right-0 h-32 opacity-40 pointer-events-none"
+                style={{
+                  background: `linear-gradient(to top, ${currentFrame.accent}, transparent)`,
+                }}
+              />
+            </motion.div>
+          </AnimatePresence>
+
+          {/* Player Badge and Text Overlay */}
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={`text-${frameIdx}`}
+              className="absolute bottom-16 left-0 right-0 px-6 z-20 pointer-events-none"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.45 }}
             >
-              <ChevronRight size={14} color="#fff" />
-            </button>
+              <div className="flex items-center gap-2 mb-1.5">
+                <img src={currentFrame.badge} alt="Club" className="w-5 h-5 object-contain" />
+                <span
+                  className="text-[11px] font-black uppercase tracking-[0.25em]"
+                  style={{ color: currentFrame.accent, textShadow: `0 0 14px ${currentFrame.accent}` }}
+                >
+                  {currentFrame.player}
+                </span>
+              </div>
+
+              <h2
+                className="text-2xl sm:text-3xl font-black uppercase tracking-tight text-white leading-tight"
+                style={{
+                  textShadow: `0 0 25px ${currentFrame.accent}, 2px 2px 0 rgba(0,0,0,0.9)`,
+                }}
+              >
+                {currentFrame.tagline}
+              </h2>
+
+              <p className="text-xs sm:text-sm text-slate-300 font-medium mt-1 max-w-lg drop-shadow">
+                {currentFrame.sub}
+              </p>
+            </motion.div>
+          </AnimatePresence>
+
+          {/* Bottom Controls Bar */}
+          <div className="absolute bottom-0 left-0 right-0 z-30 px-6 pb-4">
+            {/* Progress bar */}
+            <div className="w-full h-1 bg-white/20 rounded-full mb-3 overflow-hidden">
+              <div
+                className="h-full rounded-full transition-all duration-75"
+                style={{
+                  width: `${progress}%`,
+                  background: `linear-gradient(to right, ${currentFrame.accent}, #ffffff)`,
+                  boxShadow: `0 0 8px ${currentFrame.accent}`,
+                }}
+              />
+            </div>
+
+            <div className="flex items-center justify-between">
+              {/* Prev / Next */}
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => goTo(frameIdx - 1)}
+                  className="w-8 h-8 rounded-xl bg-black/60 border border-white/20 text-white flex items-center justify-center hover:scale-110 active:scale-95 transition-all"
+                >
+                  <ChevronLeft className="w-4 h-4" />
+                </button>
+                <button
+                  onClick={() => goTo(frameIdx + 1)}
+                  className="w-8 h-8 rounded-xl bg-black/60 border border-white/20 text-white flex items-center justify-center hover:scale-110 active:scale-95 transition-all"
+                >
+                  <ChevronRight className="w-4 h-4" />
+                </button>
+
+                {/* Frame Dots */}
+                <div className="flex items-center gap-1.5 ml-2">
+                  {PHOTO_FRAMES.map((f, i) => (
+                    <button
+                      key={f.id}
+                      onClick={() => goTo(i)}
+                      className="rounded-full transition-all duration-300"
+                      style={{
+                        width: i === frameIdx ? 20 : 6,
+                        height: 6,
+                        background: i === frameIdx ? currentFrame.accent : 'rgba(255,255,255,0.3)',
+                      }}
+                    />
+                  ))}
+                </div>
+              </div>
+
+              {/* Play / Pause Auto */}
+              <button
+                onClick={() => setIsPlaying(!isPlaying)}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 text-white text-[11px] font-mono font-bold transition-all"
+              >
+                {isPlaying ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5 fill-current" />}
+                <span>{isPlaying ? 'PAUSE' : 'AUTOPLAY'}</span>
+              </button>
+            </div>
+          </div>
+        </>
+      )}
+
+      {/* ────────────────────────────────────────────────────────────────────────
+          MODE 2: MATCH DAY VIDEOS (CR7 SIUU, HAZARD SOLO, KANTE MASTERCLASS)
+         ──────────────────────────────────────────────────────────────────────── */}
+      {viewMode === 'videos' && (
+        <div className="relative w-full h-full flex flex-col justify-between pt-16 pb-4 px-4 sm:px-6 z-20">
+          {/* Video Selector Pills */}
+          <div className="flex flex-wrap items-center gap-2 mb-3">
+            {VIDEO_CLIPS.map((clip, idx) => (
+              <button
+                key={clip.id}
+                onClick={() => setSelectedVideo(idx)}
+                className={`flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all border ${
+                  selectedVideo === idx
+                    ? 'bg-white text-black border-white shadow-lg'
+                    : 'bg-black/60 text-slate-300 border-white/15 hover:border-white/30'
+                }`}
+              >
+                <img src={clip.badge} alt="" className="w-4 h-4 object-contain" />
+                <span>{clip.legend}</span>
+              </button>
+            ))}
           </div>
 
-          {/* Center: play/pause */}
-          <button
-            onClick={togglePlay}
-            className="w-8 h-8 rounded-full flex items-center justify-center hover:scale-110 transition-transform"
-            style={{
-              background: currentFrame.accent,
-              boxShadow: `0 0 14px ${currentFrame.accent}`,
-            }}
-          >
-            {isPlaying ? <Pause size={13} color="#000" /> : <Play size={13} color="#000" />}
-          </button>
+          {/* Embedded High-Adrenaline YouTube Video */}
+          <div className="relative w-full flex-1 rounded-2xl overflow-hidden border border-white/20 shadow-2xl bg-black min-h-[260px]">
+            <iframe
+              key={activeVideo.youtubeId}
+              src={`https://www.youtube.com/embed/${activeVideo.youtubeId}?autoplay=1&mute=0&controls=1&modestbranding=1&rel=0`}
+              title={activeVideo.title}
+              className="w-full h-full border-0 absolute inset-0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            />
+          </div>
 
-          {/* Right: Wonderwall toggle */}
-          <button
-            onClick={toggleAudio}
-            className="flex items-center gap-1 px-2 py-1 rounded-full text-[9px] font-black uppercase tracking-wide hover:scale-105 transition-transform"
-            style={{
-              background: audioOn ? currentFrame.accent : 'rgba(255,255,255,0.1)',
-              color: audioOn ? '#000' : '#fff',
-              border: `1px solid ${audioOn ? currentFrame.accent : 'rgba(255,255,255,0.22)'}`,
-              boxShadow: audioOn ? `0 0 10px ${currentFrame.accent}` : 'none',
-            }}
-          >
-            {audioOn ? <Volume2 size={10} /> : <VolumeX size={10} />}
-            <span>Wonderwall</span>
-          </button>
+          {/* Video Caption & Info */}
+          <div className="mt-3 flex items-center justify-between text-xs font-mono">
+            <div className="flex items-center gap-2 text-white">
+              <span className="w-2 h-2 rounded-full bg-red-500 animate-ping" />
+              <span className="font-bold">{activeVideo.title}</span>
+              <span className="text-slate-500">//</span>
+              <span className="text-[#00ff85] font-bold">{activeVideo.club}</span>
+            </div>
+
+            <button
+              onClick={() => {
+                if (selectedVideo === 0) sounds.playSiuuu();
+                if (selectedVideo === 1) sounds.playHazardMagic();
+                if (selectedVideo === 2) sounds.playKanteTackle();
+              }}
+              className="px-2.5 py-1 rounded-lg bg-white/10 hover:bg-white/20 text-white font-bold text-[10px] uppercase border border-white/20 transition-all"
+            >
+              TRIGGER FX 🔊
+            </button>
+          </div>
         </div>
-      </div>
-
-      {/* ── Ghost watermark ── */}
-      <div
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10 pointer-events-none whitespace-nowrap"
-        style={{ color: 'rgba(255,255,255,0.035)', fontSize: '60px', fontWeight: 900, letterSpacing: '0.2em' }}
-      >
-        CINEMATICA
-      </div>
+      )}
     </div>
   );
 };

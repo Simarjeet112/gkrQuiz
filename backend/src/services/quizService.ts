@@ -48,7 +48,8 @@ export class QuizService {
   async startQuiz(
     displayName: string,
     participantCode?: string,
-    track: string = 'code'
+    track: string = 'code',
+    difficultyMode: string = 'balanced'
   ): Promise<{
     attemptId: string;
     participantId: string;
@@ -147,9 +148,9 @@ export class QuizService {
       code_snippet?: string | null;
     }> = [];
 
-    if (track === 'ronaldo' || track === 'legends') {
+    if (track === 'ronaldo' || track === 'legends' || track === 'football') {
       // ── CR7 & FOOTBALL LEGENDS TRACK ──
-      // Ronaldo, Hazard, Kanté, Chelsea FC, Real Madrid, and Tactical Football Chess
+      // Ronaldo, Hazard, Kanté, Chelsea FC, Real Madrid, Tactical Chess, and Football & Code
       const footballCats = [
         'Cristiano Ronaldo',
         'Eden Hazard',
@@ -157,6 +158,7 @@ export class QuizService {
         'Chelsea FC',
         'Real Madrid',
         'Tactical Football Chess',
+        'Football & Code',
       ];
       const placeholders = footballCats.map(() => '?').join(',');
 
@@ -196,7 +198,15 @@ export class QuizService {
         footballCats
       );
 
-      if (easyFB.length >= 2 && medFB.length >= 2 && toughFB.length >= 1) {
+      if (difficultyMode === 'easy' && easyFB.length >= 3 && medFB.length >= 2) {
+        selectedEasy = shuffleArray(easyFB).slice(0, 3);
+        selectedMed = shuffleArray(medFB).slice(0, 2);
+        selectedTough = [];
+      } else if (difficultyMode === 'tough' && toughFB.length >= 3 && medFB.length >= 2) {
+        selectedEasy = [];
+        selectedMed = shuffleArray(medFB).slice(0, 2);
+        selectedTough = shuffleArray(toughFB).slice(0, 3);
+      } else if (easyFB.length >= 2 && medFB.length >= 2 && toughFB.length >= 1) {
         const shuffEasy = shuffleArray(easyFB);
         const e1 = shuffEasy[0];
         const e2 = shuffEasy.find((q) => q.id !== e1.id && q.category !== e1.category) || shuffEasy[1];
