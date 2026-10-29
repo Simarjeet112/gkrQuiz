@@ -269,31 +269,39 @@ export const LandingPage: React.FC = () => {
             transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
             className="lg:col-span-5 flex flex-col items-center justify-center relative w-full"
           >
-            {/* Mascot Showcase Console */}
+            {/* Trio of Kings Showcase Console (Hazard, Kanté, Ronaldo) */}
             <div className="relative w-full max-w-lg rounded-2xl p-5 sm:p-6 border border-white/15 shadow-titanium overflow-hidden bg-[#101522]/90 backdrop-blur-md">
               {/* Header Badge */}
               <div className="flex items-center justify-between pb-3 border-b border-white/10 mb-2">
                 <div className="flex items-center gap-2.5 font-mono text-xs font-bold">
-                  <div className="w-8 h-8 rounded-lg bg-white/10 border border-white/15 flex items-center justify-center p-1">
-                    <img src="/geekroom-logo.png" alt="Geekroom" className="w-full h-full object-contain" />
+                  <div className="flex -space-x-1.5 items-center">
+                    <div className="w-8 h-8 rounded-lg bg-amber-950/80 border border-amber-400/60 flex items-center justify-center p-1 shadow-md">
+                      <img src="/real-madrid-logo.svg" alt="Real Madrid" className="w-full h-full object-contain" />
+                    </div>
+                    <div className="w-8 h-8 rounded-lg bg-blue-950/80 border border-blue-400/60 flex items-center justify-center p-1 shadow-md">
+                      <img src="/chelsea-logo.svg" alt="Chelsea" className="w-full h-full object-contain" />
+                    </div>
+                    <div className="w-8 h-8 rounded-lg bg-carbon-900 border border-lime/60 flex items-center justify-center p-1 shadow-md">
+                      <img src="/geekroom-logo.png" alt="Geekroom" className="w-full h-full object-contain" />
+                    </div>
                   </div>
                   <div>
-                    <div className="leading-tight text-white font-display">
-                      BITBYTE // GKR-01
+                    <div className="leading-tight text-white font-display text-sm">
+                      TRIO OF KINGS // ARENA LEGENDS
                     </div>
-                    <div className="text-[10px] text-slate-400 font-mono">
-                      OFFICIAL CODER BOT COMPANION
+                    <div className="text-[10px] text-amber-300 font-mono font-bold">
+                      CR7 × EDEN HAZARD × N'GOLO KANTÉ
                     </div>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-mono font-bold border bg-lime/10 border-lime/30 text-lime">
-                  <span className="w-2 h-2 rounded-full animate-pulse bg-lime" />
-                  <span>ONLINE</span>
+                <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-mono font-bold border bg-amber-500/10 border-amber-400/40 text-amber-300">
+                  <span className="w-2 h-2 rounded-full animate-pulse bg-amber-400" />
+                  <span>KINGS ACTIVE</span>
                 </div>
               </div>
 
-              {/* Three.js 3D Living Mascot */}
+              {/* Trio of Champions Photo Showcase */}
               <BitByte3D
                 size="hero"
                 mood="welcome"
@@ -304,9 +312,9 @@ export const LandingPage: React.FC = () => {
               <div className="flex items-center justify-between pt-3 border-t border-white/10 text-[11px] font-mono text-slate-400">
                 <span className="text-slate-300 flex items-center gap-1.5">
                   <Terminal className="w-3.5 h-3.5 text-lime" />
-                  <span>Click BitByte to interact</span>
+                  <span>Click any Legend to trigger audio & voice</span>
                 </span>
-                <span className="text-slate-500 text-[10px]">WebGL 60FPS</span>
+                <span className="text-amber-300 font-bold text-[10px]">CHELSEA 💙 × MADRID 🤍</span>
               </div>
             </div>
           </motion.div>
