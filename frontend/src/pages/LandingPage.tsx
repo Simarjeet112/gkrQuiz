@@ -53,6 +53,8 @@ export const LandingPage: React.FC = () => {
   const [tokenInserted, setTokenInserted] = useState(false);
   const [tokenToast, setTokenToast] = useState(false);
   const [siuuuActive, setSiuuuActive] = useState(false);
+  const [hazardActive, setHazardActive] = useState(false);
+  const [kanteActive, setKanteActive] = useState(false);
 
   const handleInsertToken = () => {
     sounds.playTierUp();
@@ -73,27 +75,65 @@ export const LandingPage: React.FC = () => {
     setTimeout(() => setSiuuuActive(false), 3000);
   };
 
+  const handleHazard = () => {
+    sounds.playHazardMagic();
+    setHazardActive(true);
+    confetti({
+      particleCount: 130,
+      spread: 90,
+      origin: { y: 0.6 },
+      colors: ['#034694', '#0070F3', '#60A5FA', '#FFFFFF'],
+    });
+    setTimeout(() => setHazardActive(false), 3000);
+  };
+
+  const handleKante = () => {
+    sounds.playKanteTackle();
+    setKanteActive(true);
+    confetti({
+      particleCount: 130,
+      spread: 90,
+      origin: { y: 0.6 },
+      colors: ['#10B981', '#034694', '#34D399', '#FFFFFF'],
+    });
+    setTimeout(() => setKanteActive(false), 3000);
+  };
+
   return (
     <div className="relative min-h-[calc(100vh-4rem)] overflow-hidden bg-carbon-950 text-carbon-50">
       {/* ── AMBIENT CHESS VIBES IN THE BACKGROUND ── */}
       <ChessBackground />
 
-      {/* ── 1. ARCHITECTURAL TOP TICKER TAPE ── */}
-      <div className="w-full bg-[#101522]/90 backdrop-blur-md text-slate-300 py-2.5 overflow-hidden font-mono text-xs border-y border-white/10 select-none">
+      {/* ── 1. ARCHITECTURAL TOP TICKER TAPE (CR7, HAZARD, KANTÉ, CHELSEA, MADRID, GEEKROOM, CHESS) ── */}
+      <div className="w-full bg-[#0A0E1A]/95 backdrop-blur-md text-slate-300 py-2.5 overflow-hidden font-mono text-xs border-y border-white/10 select-none">
         <div className="animate-marquee whitespace-nowrap flex items-center gap-8">
-          <span className="text-lime font-bold">♟ 1. e4 THINK 3 MOVES AHEAD</span>
+          <span className="text-amber-400 font-bold flex items-center gap-1.5">
+            <span>⚽</span> CR7 450 GOALS AT REAL MADRID // 5x BALLON D'OR
+          </span>
+          <span className="text-slate-600">•</span>
+          <span className="text-blue-400 font-bold flex items-center gap-1.5">
+            <span>🪄</span> EDEN HAZARD // STAMFORD BRIDGE MAGICIAN #10
+          </span>
+          <span className="text-slate-600">•</span>
+          <span className="text-emerald-400 font-bold flex items-center gap-1.5">
+            <span>⚡</span> N'GOLO KANTÉ COVERS 70% OF THE EARTH
+          </span>
+          <span className="text-slate-600">•</span>
+          <span className="text-white font-bold flex items-center gap-1.5">
+            <img src="/real-madrid-logo.svg" alt="" className="w-3.5 h-3.5 inline object-contain" />
+            REAL MADRID 15x KINGS OF EUROPE
+          </span>
+          <span className="text-slate-600">•</span>
+          <span className="text-blue-400 font-bold flex items-center gap-1.5">
+            <img src="/chelsea-logo.svg" alt="" className="w-3.5 h-3.5 inline object-contain" />
+            CHELSEA FC 2x UCL KINGS
+          </span>
+          <span className="text-slate-600">•</span>
+          <span className="text-lime font-bold">♚ 1. e4 THINK 3 MOVES AHEAD</span>
           <span className="text-slate-600">•</span>
           <span>GEEKROOM GTBIT // CODE ARENA 2026</span>
           <span className="text-slate-600">•</span>
-          <span>5-MINUTE BLITZ FORMAT // 90 PTS MAX</span>
-          <span className="text-slate-600">•</span>
-          <span className="text-ember font-bold">♞ OPENING → MIDDLEGAME → ENDGAME</span>
-          <span className="text-slate-600">•</span>
-          <span>BITBYTE // GKR-01 AI CODE COMPANION</span>
-          <span className="text-slate-600">•</span>
-          <span className="text-lime font-bold">♚ CHECKMATE THE LEADERBOARD</span>
-          <span className="text-slate-600">•</span>
-          <span>INSTANT ENROLLMENT ENTRY</span>
+          <span className="text-amber-300 font-bold">🔥 SIUUUUUU!</span>
         </div>
       </div>
 
@@ -108,30 +148,34 @@ export const LandingPage: React.FC = () => {
             transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
             className="lg:col-span-7 space-y-6 text-center lg:text-left"
           >
-            {/* Badges */}
-            <div className="flex flex-wrap items-center justify-center lg:justify-start gap-2.5 pt-1">
+            {/* Badges: Geekroom, Real Madrid, Chelsea FC, Chess GM */}
+            <div className="flex flex-wrap items-center justify-center lg:justify-start gap-2 pt-1">
               <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-lime/10 text-lime font-mono text-xs font-bold border border-lime/30">
                 <Code2 className="w-3.5 h-3.5 text-lime" />
                 <span>GEEKROOM GTBIT</span>
               </span>
+              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-900/30 text-blue-300 font-mono text-xs font-bold border border-blue-500/40">
+                <img src="/chelsea-logo.svg" alt="" className="w-3.5 h-3.5 object-contain" />
+                <span>CHELSEA FC</span>
+              </span>
+              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-500/20 text-amber-300 font-mono text-xs font-bold border border-amber-400/40">
+                <img src="/real-madrid-logo.svg" alt="" className="w-3.5 h-3.5 object-contain" />
+                <span>REAL MADRID 15x</span>
+              </span>
               <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/5 text-slate-200 font-mono text-xs font-bold border border-white/10">
                 <span className="text-lime">♟</span>
-                <span>CHESS TACTICAL ARENA</span>
-              </span>
-              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#161D2E] text-slate-300 font-mono text-xs font-bold border border-white/10">
-                <span>⏱️</span>
-                <span>5-MIN BLITZ</span>
+                <span>CHESS GM ELO</span>
               </span>
             </div>
 
             {/* Editorial Headline */}
             <div className="space-y-1">
               <div className="text-xs font-mono text-lime tracking-[0.25em] uppercase font-bold flex items-center justify-center lg:justify-start gap-2">
-                <span>[ FASTEST FINGERS // TIMED CHALLENGE ]</span>
+                <span>[ CR7 × HAZARD × KANTÉ // THE ARENA OF KINGS ]</span>
               </div>
               <h1 className="text-4xl sm:text-6xl md:text-7xl font-black tracking-tight text-white leading-[0.95] font-display">
-                OWN THE <br />
-                <span className="text-lime">
+                CR7 × LEGENDS <br />
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-lime to-blue-400">
                   CODE ARENA.
                 </span>
               </h1>
@@ -139,11 +183,11 @@ export const LandingPage: React.FC = () => {
 
             {/* Tagline */}
             <div className="space-y-2">
-              <p className="text-lg sm:text-xl font-bold text-slate-200 font-mono tracking-wide">
-                “Think 3 Moves Ahead. Code Smart. Climb the Ranks.”
+              <p className="text-base sm:text-lg font-bold text-slate-200 font-mono tracking-wide">
+                “Think 3 Moves Ahead like Kasparov. Dribble like Eden Hazard. Intercept like N'Golo Kanté. Finish like Cristiano Ronaldo.”
               </p>
               <div className="font-mono text-[9px] tracking-[0.25em] text-slate-500 select-none hidden sm:block">
-                ||| |||| | ||||| || |||||| |||| | || [GEEKROOM-CODE-ARENA-SECTOR-2026]
+                ||| |||| | ||||| || |||||| |||| | || [GTBIT-GEEKROOM-CHELSEA-MADRID-ARENA-2026]
               </div>
             </div>
 
@@ -364,6 +408,183 @@ export const LandingPage: React.FC = () => {
                 )}
               </div>
             </div>
+          </div>
+
+          {/* ── HAZARD & KANTÉ CHELSEA & MADRID MASTERCLASS DUAL CARDS ── */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8 pt-8 border-t border-white/10">
+            {/* Eden Hazard Card */}
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="relative overflow-hidden rounded-2xl border border-blue-500/40 bg-gradient-to-br from-[#041126] via-[#09152E] to-[#0A0E1A] p-6 shadow-2xl flex flex-col justify-between"
+            >
+              <div className="absolute top-0 right-0 w-48 h-48 bg-blue-500/10 rounded-full blur-3xl pointer-events-none" />
+              
+              <div className="space-y-4 relative z-10">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <img src="/chelsea-logo.svg" alt="Chelsea" className="w-6 h-6 object-contain" />
+                    <span className="text-xs font-mono font-bold text-blue-400 uppercase tracking-widest">
+                      CHELSEA FC TALISMAN // #10
+                    </span>
+                  </div>
+                  <span className="px-2.5 py-1 rounded-full text-[10px] font-mono font-bold bg-blue-500/20 text-blue-300 border border-blue-400/40">
+                    REAL MADRID 2019
+                  </span>
+                </div>
+
+                <div className="flex items-center gap-4">
+                  <div className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-2xl overflow-hidden border-2 border-blue-400/80 shadow-xl shrink-0 group">
+                    <img
+                      src="/hazard.jpg"
+                      alt="Eden Hazard"
+                      className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
+                    />
+                    <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/90 to-transparent p-1 text-center">
+                      <span className="text-[9px] font-mono text-blue-300 font-bold">HAZARD #10</span>
+                    </div>
+                  </div>
+
+                  <div className="space-y-1">
+                    <h3 className="text-xl sm:text-2xl font-black text-white font-display">
+                      EDEN HAZARD
+                    </h3>
+                    <p className="text-xs text-blue-200 font-mono font-semibold">
+                      “I play with freedom, joy and instinct.”
+                    </p>
+                    <p className="text-[11px] text-slate-300 font-sans leading-relaxed">
+                      2x Premier League Champion, 2x Europa League winner, 110 Chelsea goals, and over 900 defenders left behind on the turf.
+                    </p>
+                  </div>
+                </div>
+
+                {/* Hazard Mini Stats */}
+                <div className="grid grid-cols-3 gap-2 font-mono text-center pt-2">
+                  <div className="p-2 rounded-xl bg-white/5 border border-blue-500/20">
+                    <div className="text-base font-bold text-blue-300">110</div>
+                    <div className="text-[9px] text-slate-400">CHELSEA GOALS</div>
+                  </div>
+                  <div className="p-2 rounded-xl bg-white/5 border border-blue-500/20">
+                    <div className="text-base font-bold text-blue-300">900+</div>
+                    <div className="text-[9px] text-slate-400">DRIBBLES WON</div>
+                  </div>
+                  <div className="p-2 rounded-xl bg-white/5 border border-blue-500/20">
+                    <div className="text-base font-bold text-blue-300">2x</div>
+                    <div className="text-[9px] text-slate-400">PREMIER LEAGUE</div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Hazard Button */}
+              <div className="pt-4 flex items-center justify-between gap-3 relative z-10 border-t border-white/10 mt-4">
+                <button
+                  type="button"
+                  onClick={handleHazard}
+                  className="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-mono text-xs font-bold uppercase tracking-wider shadow-[0_0_20px_rgba(37,99,235,0.4)] active:scale-95 transition-all flex items-center justify-center gap-2"
+                >
+                  <span>🪄</span>
+                  <span>SILKY DRIBBLE MAGIC</span>
+                </button>
+              </div>
+
+              {hazardActive && (
+                <motion.div
+                  initial={{ opacity: 0, y: 5 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="mt-2 p-2 rounded-lg bg-blue-900/80 border border-blue-400 text-blue-200 text-center font-mono text-[10px] font-bold"
+                >
+                  ⚡ HAZARD TOOK ON 3 DEFENDERS WITH A BODY FEINT!
+                </motion.div>
+              )}
+            </motion.div>
+
+            {/* N'Golo Kanté Card */}
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="relative overflow-hidden rounded-2xl border border-emerald-500/40 bg-gradient-to-br from-[#031c12] via-[#062419] to-[#0A0E1A] p-6 shadow-2xl flex flex-col justify-between"
+            >
+              <div className="absolute top-0 right-0 w-48 h-48 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
+              
+              <div className="space-y-4 relative z-10">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <img src="/chelsea-logo.svg" alt="Chelsea" className="w-6 h-6 object-contain" />
+                    <span className="text-xs font-mono font-bold text-emerald-400 uppercase tracking-widest">
+                      CHELSEA FC // THE ENGINE #7
+                    </span>
+                  </div>
+                  <span className="px-2.5 py-1 rounded-full text-[10px] font-mono font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-400/40">
+                    2021 UCL FINAL MOTM
+                  </span>
+                </div>
+
+                <div className="flex items-center gap-4">
+                  <div className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-2xl overflow-hidden border-2 border-emerald-400/80 shadow-xl shrink-0 group">
+                    <img
+                      src="/kante.jpg"
+                      alt="N'Golo Kanté"
+                      className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
+                    />
+                    <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/90 to-transparent p-1 text-center">
+                      <span className="text-[9px] font-mono text-emerald-300 font-bold">KANTÉ #7</span>
+                    </div>
+                  </div>
+
+                  <div className="space-y-1">
+                    <h3 className="text-xl sm:text-2xl font-black text-white font-display">
+                      N'GOLO KANTÉ
+                    </h3>
+                    <p className="text-xs text-emerald-200 font-mono font-semibold">
+                      “70% Earth is water, rest is Kanté.”
+                    </p>
+                    <p className="text-[11px] text-slate-300 font-sans leading-relaxed">
+                      World Cup Champion with France, UEFA Champions League Final Man of the Match, back-to-back Premier League winner with zero ego.
+                    </p>
+                  </div>
+                </div>
+
+                {/* Kanté Mini Stats */}
+                <div className="grid grid-cols-3 gap-2 font-mono text-center pt-2">
+                  <div className="p-2 rounded-xl bg-white/5 border border-emerald-500/20">
+                    <div className="text-base font-bold text-emerald-300">100%</div>
+                    <div className="text-[9px] text-slate-400">WORK-RATE</div>
+                  </div>
+                  <div className="p-2 rounded-xl bg-white/5 border border-emerald-500/20">
+                    <div className="text-base font-bold text-emerald-300">3x</div>
+                    <div className="text-[9px] text-slate-400">UCL KO MOTM</div>
+                  </div>
+                  <div className="p-2 rounded-xl bg-white/5 border border-emerald-500/20">
+                    <div className="text-base font-bold text-emerald-300">2018</div>
+                    <div className="text-[9px] text-slate-400">WORLD CUP 🏆</div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Kanté Button */}
+              <div className="pt-4 flex items-center justify-between gap-3 relative z-10 border-t border-white/10 mt-4">
+                <button
+                  type="button"
+                  onClick={handleKante}
+                  className="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-mono text-xs font-bold uppercase tracking-wider shadow-[0_0_20px_rgba(16,185,129,0.4)] active:scale-95 transition-all flex items-center justify-center gap-2"
+                >
+                  <span>⚡</span>
+                  <span>100% TACKLE ENERGY BOOST</span>
+                </button>
+              </div>
+
+              {kanteActive && (
+                <motion.div
+                  initial={{ opacity: 0, y: 5 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="mt-2 p-2 rounded-lg bg-emerald-900/80 border border-emerald-400 text-emerald-200 text-center font-mono text-[10px] font-bold"
+                >
+                  ⚡ KANTÉ DISPOSSESSED THE ENTIRE MIDFIELD WITH 0 FOULS!
+                </motion.div>
+              )}
+            </motion.div>
           </div>
         </div>
       </section>

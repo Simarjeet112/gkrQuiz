@@ -142,8 +142,8 @@ export const LeaderboardPage: React.FC = () => {
                 <div className="w-13 h-13 rounded-2xl bg-slate-300/10 border border-slate-300/30 flex items-center justify-center text-slate-200 mb-3 text-2xl">
                   ♞
                 </div>
-                <div className="text-[11px] font-mono text-slate-300 uppercase tracking-widest font-bold">
-                  RANK #02 // INTERNATIONAL MASTER
+                <div className="text-[11px] font-mono text-slate-300 uppercase tracking-widest font-bold flex items-center gap-1 justify-center">
+                  <span>🪄</span> RANK #02 // HAZARD MAGICIAN
                 </div>
                 <h3 className="text-xl font-bold font-display text-white mt-1 truncate max-w-full">
                   {top3[1].display_name}
@@ -172,8 +172,8 @@ export const LeaderboardPage: React.FC = () => {
                 animate={{ opacity: 1, y: 0 }}
                 className="titanium-card p-7 border-2 border-amber-400/40 flex flex-col items-center text-center order-1 md:order-2 bg-gradient-to-b from-amber-500/15 via-carbon-900 to-carbon-950 relative"
               >
-                <div className="absolute -top-3 px-3 py-1 bg-amber-400 text-carbon-950 font-black text-[10px] uppercase tracking-widest font-mono rounded-full flex items-center gap-1">
-                  <span>♚</span> GRANDMASTER CHAMPION
+                <div className="absolute -top-3 px-3.5 py-1 bg-gradient-to-r from-amber-400 to-yellow-300 text-carbon-950 font-black text-[10px] uppercase tracking-widest font-mono rounded-full flex items-center gap-1.5 shadow-lg">
+                  <span>🏆</span> CR7 BALLON D'OR GRANDMASTER
                 </div>
                 <div className="w-16 h-16 rounded-2xl bg-amber-400/15 border border-amber-400/40 flex items-center justify-center text-amber-300 mb-3 text-3xl">
                   ♚
@@ -212,8 +212,8 @@ export const LeaderboardPage: React.FC = () => {
                 <div className="w-13 h-13 rounded-2xl bg-amber-800/15 border border-amber-800/30 flex items-center justify-center text-amber-600 mb-3 text-2xl">
                   ♜
                 </div>
-                <div className="text-[11px] font-mono text-amber-600 uppercase tracking-widest font-bold">
-                  RANK #03 // CANDIDATE MASTER
+                <div className="text-[11px] font-mono text-emerald-400 uppercase tracking-widest font-bold flex items-center gap-1 justify-center">
+                  <span>⚡</span> RANK #03 // KANTÉ ENGINE
                 </div>
                 <h3 className="text-xl font-bold font-display text-white mt-1 truncate max-w-full">
                   {top3[2].display_name}

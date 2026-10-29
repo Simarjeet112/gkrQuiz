@@ -47,7 +47,8 @@ export class QuizService {
 
   async startQuiz(
     displayName: string,
-    participantCode?: string
+    participantCode?: string,
+    track: string = 'code'
   ): Promise<{
     attemptId: string;
     participantId: string;
@@ -55,6 +56,7 @@ export class QuizService {
     deadlineAt: string;
     durationMinutes: number;
     questions: PublicQuestion[];
+    track?: string;
   }> {
     const trimmedName = displayName?.trim();
     if (!trimmedName) {
@@ -145,7 +147,69 @@ export class QuizService {
       code_snippet?: string | null;
     }> = [];
 
-    if (isBatch2026(participantCode)) {
+    if (track === 'ronaldo' || track === 'legends') {
+      // ── CR7 & FOOTBALL LEGENDS TRACK ──
+      // Ronaldo, Hazard, Kanté, Chelsea FC, Real Madrid, and Tactical Football Chess
+      const footballCats = [
+        'Cristiano Ronaldo',
+        'Eden Hazard',
+        "N'Golo Kante",
+        'Chelsea FC',
+        'Real Madrid',
+        'Tactical Football Chess',
+      ];
+      const placeholders = footballCats.map(() => '?').join(',');
+
+      const easyFB = await this.db.query<{
+        id: string;
+        text: string;
+        difficulty: QuestionDifficulty;
+        category: string;
+        options: string;
+        code_snippet?: string | null;
+      }>(
+        `SELECT id, text, difficulty, category, options, code_snippet FROM questions WHERE category IN (${placeholders}) AND difficulty = "easy" AND is_active = 1`,
+        footballCats
+      );
+
+      const medFB = await this.db.query<{
+        id: string;
+        text: string;
+        difficulty: QuestionDifficulty;
+        category: string;
+        options: string;
+        code_snippet?: string | null;
+      }>(
+        `SELECT id, text, difficulty, category, options, code_snippet FROM questions WHERE category IN (${placeholders}) AND difficulty = "medium" AND is_active = 1`,
+        footballCats
+      );
+
+      const toughFB = await this.db.query<{
+        id: string;
+        text: string;
+        difficulty: QuestionDifficulty;
+        category: string;
+        options: string;
+        code_snippet?: string | null;
+      }>(
+        `SELECT id, text, difficulty, category, options, code_snippet FROM questions WHERE category IN (${placeholders}) AND difficulty = "tough" AND is_active = 1`,
+        footballCats
+      );
+
+      if (easyFB.length >= 2 && medFB.length >= 2 && toughFB.length >= 1) {
+        const shuffEasy = shuffleArray(easyFB);
+        const e1 = shuffEasy[0];
+        const e2 = shuffEasy.find((q) => q.id !== e1.id && q.category !== e1.category) || shuffEasy[1];
+        selectedEasy = [e1, e2];
+
+        const shuffMed = shuffleArray(medFB);
+        const m1 = shuffMed[0];
+        const m2 = shuffMed.find((q) => q.id !== m1.id && q.category !== m1.category) || shuffMed[1];
+        selectedMed = [m1, m2];
+
+        selectedTough = [shuffleArray(toughFB)[0]];
+      }
+    } else if (isBatch2026(participantCode)) {
       // ── BATCH '26 ADAPTIVE ALGORITHM ──
       // Freshmen (enrollment ending in 26):
       // Q1: Basic Python (Easy) | Q2: Basic SQL (Easy) | Q3: Basic OOP (Medium) | Q4: Basic OOP/Python/SQL (Medium) | Q5: Basic DS (Tough slot)
@@ -322,9 +386,9 @@ export class QuizService {
 
     await this.db.transaction(async (tx) => {
       await tx.run(
-        `INSERT INTO quiz_attempts (id, participant_id, started_at, deadline_at, status, total_score)
-         VALUES (?, ?, ?, ?, 'in_progress', 0)`,
-        [attemptId, participant.id, startedAt.toISOString(), deadlineAt.toISOString()]
+        `INSERT INTO quiz_attempts (id, participant_id, started_at, deadline_at, status, total_score, track)
+         VALUES (?, ?, ?, ?, 'in_progress', 0, ?)`,
+        [attemptId, participant.id, startedAt.toISOString(), deadlineAt.toISOString(), track]
       );
 
       for (let i = 0; i < selected5.length; i++) {
@@ -360,6 +424,7 @@ export class QuizService {
       deadlineAt: deadlineAt.toISOString(),
       durationMinutes,
       questions: publicQuestions,
+      track,
     };
   }
 

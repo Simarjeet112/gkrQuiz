@@ -32,11 +32,12 @@ router.post('/start', async (req: Request, res: Response) => {
   try {
     const displayName = req.body.displayName || req.body.display_name;
     const participantCode = req.body.participantCode || req.body.participant_code;
+    const track = req.body.track || 'code';
     if (!displayName || typeof displayName !== 'string' || !displayName.trim()) {
       return res.status(400).json({ success: false, error: 'Player name is required.' });
     }
 
-    const result = await quizService.startQuiz(displayName, participantCode);
+    const result = await quizService.startQuiz(displayName, participantCode, track);
     res.status(201).json({ success: true, data: result });
   } catch (err: any) {
     res.status(400).json({ success: false, error: err.message });

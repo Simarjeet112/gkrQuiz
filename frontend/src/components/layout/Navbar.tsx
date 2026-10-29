@@ -54,6 +54,36 @@ export const Navbar: React.FC = () => {
 
         {/* Desktop Nav */}
         <nav className="hidden md:flex items-center gap-5">
+          {/* Legend Quick Power Triggers: CR7, Hazard, Kanté */}
+          <div className="hidden xl:flex items-center gap-1.5 px-2 py-1 rounded-xl bg-white/5 border border-white/10 font-mono text-[10px]">
+            <button
+              onClick={() => sounds.playSiuuu()}
+              className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border border-amber-500/30 transition-all active:scale-95"
+              title="Cristiano Ronaldo (Real Madrid 5x Ballon d'Or) - Click for SIUUU!"
+            >
+              <img src="/ronaldo-ballondor.jpg" alt="CR7" className="w-4 h-4 rounded-full object-cover border border-amber-400" />
+              <span className="font-bold">CR7 ⚽</span>
+            </button>
+
+            <button
+              onClick={() => sounds.playHazardMagic()}
+              className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-blue-500/10 hover:bg-blue-500/20 text-blue-300 border border-blue-500/30 transition-all active:scale-95"
+              title="Eden Hazard (Chelsea #10 Magician) - Click for Silky Dribble!"
+            >
+              <img src="/hazard.jpg" alt="Hazard" className="w-4 h-4 rounded-full object-cover border border-blue-400" />
+              <span className="font-bold">HAZARD 🪄</span>
+            </button>
+
+            <button
+              onClick={() => sounds.playKanteTackle()}
+              className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 transition-all active:scale-95"
+              title="N'Golo Kanté (Chelsea Engine // 70% Earth) - Click for Energy Pulse!"
+            >
+              <img src="/kante.jpg" alt="Kanté" className="w-4 h-4 rounded-full object-cover border border-emerald-400" />
+              <span className="font-bold">KANTÉ ⚡</span>
+            </button>
+          </div>
+
           {navLinks.map((link) => {
             const Icon = link.icon;
             const isActive = location.pathname === link.path;

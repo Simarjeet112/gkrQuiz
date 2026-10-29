@@ -407,6 +407,68 @@ export const ResultsPage: React.FC = () => {
           </div>
         </motion.div>
 
+        {/* ── CHELSEA & REAL MADRID LEGENDS PODIUM: HAZARD & KANTÉ ── */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+          className="grid grid-cols-1 sm:grid-cols-2 gap-4"
+        >
+          {/* Hazard Card */}
+          <div className="rounded-2xl border border-blue-500/30 bg-gradient-to-br from-[#061329] to-[#0A0E1A] p-4 flex items-center gap-4 shadow-xl">
+            <div className="relative w-16 h-16 rounded-xl overflow-hidden border-2 border-blue-400 shadow-md shrink-0">
+              <img src="/hazard.jpg" alt="Eden Hazard" className="w-full h-full object-cover object-top" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-1.5 text-[10px] font-mono text-blue-400 font-bold">
+                <img src="/chelsea-logo.svg" alt="" className="w-3.5 h-3.5 inline object-contain" />
+                <span>EDEN HAZARD // #10</span>
+              </div>
+              <div className="text-sm font-bold text-white truncate font-display">THE ART OF DRIBBLING</div>
+              <p className="text-[11px] text-slate-300 font-sans mt-0.5 line-clamp-1">
+                “Played with technical mastery and joy.”
+              </p>
+            </div>
+            <button
+              onClick={() => {
+                sounds.playHazardMagic();
+                confetti({ particleCount: 50, spread: 60, colors: ['#034694', '#60A5FA', '#FFFFFF'] });
+              }}
+              className="p-2.5 rounded-xl bg-blue-600/20 hover:bg-blue-600/30 text-blue-300 border border-blue-500/40 text-xs font-mono font-bold active:scale-95 transition-all"
+              title="Play Hazard Magic Chime"
+            >
+              🪄
+            </button>
+          </div>
+
+          {/* Kanté Card */}
+          <div className="rounded-2xl border border-emerald-500/30 bg-gradient-to-br from-[#041a12] to-[#0A0E1A] p-4 flex items-center gap-4 shadow-xl">
+            <div className="relative w-16 h-16 rounded-xl overflow-hidden border-2 border-emerald-400 shadow-md shrink-0">
+              <img src="/kante.jpg" alt="N'Golo Kanté" className="w-full h-full object-cover object-top" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-1.5 text-[10px] font-mono text-emerald-400 font-bold">
+                <img src="/chelsea-logo.svg" alt="" className="w-3.5 h-3.5 inline object-contain" />
+                <span>N'GOLO KANTÉ // 100%</span>
+              </div>
+              <div className="text-sm font-bold text-white truncate font-display">THE MIDFIELD MACHINE</div>
+              <p className="text-[11px] text-slate-300 font-sans mt-0.5 line-clamp-1">
+                “Covered every inch of the pitch with 0 excuses.”
+              </p>
+            </div>
+            <button
+              onClick={() => {
+                sounds.playKanteTackle();
+                confetti({ particleCount: 50, spread: 60, colors: ['#10B981', '#34D399', '#FFFFFF'] });
+              }}
+              className="p-2.5 rounded-xl bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-300 border border-emerald-500/40 text-xs font-mono font-bold active:scale-95 transition-all"
+              title="Play Kanté Energy Pulse"
+            >
+              ⚡
+            </button>
+          </div>
+        </motion.div>
+
         {/* ── QUESTION REVIEW SECTION ── */}
         <div className="space-y-3">
           <div className="flex items-center justify-between font-mono">

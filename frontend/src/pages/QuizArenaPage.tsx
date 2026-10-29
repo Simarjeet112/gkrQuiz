@@ -327,14 +327,37 @@ export const QuizArenaPage: React.FC = () => {
             })}
           </div>
 
-          {/* CR7 Calma Mode Motivational Badge */}
-          <div
-            onClick={() => sounds.playClick()}
-            className="hidden xl:flex items-center gap-2 px-3 py-1.5 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-300 font-mono text-[11px] font-bold cursor-pointer hover:bg-amber-500/20 transition-all select-none"
-            title="CR7 Mindset: Focus, execute, no pressure!"
-          >
-            <span className="text-sm">⚽</span>
-            <span>CR7 CALMA MODE // LOCK IN</span>
+          {/* Legend Triad Badges: CR7, Hazard, Kanté */}
+          <div className="hidden lg:flex items-center gap-1.5 font-mono text-[11px] font-bold select-none">
+            <button
+              type="button"
+              onClick={() => sounds.playSiuuu()}
+              className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-300 hover:bg-amber-500/20 transition-all active:scale-95"
+              title="CR7 Mode: Calma, precision, execute!"
+            >
+              <img src="/ronaldo-ballondor.jpg" alt="" className="w-4 h-4 rounded-full object-cover border border-amber-400" />
+              <span>CR7 SIUUU ⚽</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => sounds.playHazardMagic()}
+              className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-blue-500/10 border border-blue-500/30 text-blue-300 hover:bg-blue-500/20 transition-all active:scale-95"
+              title="Hazard Mode: Silky smooth dribble through logic!"
+            >
+              <img src="/hazard.jpg" alt="" className="w-4 h-4 rounded-full object-cover border border-blue-400" />
+              <span>HAZARD 🪄</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => sounds.playKanteTackle()}
+              className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 hover:bg-emerald-500/20 transition-all active:scale-95"
+              title="Kanté Mode: Relentless work-rate & focus!"
+            >
+              <img src="/kante.jpg" alt="" className="w-4 h-4 rounded-full object-cover border border-emerald-400" />
+              <span>KANTÉ ⚡</span>
+            </button>
           </div>
 
           {/* Synchronized Countdown Timer */}

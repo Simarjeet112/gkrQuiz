@@ -13,6 +13,7 @@ export const RegistrationPage: React.FC = () => {
 
   const [displayName, setDisplayName] = useState('');
   const [participantCode, setParticipantCode] = useState('');
+  const [selectedTrack, setSelectedTrack] = useState<'ronaldo' | 'code'>('ronaldo');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [config, setConfig] = useState<{
@@ -50,9 +51,10 @@ export const RegistrationPage: React.FC = () => {
     sounds.playSelect();
 
     try {
-      const data = await api.startQuiz(name, participantCode.trim() || undefined);
+      const data = await api.startQuiz(name, participantCode.trim() || undefined, selectedTrack);
       localStorage.setItem('gkr_active_attempt_id', data.attemptId);
       localStorage.setItem('gkr_player_name', name);
+      localStorage.setItem('gkr_active_track', selectedTrack);
       navigate(`/arena/${data.attemptId}`);
     } catch (err: any) {
       setError(err.message || 'Failed to start quiz. Please try again.');
@@ -129,6 +131,73 @@ export const RegistrationPage: React.FC = () => {
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-4">
+          {/* Arena Track Selector: CR7 & Legends vs Geekroom Tech */}
+          <div className="space-y-1.5">
+            <label className="block text-xs font-mono uppercase tracking-wider text-slate-300 flex items-center justify-between">
+              <span>SELECT ARENA ARENA MODE</span>
+              <span className="text-[10px] text-lime font-bold">5-MIN BLITZ // 90 PTS</span>
+            </label>
+            <div className="grid grid-cols-2 gap-2.5">
+              {/* Ronaldo, Hazard & Kanté Legends Track */}
+              <button
+                type="button"
+                onClick={() => {
+                  setSelectedTrack('ronaldo');
+                  sounds.playSiuuu();
+                }}
+                className={`p-3 rounded-xl border text-left transition-all relative overflow-hidden ${
+                  selectedTrack === 'ronaldo'
+                    ? 'bg-gradient-to-br from-amber-500/20 via-blue-900/30 to-black border-amber-400 shadow-[0_0_20px_rgba(254,190,16,0.3)]'
+                    : 'bg-[#090D16] border-white/10 hover:border-white/25 opacity-70'
+                }`}
+              >
+                <div className="flex items-center gap-1.5 mb-1">
+                  <div className="flex -space-x-1">
+                    <img src="/ronaldo-ballondor.jpg" alt="" className="w-5 h-5 rounded-full object-cover border border-amber-400" />
+                    <img src="/hazard.jpg" alt="" className="w-5 h-5 rounded-full object-cover border border-blue-400" />
+                    <img src="/kante.jpg" alt="" className="w-5 h-5 rounded-full object-cover border border-emerald-400" />
+                  </div>
+                  <span className="text-[9px] font-mono px-1 py-0.5 rounded bg-amber-400/20 text-amber-300 font-bold">
+                    GOAT 🏆
+                  </span>
+                </div>
+                <div className="text-xs font-bold text-white font-display">
+                  CR7 & LEGENDS
+                </div>
+                <div className="text-[10px] text-slate-300 font-sans mt-0.5 line-clamp-1">
+                  Ronaldo, Hazard, Kanté, Chelsea & Real Madrid
+                </div>
+              </button>
+
+              {/* Geekroom Tech Track */}
+              <button
+                type="button"
+                onClick={() => {
+                  setSelectedTrack('code');
+                  sounds.playSelect();
+                }}
+                className={`p-3 rounded-xl border text-left transition-all relative overflow-hidden ${
+                  selectedTrack === 'code'
+                    ? 'bg-lime/10 border-lime shadow-[0_0_20px_rgba(212,255,0,0.25)]'
+                    : 'bg-[#090D16] border-white/10 hover:border-white/25 opacity-70'
+                }`}
+              >
+                <div className="flex items-center gap-1.5 mb-1">
+                  <span className="text-sm">💻</span>
+                  <span className="text-[9px] font-mono px-1 py-0.5 rounded bg-lime/20 text-lime font-bold">
+                    TECH ⌨️
+                  </span>
+                </div>
+                <div className="text-xs font-bold text-white font-display">
+                  CODE & CHESS
+                </div>
+                <div className="text-[10px] text-slate-300 font-sans mt-0.5 line-clamp-1">
+                  DSA, Python, SQL, Recurrences & Chess Logic
+                </div>
+              </button>
+            </div>
+          </div>
+
           <div>
             <label className="block text-xs font-mono uppercase tracking-wider text-slate-300 mb-1.5 flex items-center justify-between">
               <span>Player Name / Callsign <span className="text-lime">*</span></span>

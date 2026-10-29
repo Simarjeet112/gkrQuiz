@@ -168,6 +168,53 @@ class SoundManager {
       });
     } catch {}
   }
+
+  // Eden Hazard Silky Dribble Magic Arpeggio Chime
+  public playHazardMagic() {
+    if (this.isMuted) return;
+    try {
+      const ctx = this.getContext();
+      if (!ctx) return;
+      const now = ctx.currentTime;
+      const notes = [587.33, 659.25, 783.99, 880.00, 1046.50, 1174.66]; // D, E, G, A, C, D sparkle
+      notes.forEach((freq, idx) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, now + idx * 0.05);
+        gain.gain.setValueAtTime(0.12, now + idx * 0.05);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.05 + 0.25);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(now + idx * 0.05);
+        osc.stop(now + idx * 0.05 + 0.25);
+      });
+    } catch {}
+  }
+
+  // N'Golo Kanté Relentless Engine / Clean Tackle Power Pulse
+  public playKanteTackle() {
+    if (this.isMuted) return;
+    try {
+      const ctx = this.getContext();
+      if (!ctx) return;
+      const now = ctx.currentTime;
+      // Punchy double percussion
+      [0, 0.09].forEach((offset) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(180, now + offset);
+        osc.frequency.exponentialRampToValueAtTime(45, now + offset + 0.12);
+        gain.gain.setValueAtTime(0.2, now + offset);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + offset + 0.12);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(now + offset);
+        osc.stop(now + offset + 0.12);
+      });
+    } catch {}
+  }
 }
 
 export const sounds = new SoundManager();

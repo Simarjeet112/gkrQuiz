@@ -44,6 +44,7 @@ export interface QuizAttempt {
   time_taken_seconds?: number | null;
   participant_name?: string;
   participant_code?: string | null;
+  track?: string | null;
 }
 
 export interface AttemptQuestion {

@@ -20,10 +20,27 @@ export const ChessBackground: React.FC = () => {
         }}
       />
 
-      {/* 2. Soft Ambient Radial Vignettes */}
+      {/* 2. Soft Ambient Radial Vignettes: Geekroom Lime, Chelsea Royal Blue, Real Madrid Gold */}
       <div className="absolute -top-32 -left-32 w-[650px] h-[650px] rounded-full bg-lime/5 blur-[160px]" />
-      <div className="absolute top-1/2 -right-32 w-[700px] h-[700px] rounded-full bg-blue-500/5 blur-[180px]" />
-      <div className="absolute -bottom-32 left-1/3 w-[600px] h-[600px] rounded-full bg-amber-500/5 blur-[160px]" />
+      <div className="absolute top-1/4 -right-32 w-[700px] h-[700px] rounded-full bg-[#034694]/15 blur-[180px]" />
+      <div className="absolute -bottom-32 left-1/3 w-[650px] h-[650px] rounded-full bg-[#FEBE10]/10 blur-[180px]" />
+
+      {/* Floating Chelsea & Real Madrid Royal Crest Watermarks */}
+      <motion.div
+        animate={{ y: [0, -15, 0], rotate: [0, -2, 0] }}
+        transition={{ duration: 25, repeat: Infinity, ease: 'easeInOut' }}
+        className="absolute top-1/4 right-[12%] w-56 h-56 sm:w-80 sm:h-80 opacity-[0.025] pointer-events-none select-none grayscale invert"
+      >
+        <img src="/chelsea-logo.svg" alt="" className="w-full h-full object-contain" />
+      </motion.div>
+
+      <motion.div
+        animate={{ y: [0, 18, 0], rotate: [0, 2, 0] }}
+        transition={{ duration: 28, repeat: Infinity, ease: 'easeInOut' }}
+        className="absolute bottom-1/4 left-[10%] w-56 h-56 sm:w-80 sm:h-80 opacity-[0.025] pointer-events-none select-none"
+      >
+        <img src="/real-madrid-logo.svg" alt="" className="w-full h-full object-contain" />
+      </motion.div>
 
       {/* 3. Floating Atmospheric Chess Pieces (Low-Opacity Watermarks) */}
       {/* Top Left: King */}

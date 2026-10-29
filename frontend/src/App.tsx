@@ -8,6 +8,7 @@ import { QuizArenaPage } from './pages/QuizArenaPage';
 import { ResultsPage } from './pages/ResultsPage';
 import { LeaderboardPage } from './pages/LeaderboardPage';
 import { OrganizerPage } from './pages/OrganizerPage';
+import { LegendsFloatBar } from './components/ui/LegendsFloatBar';
 
 export const App: React.FC = () => {
   return (
@@ -26,6 +27,7 @@ export const App: React.FC = () => {
           </Routes>
         </main>
         <Footer />
+        <LegendsFloatBar />
       </div>
     </Router>
   );

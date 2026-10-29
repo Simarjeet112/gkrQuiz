@@ -15,11 +15,11 @@ export const api = {
     return json.data;
   },
 
-  async startQuiz(displayName: string, participantCode?: string) {
+  async startQuiz(displayName: string, participantCode?: string, track: string = 'code') {
     const res = await fetch(`${API_BASE}/quiz/start`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ displayName, participantCode }),
+      body: JSON.stringify({ displayName, participantCode, track }),
     });
     const json = await res.json();
     if (!res.ok) throw new Error(json.error || 'Failed to start quiz');

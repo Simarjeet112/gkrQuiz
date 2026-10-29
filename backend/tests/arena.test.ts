@@ -224,6 +224,33 @@ test('GEEKROOM CODE ARENA - Comprehensive Test Suite', async (t) => {
     assert.equal(res.questions[4].points, 30);
   });
 
+  await t.test('15. Ronaldo & Football Legends track: Selects CR7, Hazard, Kante, Madrid, Chelsea questions', async () => {
+    const res = await quizService.startQuiz('CR7_Fan_7', 'CR7-MADRID-07', 'ronaldo');
+    assert.ok(res.attemptId);
+    assert.equal(res.questions.length, 5);
+    assert.equal(res.questions[0].difficulty, 'easy');
+    assert.equal(res.questions[1].difficulty, 'easy');
+    assert.equal(res.questions[2].difficulty, 'medium');
+    assert.equal(res.questions[3].difficulty, 'medium');
+    assert.equal(res.questions[4].difficulty, 'tough');
+
+    const footballCats = [
+      'Cristiano Ronaldo',
+      'Eden Hazard',
+      "N'Golo Kante",
+      'Chelsea FC',
+      'Real Madrid',
+      'Tactical Football Chess',
+    ];
+
+    res.questions.forEach((q) => {
+      assert.ok(
+        footballCats.includes(q.category),
+        `Question category ${q.category} must belong to football legends track`
+      );
+    });
+  });
+
   await t.test('13. Organizer passcode security & clean state', async () => {
     const passcode = process.env.ORGANIZER_PASSCODE || 'geekroom2026';
     assert.equal(typeof passcode, 'string');

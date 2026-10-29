@@ -2,6 +2,7 @@ import crypto from 'crypto';
 import { getDB, IDatabase } from './connection.js';
 import { initDatabase } from './init.js';
 import { generateProceduralQuestions } from './proceduralQuestions.js';
+import { footballLegendsQuestions } from './footballLegendsQuestions.js';
 
 export const seedQuestions = [
   // ── EASY QUESTIONS (Q1–Q20) ─────────────────────────────────────────────────
@@ -1314,7 +1315,7 @@ export async function seedDatabase(db?: IDatabase): Promise<void> {
   console.log('[Seed] Seeding questions into database...');
 
   const procedural = generateProceduralQuestions(500);
-  const allToSeed = [...seedQuestions, ...procedural];
+  const allToSeed = [...seedQuestions, ...footballLegendsQuestions, ...procedural];
 
   for (const q of allToSeed) {
     const existing = await targetDb.getOne('SELECT id FROM questions WHERE text = ?', [q.text]);

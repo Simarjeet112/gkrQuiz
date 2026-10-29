@@ -66,6 +66,7 @@ export async function initDatabase(db?: IDatabase): Promise<void> {
     await targetDb.run(`CREATE INDEX IF NOT EXISTS idx_attempts_participant ON quiz_attempts(participant_id);`);
     await targetDb.run(`CREATE INDEX IF NOT EXISTS idx_attempts_leaderboard ON quiz_attempts(status, total_score, time_taken_seconds, submitted_at);`);
     await targetDb.run(`CREATE INDEX IF NOT EXISTS idx_attempt_questions_attempt ON attempt_questions(attempt_id, position);`);
+    await targetDb.run(`ALTER TABLE quiz_attempts ADD COLUMN track VARCHAR(32) DEFAULT 'code';`);
   } catch (err) {
     // Indexes might already exist or slight dialect variance
   }
