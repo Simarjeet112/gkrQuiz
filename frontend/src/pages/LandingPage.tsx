@@ -315,7 +315,7 @@ export const LandingPage: React.FC = () => {
                   }`}
                 >
                   <span>⚽</span>
-                  <span>LIVE FOOTBALL MATCH</span>
+                  <span>🎬 CINEMATICA</span>
                 </button>
                 <button
                   type="button"
