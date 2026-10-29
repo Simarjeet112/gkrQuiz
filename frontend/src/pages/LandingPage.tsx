@@ -13,6 +13,7 @@ import {
   Award,
 } from 'lucide-react';
 import { BitByte3D } from '../components/mascot/BitByte3D';
+import { LiveFootballPitch } from '../components/stadium/LiveFootballPitch';
 import { ChessBackground } from '../components/ui/ChessBackground';
 import { sounds } from '../utils/soundEffects';
 
@@ -55,6 +56,7 @@ export const LandingPage: React.FC = () => {
   const [siuuuActive, setSiuuuActive] = useState(false);
   const [hazardActive, setHazardActive] = useState(false);
   const [kanteActive, setKanteActive] = useState(false);
+  const [heroView, setHeroView] = useState<'pitch' | 'cards'>('pitch');
 
   const handleInsertToken = () => {
     sounds.playTierUp();
@@ -301,12 +303,62 @@ export const LandingPage: React.FC = () => {
                 </div>
               </div>
 
-              {/* Trio of Champions Photo Showcase */}
-              <BitByte3D
-                size="hero"
-                mood="welcome"
-                showSpeech={true}
-              />
+              {/* View Switcher Tabs: Live Football Match vs Legends Gallery */}
+              <div className="flex items-center gap-1.5 p-1 rounded-xl bg-black/60 border border-white/10 mb-3">
+                <button
+                  type="button"
+                  onClick={() => setHeroView('pitch')}
+                  className={`flex-1 py-1.5 px-3 rounded-lg font-mono text-xs font-bold transition-all flex items-center justify-center gap-1.5 ${
+                    heroView === 'pitch'
+                      ? 'bg-gradient-to-r from-amber-500 to-yellow-400 text-carbon-950 shadow-md font-black'
+                      : 'text-slate-400 hover:text-white'
+                  }`}
+                >
+                  <span>⚽</span>
+                  <span>LIVE FOOTBALL MATCH</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setHeroView('cards')}
+                  className={`flex-1 py-1.5 px-3 rounded-lg font-mono text-xs font-bold transition-all flex items-center justify-center gap-1.5 ${
+                    heroView === 'cards'
+                      ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md font-black'
+                      : 'text-slate-400 hover:text-white'
+                  }`}
+                >
+                  <span>👑</span>
+                  <span>LEGENDS GALLERY</span>
+                </button>
+              </div>
+
+              {/* Dynamic Hero View: Live Animated Pitch OR Player Photo Cards */}
+              <AnimatePresence mode="wait">
+                {heroView === 'pitch' ? (
+                  <motion.div
+                    key="pitch"
+                    initial={{ opacity: 0, scale: 0.96 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.96 }}
+                    transition={{ duration: 0.25 }}
+                  >
+                    <LiveFootballPitch />
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    key="cards"
+                    initial={{ opacity: 0, scale: 0.96 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.96 }}
+                    transition={{ duration: 0.25 }}
+                  >
+                    <BitByte3D
+                      size="hero"
+                      mood="welcome"
+                      showSpeech={true}
+                    />
+                  </motion.div>
+                )}
+              </AnimatePresence>
 
               {/* Console Footer */}
               <div className="flex items-center justify-between pt-3 border-t border-white/10 text-[11px] font-mono text-slate-400">
