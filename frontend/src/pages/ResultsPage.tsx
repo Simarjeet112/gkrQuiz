@@ -21,6 +21,7 @@ import { api } from '../services/api';
 import { BitByte3D } from '../components/mascot/BitByte3D';
 import { BitByteMood } from '../components/mascot/bitbyteDialogue';
 import { sounds } from '../utils/soundEffects';
+import { ChessBackground } from '../components/ui/ChessBackground';
 
 interface QuestionReviewItem {
   id: string;
@@ -177,8 +178,9 @@ export const ResultsPage: React.FC = () => {
   const bd = results.difficulty_breakdown;
 
   return (
-    <div className="relative min-h-[calc(100vh-4.5rem)] bg-carbon-950 tech-grid py-10 px-4 sm:px-6">
-      <div className="max-w-4xl mx-auto space-y-6">
+    <div className="relative min-h-[calc(100vh-4.5rem)] bg-carbon-950 py-10 px-4 sm:px-6 overflow-hidden">
+      <ChessBackground />
+      <div className="max-w-4xl mx-auto space-y-6 relative z-10">
 
         {/* ── HERO RESULT FINALE CARD ── */}
         <motion.div

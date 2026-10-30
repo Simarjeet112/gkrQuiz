@@ -7,6 +7,7 @@ import {
 import { api } from '../services/api';
 import { soundEffects } from '../utils/soundEffects';
 import { BitByte3D } from '../components/mascot/BitByte3D';
+import { ChessBackground } from '../components/ui/ChessBackground';
 
 interface LeaderboardEntry {
   rank: number;
@@ -63,15 +64,16 @@ export const LeaderboardPage: React.FC = () => {
   const top3 = entries.slice(0, 3);
 
   return (
-    <div className="relative min-h-[calc(100vh-4.5rem)] bg-carbon-950 tech-grid py-10 px-4 sm:px-6">
-      <div className="max-w-5xl mx-auto space-y-8">
+    <div className="relative min-h-[calc(100vh-4.5rem)] bg-carbon-950 py-10 px-4 sm:px-6 overflow-hidden">
+      <ChessBackground />
+      <div className="max-w-5xl mx-auto space-y-8 relative z-10">
 
         {/* ── Header ── */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-white/10 pb-6">
           <div>
-            <div className="inline-flex items-center gap-2 text-xs font-mono text-lime-400 uppercase tracking-widest mb-1.5">
-              <span className="w-2 h-2 rounded-full bg-lime-400 animate-pulse" />
-              GRANDMASTER TELEMETRY // FIDE ARENA STANDINGS
+            <div className="inline-flex items-center gap-2 text-xs font-mono text-[#FEBE10] uppercase tracking-widest mb-1.5 font-bold">
+              <span className="w-2 h-2 rounded-full bg-[#00ff85] animate-pulse" />
+              BALLON D'OR STANDINGS // PREMIER LEAGUE & REAL MADRID LEADERBOARD 🏆
             </div>
             <h1 className="text-3xl sm:text-5xl font-black font-display text-white tracking-wider">
               ARENA LEADERBOARD

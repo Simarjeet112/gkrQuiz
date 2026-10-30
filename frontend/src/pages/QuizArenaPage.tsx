@@ -284,14 +284,14 @@ export const QuizArenaPage: React.FC = () => {
         <div className="titanium-card px-5 py-3.5 flex items-center justify-between gap-4 flex-wrap border border-white/10">
           {/* Challenger Identity */}
           <div className="flex items-center gap-3 min-w-0">
-            <div className="w-9 h-9 rounded-xl bg-white/5 border border-white/15 flex items-center justify-center font-mono text-sm font-bold text-lime shrink-0">
-              <span className="text-base">🤖</span>
+            <div className="w-9 h-9 rounded-xl bg-white/5 border border-white/15 flex items-center justify-center font-mono text-sm font-bold text-[#00ff85] shrink-0">
+              <span className="text-base">⚽</span>
             </div>
             <div className="min-w-0">
               <div className="flex items-center gap-1.5 text-[10px] font-mono text-slate-400 uppercase font-bold">
-                <span>GTBIT ARENA</span>
+                <span className="text-[#FEBE10]">BERNABÉU × STAMFORD</span>
                 <span className="text-slate-600">•</span>
-                <span>SEAT VERIFIED</span>
+                <span className="text-[#00ff85]">MATCHDAY #11</span>
               </div>
               <div className="text-sm font-bold text-white font-sans truncate">{participantName}</div>
             </div>
@@ -303,7 +303,7 @@ export const QuizArenaPage: React.FC = () => {
               const isActive = currentIndex === idx;
               const isAnswered = !!selectedAnswers[q.id];
               const isQBoss = q.difficulty === 'tough';
-              const pieceIcon = idx < 2 ? '♟' : idx < 4 ? '♞' : '♚';
+              const pieceIcon = idx < 2 ? '⚽' : idx < 4 ? '⚡' : '👑';
 
               return (
                 <button
@@ -335,7 +335,7 @@ export const QuizArenaPage: React.FC = () => {
               className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-300 hover:bg-amber-500/20 transition-all active:scale-95"
               title="CR7 Mode: Calma, precision, execute!"
             >
-              <img src="/ronaldo-ballondor.jpg" alt="" className="w-4 h-4 rounded-full object-cover border border-amber-400" />
+              <img src="/ronaldo-ucl.jpg" alt="" className="w-4 h-4 rounded-full object-cover border border-amber-400" />
               <span>CR7 SIUUU ⚽</span>
             </button>
 
@@ -345,7 +345,7 @@ export const QuizArenaPage: React.FC = () => {
               className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-blue-500/10 border border-blue-500/30 text-blue-300 hover:bg-blue-500/20 transition-all active:scale-95"
               title="Hazard Mode: Silky smooth dribble through logic!"
             >
-              <img src="/hazard.jpg" alt="" className="w-4 h-4 rounded-full object-cover border border-blue-400" />
+              <img src="/hazard-snow.jpg" alt="" className="w-4 h-4 rounded-full object-cover border border-blue-400" />
               <span>HAZARD 🪄</span>
             </button>
 
@@ -355,7 +355,7 @@ export const QuizArenaPage: React.FC = () => {
               className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 hover:bg-emerald-500/20 transition-all active:scale-95"
               title="Kanté Mode: Relentless work-rate & focus!"
             >
-              <img src="/kante.jpg" alt="" className="w-4 h-4 rounded-full object-cover border border-emerald-400" />
+              <img src="/kante-explosion.jpg" alt="" className="w-4 h-4 rounded-full object-cover border border-emerald-400" />
               <span>KANTÉ ⚡</span>
             </button>
           </div>

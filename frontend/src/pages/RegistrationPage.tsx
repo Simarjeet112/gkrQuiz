@@ -82,16 +82,16 @@ export const RegistrationPage: React.FC = () => {
               <img src="/geekroom-logo.png" alt="Geekroom GTBIT" className="w-full h-full object-contain" />
             </div>
             <div>
-              <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-lime/10 text-lime border border-lime/30 font-bold uppercase tracking-wider flex items-center gap-1">
-                <span>♟</span> BOARD 01 // SEAT #2026
+              <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#00ff85]/15 text-[#00ff85] border border-[#00ff85]/30 font-bold uppercase tracking-wider flex items-center gap-1">
+                <span>⚽</span> TUNNEL EXIT // SANTIAGO BERNABÉU SEAT #7
               </span>
               <div className="text-sm font-black text-white font-display mt-0.5">
-                GEEKROOM CODE ARENA
+                MATCHDAY ARENA // GEEKROOM × UCL
               </div>
             </div>
           </div>
           <span className="text-[10px] font-mono px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 font-bold flex items-center gap-1">
-            <span>●</span> BLITZ READY
+            <span>●</span> KICKOFF READY
           </span>
         </div>
 
@@ -102,8 +102,8 @@ export const RegistrationPage: React.FC = () => {
             mood={displayName.length > 2 ? 'excited' : 'welcome'}
             customMessage={
               displayName.length > 2
-                ? `Yo ${displayName}! Think 3 moves ahead and code cleanly!`
-                : 'Welcome, engineer! Enter your callsign below to take your terminal seat.'
+                ? `Yo ${displayName}! Dribble past defenders like Hazard & finish like CR7!`
+                : 'Welcome, striker! Enter your callsign below to take your position on the pitch.'
             }
           />
         </div>
@@ -111,11 +111,11 @@ export const RegistrationPage: React.FC = () => {
         {/* Heading */}
         <div className="mt-4 mb-4 text-center sm:text-left">
           <h1 className="text-2xl font-black text-white font-display tracking-tight flex items-center gap-2">
-            <span>CHALLENGER ADMISSION</span>
-            <span className="text-sm font-mono text-lime font-normal">♚</span>
+            <span>MATCHDAY LINEUP ADMISSION</span>
+            <span className="text-sm font-mono text-[#FEBE10] font-normal">⚽</span>
           </h1>
           <p className="text-slate-400 text-xs mt-1 font-mono">
-            5 Strategic Moves: ♟ Opening (10p) → ♞ Middlegame (20p) → ♚ The Endgame (30p). 5+0 Rapid Blitz.
+            5 Moves to Glory: ⚽ First Half Kickoff (10p) → ⚡ Midfield Engine (20p) → 🏆 90' Stoppage Winner (30p). 5-Min Blitz Clock.
           </p>
         </div>
 
@@ -136,8 +136,8 @@ export const RegistrationPage: React.FC = () => {
           {/* Arena Track Selector: CR7 & Legends vs Geekroom Tech */}
           <div className="space-y-1.5">
             <label className="block text-xs font-mono uppercase tracking-wider text-slate-300 flex items-center justify-between">
-              <span>SELECT ARENA ARENA MODE</span>
-              <span className="text-[10px] text-lime font-bold">5-MIN BLITZ // 90 PTS</span>
+              <span>SELECT MATCHDAY TRACK</span>
+              <span className="text-[10px] text-[#00ff85] font-bold">5-MIN BLITZ // 90 PTS</span>
             </label>
             <div className="grid grid-cols-2 gap-2.5">
               {/* Ronaldo, Hazard & Kanté Legends Track */}

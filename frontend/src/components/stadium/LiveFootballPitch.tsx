@@ -5,7 +5,7 @@ import { sounds } from '../../utils/soundEffects';
 import { wonderwallAudio } from '../../utils/audioPlayer';
 import { ChevronLeft, ChevronRight, Volume2, VolumeX, Play, Pause, Film, Image as ImageIcon, Flame, Trophy } from 'lucide-react';
 
-// ─── Frame Definitions (Photos) ──────────────────────────────────────────────
+// ─── Curated Ultra-HD Iconic Photos ──────────────────────────────────────────
 interface PhotoFrame {
   id: number;
   photo: string;
@@ -58,34 +58,10 @@ const PHOTO_FRAMES: PhotoFrame[] = [
   },
   {
     id: 3,
-    photo: '/ronaldo-shades.jpg',
-    player: 'CR7 // THE ICONIC AESTHETIC',
-    tagline: '⚡ SIUUUUUUUUUUUUUU! ⚡',
-    sub: 'From Old Trafford to the Bernabéu · 900+ Career Goals · Total Football Legend',
-    badge: '/real-madrid-logo.svg',
-    accent: '#FEBE10',
-    accentDark: '#997500',
-    sound: () => sounds.playSiuuu(),
-    confettiColors: ['#FEBE10', '#ffffff', '#ff2d55'],
-  },
-  {
-    id: 4,
-    photo: '/hazard.jpg',
-    player: 'EDEN HAZARD // THE MAGICIAN',
-    tagline: '🎩 UNSTOPPABLE BALLER 🎩',
-    sub: 'Destroyed Arsenal, Tottenham & West Ham alone · True Stamford Bridge Royalty',
-    badge: '/chelsea-logo.svg',
-    accent: '#0080ff',
-    accentDark: '#004080',
-    sound: () => sounds.playHazardMagic(),
-    confettiColors: ['#0080ff', '#ffffff', '#034694'],
-  },
-  {
-    id: 5,
     photo: '/ronaldo-ballondor.jpg',
-    player: 'CRISTIANO RONALDO // GOLDEN LEGEND',
+    player: 'CR7 // GOLDEN BALLON D\'OR',
     tagline: '👑 5× BALLON D\'OR WINNER 👑',
-    sub: 'Real Madrid All-Time Top Scorer · Calma at Camp Nou · The Ultimate Machine',
+    sub: 'Real Madrid All-Time Top Scorer · 900+ Career Goals · The Ultimate Machine',
     badge: '/real-madrid-logo.svg',
     accent: '#FEBE10',
     accentDark: '#806000',
@@ -94,7 +70,7 @@ const PHOTO_FRAMES: PhotoFrame[] = [
   },
 ];
 
-// ─── Football Video Clips ────────────────────────────────────────────────────
+// ─── Football Video Clips & Viral Edits ──────────────────────────────────────
 interface VideoClip {
   id: string;
   title: string;
@@ -106,6 +82,15 @@ interface VideoClip {
 }
 
 const VIDEO_CLIPS: VideoClip[] = [
+  {
+    id: 'cr7-cold-edit',
+    title: 'CR7 4K Cold Moments & Edit',
+    legend: 'Cristiano Ronaldo',
+    club: 'Real Madrid',
+    youtubeId: 'xet6yvy1F0M',
+    badge: '/real-madrid-logo.svg',
+    accent: '#FEBE10',
+  },
   {
     id: 'cr7-siu',
     title: 'CR7 Iconic Siuu & Real Madrid Rockets',
@@ -135,7 +120,7 @@ const VIDEO_CLIPS: VideoClip[] = [
   },
 ];
 
-const SLIDE_DURATION = 5000;
+const SLIDE_DURATION = 5500;
 
 export const LiveFootballPitch: React.FC = () => {
   const [viewMode, setViewMode] = useState<'photos' | 'videos'>('photos');
@@ -144,13 +129,22 @@ export const LiveFootballPitch: React.FC = () => {
   const [progress, setProgress] = useState(0);
   const [isPlaying, setIsPlaying] = useState(true);
   const [wonderwallActive, setWonderwallActive] = useState(false);
-  const [showFlash, setShowFlash] = useState(false);
 
   const progressRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const slideRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const currentFrame = PHOTO_FRAMES[frameIdx];
   const activeVideo = VIDEO_CLIPS[selectedVideo];
+
+  // ── Preload All Heavy Images to Eliminate Stutter/Flicker ─────────────────
+  useEffect(() => {
+    PHOTO_FRAMES.forEach((frame) => {
+      const img = new Image();
+      img.src = frame.photo;
+    });
+    const crowd = new Image();
+    crowd.src = '/stadium-crowd.jpg';
+  }, []);
 
   // ── Sync with Wonderwall global audio ─────────────────────────────────────
   useEffect(() => {
@@ -170,12 +164,10 @@ export const LiveFootballPitch: React.FC = () => {
     }, 50);
   }, []);
 
-  // ── Frame transition ──────────────────────────────────────────────────────
+  // ── Seamless Frame transition ─────────────────────────────────────────────
   const goTo = useCallback(
     (idx: number, playSound = true) => {
       const target = ((idx % PHOTO_FRAMES.length) + PHOTO_FRAMES.length) % PHOTO_FRAMES.length;
-      setShowFlash(true);
-      setTimeout(() => setShowFlash(false), 120);
       setFrameIdx(target);
       startProgress();
       if (playSound) {
@@ -185,16 +177,16 @@ export const LiveFootballPitch: React.FC = () => {
         confetti({
           particleCount: 25,
           spread: 60,
-          origin: { y: 0.5, x: 0.3 + Math.random() * 0.4 },
+          origin: { y: 0.55, x: 0.35 + Math.random() * 0.3 },
           colors: PHOTO_FRAMES[target].confettiColors,
-          scalar: 0.8,
+          scalar: 0.75,
         });
       }
     },
     [startProgress]
   );
 
-  // ── Auto advance photos ───────────────────────────────────────────────────
+  // ── Auto advance photos smoothly ──────────────────────────────────────────
   useEffect(() => {
     if (viewMode !== 'photos' || !isPlaying) return;
     if (slideRef.current) clearTimeout(slideRef.current);
@@ -218,11 +210,11 @@ export const LiveFootballPitch: React.FC = () => {
 
   return (
     <div
-      className="relative w-full h-full min-h-[460px] rounded-3xl overflow-hidden select-none border-2 border-white/10 shadow-2xl"
-      style={{ background: '#070a10' }}
+      className="relative w-full h-full min-h-[460px] rounded-3xl overflow-hidden select-none border-2 border-white/15 shadow-2xl"
+      style={{ background: '#050811' }}
     >
       {/* ── Mode Switcher Tab Bar (Top Left) ── */}
-      <div className="absolute top-4 left-4 z-40 flex items-center gap-1.5 p-1 rounded-2xl bg-black/70 border border-white/20 backdrop-blur-xl">
+      <div className="absolute top-4 left-4 z-40 flex items-center gap-1.5 p-1 rounded-2xl bg-black/75 border border-white/20 backdrop-blur-xl shadow-lg">
         <button
           onClick={() => {
             setViewMode('photos');
@@ -251,14 +243,14 @@ export const LiveFootballPitch: React.FC = () => {
           }`}
         >
           <Film className="w-3.5 h-3.5" />
-          <span>VIDEOS ⚽</span>
+          <span>CR7 EDITS ⚽</span>
         </button>
       </div>
 
       {/* ── Club Badges & Wonderwall Quick Play (Top Right) ── */}
       <div className="absolute top-4 right-4 z-40 flex items-center gap-2">
         {/* Real Madrid + Chelsea Crests */}
-        <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-black/70 border border-white/20 backdrop-blur-xl">
+        <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-black/75 border border-white/20 backdrop-blur-xl">
           <img src="/real-madrid-logo.svg" alt="Real Madrid" className="w-6 h-6 object-contain drop-shadow-md" />
           <span className="text-[10px] font-mono text-slate-400 font-bold">vs</span>
           <img src="/chelsea-logo.svg" alt="Chelsea FC" className="w-6 h-6 object-contain drop-shadow-md" />
@@ -270,7 +262,7 @@ export const LiveFootballPitch: React.FC = () => {
           className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all border ${
             wonderwallActive
               ? 'bg-[#FEBE10] text-black border-[#FEBE10] shadow-lg shadow-[#FEBE10]/30 animate-pulse'
-              : 'bg-black/70 text-white border-white/20 hover:border-white/40'
+              : 'bg-black/75 text-white border-white/20 hover:border-white/40'
           }`}
           title="Play user-uploaded Wonderwall by Oasis"
         >
@@ -280,35 +272,20 @@ export const LiveFootballPitch: React.FC = () => {
       </div>
 
       {/* ────────────────────────────────────────────────────────────────────────
-          MODE 1: CINEMATIC PHOTOS
+          MODE 1: CINEMATIC PHOTOS (Seamless Ken-Burns Dissolve, Zero Flicker)
          ──────────────────────────────────────────────────────────────────────── */}
       {viewMode === 'photos' && (
         <>
-          {/* White flash on transition */}
-          <AnimatePresence>
-            {showFlash && (
-              <motion.div
-                key="flash"
-                className="absolute inset-0 z-30 pointer-events-none"
-                style={{ background: 'rgba(255,255,255,0.45)' }}
-                initial={{ opacity: 1 }}
-                animate={{ opacity: 0 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.12 }}
-              />
-            )}
-          </AnimatePresence>
-
           {/* Full-bleed Photo with Ken Burns */}
-          <AnimatePresence mode="wait">
+          <AnimatePresence mode="popLayout">
             <motion.div
               key={frameIdx}
               className="absolute inset-0"
-              initial={{ opacity: 0, scale: 1.05 }}
-              animate={{ opacity: 1, scale: 1.15 }}
-              exit={{ opacity: 0, scale: 1.0 }}
+              initial={{ opacity: 0, scale: 1.04 }}
+              animate={{ opacity: 1, scale: 1.12 }}
+              exit={{ opacity: 0 }}
               transition={{
-                opacity: { duration: 0.65, ease: 'easeInOut' },
+                opacity: { duration: 0.75, ease: 'easeInOut' },
                 scale: { duration: SLIDE_DURATION / 1000, ease: 'linear' },
               }}
             >
@@ -324,17 +301,17 @@ export const LiveFootballPitch: React.FC = () => {
                 className="absolute inset-0"
                 style={{
                   background:
-                    'linear-gradient(to top, rgba(7,10,16,0.95) 0%, rgba(7,10,16,0.5) 45%, rgba(7,10,16,0.15) 75%, transparent 100%)',
+                    'linear-gradient(to top, rgba(5,8,17,0.96) 0%, rgba(5,8,17,0.52) 45%, rgba(5,8,17,0.18) 75%, transparent 100%)',
                 }}
               />
               <div
                 className="absolute inset-0"
                 style={{
-                  background: 'radial-gradient(ellipse at center, transparent 40%, rgba(7,10,16,0.7) 100%)',
+                  background: 'radial-gradient(ellipse at center, transparent 40%, rgba(5,8,17,0.7) 100%)',
                 }}
               />
               <div
-                className="absolute bottom-0 left-0 right-0 h-32 opacity-40 pointer-events-none"
+                className="absolute bottom-0 left-0 right-0 h-36 opacity-45 pointer-events-none"
                 style={{
                   background: `linear-gradient(to top, ${currentFrame.accent}, transparent)`,
                 }}
@@ -347,13 +324,13 @@ export const LiveFootballPitch: React.FC = () => {
             <motion.div
               key={`text-${frameIdx}`}
               className="absolute bottom-16 left-0 right-0 px-6 z-20 pointer-events-none"
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.45 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.4 }}
             >
               <div className="flex items-center gap-2 mb-1.5">
-                <img src={currentFrame.badge} alt="Club" className="w-5 h-5 object-contain" />
+                <img src={currentFrame.badge} alt="Club" className="w-5 h-5 object-contain drop-shadow" />
                 <span
                   className="text-[11px] font-black uppercase tracking-[0.25em]"
                   style={{ color: currentFrame.accent, textShadow: `0 0 14px ${currentFrame.accent}` }}
@@ -396,18 +373,20 @@ export const LiveFootballPitch: React.FC = () => {
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => goTo(frameIdx - 1)}
-                  className="w-8 h-8 rounded-xl bg-black/60 border border-white/20 text-white flex items-center justify-center hover:scale-110 active:scale-95 transition-all"
+                  className="w-8 h-8 rounded-xl bg-black/70 border border-white/20 text-white flex items-center justify-center hover:scale-110 active:scale-95 transition-all"
+                  aria-label="Previous slide"
                 >
                   <ChevronLeft className="w-4 h-4" />
                 </button>
                 <button
                   onClick={() => goTo(frameIdx + 1)}
-                  className="w-8 h-8 rounded-xl bg-black/60 border border-white/20 text-white flex items-center justify-center hover:scale-110 active:scale-95 transition-all"
+                  className="w-8 h-8 rounded-xl bg-black/70 border border-white/20 text-white flex items-center justify-center hover:scale-110 active:scale-95 transition-all"
+                  aria-label="Next slide"
                 >
                   <ChevronRight className="w-4 h-4" />
                 </button>
 
-                {/* Frame Dots */}
+                {/* Frame Indicator Pills */}
                 <div className="flex items-center gap-1.5 ml-2">
                   {PHOTO_FRAMES.map((f, i) => (
                     <button
@@ -415,10 +394,11 @@ export const LiveFootballPitch: React.FC = () => {
                       onClick={() => goTo(i)}
                       className="rounded-full transition-all duration-300"
                       style={{
-                        width: i === frameIdx ? 20 : 6,
-                        height: 6,
+                        width: i === frameIdx ? 24 : 8,
+                        height: 7,
                         background: i === frameIdx ? currentFrame.accent : 'rgba(255,255,255,0.3)',
                       }}
+                      aria-label={`Go to slide ${i + 1}`}
                     />
                   ))}
                 </div>
@@ -438,7 +418,7 @@ export const LiveFootballPitch: React.FC = () => {
       )}
 
       {/* ────────────────────────────────────────────────────────────────────────
-          MODE 2: MATCH DAY VIDEOS (CR7 SIUU, HAZARD SOLO, KANTE MASTERCLASS)
+          MODE 2: MATCH DAY VIDEOS & RONALDO EDITS
          ──────────────────────────────────────────────────────────────────────── */}
       {viewMode === 'videos' && (
         <div className="relative w-full h-full flex flex-col justify-between pt-16 pb-4 px-4 sm:px-6 z-20">
@@ -483,9 +463,9 @@ export const LiveFootballPitch: React.FC = () => {
 
             <button
               onClick={() => {
-                if (selectedVideo === 0) sounds.playSiuuu();
-                if (selectedVideo === 1) sounds.playHazardMagic();
-                if (selectedVideo === 2) sounds.playKanteTackle();
+                if (selectedVideo === 0 || selectedVideo === 1) sounds.playSiuuu();
+                if (selectedVideo === 2) sounds.playHazardMagic();
+                if (selectedVideo === 3) sounds.playKanteTackle();
               }}
               className="px-2.5 py-1 rounded-lg bg-white/10 hover:bg-white/20 text-white font-bold text-[10px] uppercase border border-white/20 transition-all"
             >

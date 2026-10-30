@@ -20,33 +20,33 @@ import { sounds } from '../utils/soundEffects';
 const tierCards = [
   {
     tier: 'STAGE 01',
-    level: '♟ OPENING TACTICS',
+    level: '⚽ FIRST HALF KICKOFF',
     points: '10 PTS EACH',
-    color: 'border-white/10 hover:border-lime/40',
-    bg: 'bg-[#101522]',
-    tag: 'bg-lime text-carbon-950',
-    desc: 'Questions 1 & 2: Rapid opening logic on algorithms, control flow, loops, and Python/SQL fundamentals.',
-    icon: <span className="text-xl text-lime font-bold">♟</span>,
+    color: 'border-emerald-500/30 hover:border-emerald-400',
+    bg: 'bg-[#09131a]',
+    tag: 'bg-[#00ff85] text-black font-black',
+    desc: 'Moves 1 & 2: Rapid pitch opening, Premier League & Real Madrid trivia, loops, control flow, and baseline tactical theory.',
+    icon: <span className="text-xl text-[#00ff85] font-bold">⚽</span>,
   },
   {
     tier: 'STAGE 02',
-    level: '♞ TACTICAL MIDDLEGAME',
+    level: '⚡ MIDFIELD ENGINE ROOM',
     points: '20 PTS EACH',
-    color: 'border-white/10 hover:border-ember/40',
-    bg: 'bg-[#101522]',
-    tag: 'bg-ember text-white',
-    desc: 'Questions 3 & 4: Deep calculations on OOP polymorphism, Tower of Hanoi recurrence, BFS/DFS, and data structures.',
-    icon: <span className="text-xl text-ember font-bold">♞</span>,
+    color: 'border-blue-500/30 hover:border-blue-400',
+    bg: 'bg-[#091124]',
+    tag: 'bg-[#00a5ff] text-black font-black',
+    desc: 'Moves 3 & 4: Eden Hazard silky dribbles, Kanté defensive intercepts, sorting masterclasses, and tactical half-space chess.',
+    icon: <span className="text-xl text-[#00a5ff] font-bold">🪄</span>,
   },
   {
     tier: 'STAGE 03',
-    level: '♚ GRANDMASTER ENDGAME',
+    level: '🏆 90TH MINUTE CLUTCH WINNER',
     points: '30 PTS',
-    color: 'border-rose-500/30 hover:border-rose-500/60',
-    bg: 'bg-[#15101A]',
-    tag: 'bg-rose-500 text-white',
-    desc: 'Question 5: High-stakes endgame challenge on cache architecture, graph shortest paths, or core data structures.',
-    icon: <span className="text-xl text-rose-400 font-bold">♚</span>,
+    color: 'border-amber-400/40 hover:border-amber-400',
+    bg: 'bg-[#1a1408]',
+    tag: 'bg-[#FEBE10] text-black font-black',
+    desc: 'Move 5: Cristiano Ronaldo stoppage-time rocket into the top corner. Graph routing, cache architecture, and ultimate Ballon d\'Or glory.',
+    icon: <span className="text-xl text-amber-400 font-bold">👑</span>,
   },
 ];
 
@@ -496,12 +496,12 @@ export const LandingPage: React.FC = () => {
                 <div className="flex items-center gap-4">
                   <div className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-2xl overflow-hidden border-2 border-blue-400/80 shadow-xl shrink-0 group">
                     <img
-                      src="/hazard.jpg"
+                      src="/hazard-snow.jpg"
                       alt="Eden Hazard"
                       className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
                     />
                     <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/90 to-transparent p-1 text-center">
-                      <span className="text-[9px] font-mono text-blue-300 font-bold">HAZARD #10</span>
+                      <span className="text-[9px] font-mono text-blue-300 font-bold">HAZARD #17 IN SNOW</span>
                     </div>
                   </div>
 
@@ -583,12 +583,12 @@ export const LandingPage: React.FC = () => {
                 <div className="flex items-center gap-4">
                   <div className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-2xl overflow-hidden border-2 border-emerald-400/80 shadow-xl shrink-0 group">
                     <img
-                      src="/kante.jpg"
+                      src="/kante-explosion.jpg"
                       alt="N'Golo Kanté"
                       className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
                     />
                     <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/90 to-transparent p-1 text-center">
-                      <span className="text-[9px] font-mono text-emerald-300 font-bold">KANTÉ #7</span>
+                      <span className="text-[9px] font-mono text-emerald-300 font-bold">KANTÉ TANK 💥</span>
                     </div>
                   </div>
 
