@@ -248,6 +248,28 @@ export const LandingPage: React.FC = () => {
               </button>
             </div>
 
+            {/* Charcoal + Burnt Orange CR7 Dossier Banner */}
+            <div className="pt-2">
+              <Link
+                to="/cr7-goat"
+                className="w-full sm:w-auto inline-flex items-center justify-between sm:justify-start gap-3 px-5 py-3 rounded-2xl card-charcoal-orange text-warmCream hover:border-burntOrange transition-all text-xs font-mono font-black shadow-orange-glow active:scale-95 group"
+              >
+                <div className="flex items-center gap-2.5">
+                  <span className="text-lg group-hover:scale-125 transition-transform">👑</span>
+                  <div>
+                    <div className="text-burntOrange-light font-black uppercase tracking-wider text-xs flex items-center gap-1.5">
+                      <span>WHY CR7 IS THE ONLY UNDISPUTED G.O.A.T.</span>
+                      <span className="text-[9px] px-1.5 py-0.2 rounded bg-burntOrange text-white font-bold">DOSSIER</span>
+                    </div>
+                    <div className="text-[10px] text-warmCream/70 font-mono font-normal">
+                      Deep research breakdown: UCL King, 3 Leagues Conquered, Zero Weak Foot
+                    </div>
+                  </div>
+                </div>
+                <span className="text-burntOrange font-black ml-2 group-hover:translate-x-1 transition-transform">→</span>
+              </Link>
+            </div>
+
             {/* Token Toast */}
             <AnimatePresence>
               {tokenToast && (
@@ -453,6 +475,14 @@ export const LandingPage: React.FC = () => {
                   <span className="text-xl">⚽</span>
                   <span>CELEBRATE SIUUUU! 🏆</span>
                 </button>
+
+                <Link
+                  to="/cr7-goat"
+                  className="w-full sm:w-auto px-6 py-4 rounded-2xl btn-burntOrange text-sm uppercase tracking-wider flex items-center justify-center gap-2"
+                >
+                  <span>👑</span>
+                  <span>READ CR7 GOAT DOSSIER</span>
+                </Link>
 
                 {siuuuActive && (
                   <motion.div

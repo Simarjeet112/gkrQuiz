@@ -194,3 +194,55 @@ body {
 .eq-bar-2 { animation: eqBounce 0.6s ease-in-out infinite 0.15s; }
 .eq-bar-3 { animation: eqBounce 1.0s ease-in-out infinite 0.3s; }
 .eq-bar-4 { animation: eqBounce 0.7s ease-in-out infinite 0.2s; }
+
+/* ── CHARCOAL + BURNT ORANGE & FOREST GREEN + WARM CREAM PALETTE ── */
+.card-charcoal-orange {
+  background: radial-gradient(circle at top right, rgba(234, 88, 12, 0.15) 0%, transparent 60%), #12151B;
+  border: 1px solid rgba(234, 88, 12, 0.35);
+  box-shadow: 0 10px 35px -5px rgba(0, 0, 0, 0.7), 0 0 25px rgba(234, 88, 12, 0.18);
+}
+
+.card-forest-cream {
+  background: radial-gradient(circle at top left, rgba(16, 185, 129, 0.2) 0%, transparent 60%), #041f17;
+  border: 1px solid rgba(254, 243, 199, 0.3);
+  box-shadow: 0 10px 35px -5px rgba(0, 0, 0, 0.7), 0 0 25px rgba(6, 78, 59, 0.4);
+}
+
+.btn-burnt-orange {
+  background: linear-gradient(135deg, #EA580C 0%, #C2410C 100%);
+  color: #FFFBEB;
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 800;
+  box-shadow: 0 3px 0 #9A3412, 0 8px 24px rgba(234, 88, 12, 0.35);
+  transition: all 0.15s cubic-bezier(0.2, 0, 0, 1);
+}
+.btn-burnt-orange:hover {
+  background: linear-gradient(135deg, #F97316 0%, #EA580C 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 0 #9A3412, 0 12px 28px rgba(234, 88, 12, 0.5);
+}
+.btn-burnt-orange:active {
+  transform: translateY(1px);
+  box-shadow: 0 1px 0 #9A3412;
+}
+
+.btn-forest-cream {
+  background: linear-gradient(135deg, #065F46 0%, #064E3B 100%);
+  color: #FEF3C7;
+  border: 1px solid rgba(254, 243, 199, 0.4);
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 800;
+  box-shadow: 0 3px 0 #022C22, 0 8px 20px rgba(6, 78, 59, 0.4);
+  transition: all 0.15s cubic-bezier(0.2, 0, 0, 1);
+}
+.btn-forest-cream:hover {
+  background: linear-gradient(135deg, #047857 0%, #065F46 100%);
+  border-color: #FEF3C7;
+  color: #FFFFFF;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 0 #022C22, 0 12px 26px rgba(16, 185, 129, 0.4);
+}
+.btn-forest-cream:active {
+  transform: translateY(1px);
+  box-shadow: 0 1px 0 #022C22;
+}

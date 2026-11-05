@@ -15,9 +15,17 @@ export const Footer: React.FC = () => {
         </div>
 
         {/* Attribution */}
-        <div className="flex items-center gap-1 text-[11px] text-slate-400">
+        <div className="flex items-center gap-3 text-[11px] text-slate-400">
           <span>Engineered by</span>
-          <span className="text-white font-bold ml-1">Geekroom Technical Society</span>
+          <span className="text-white font-bold">Geekroom Technical Society</span>
+          <span className="text-slate-600">•</span>
+          <Link
+            to="/cr7-goat"
+            className="text-burntOrange-light hover:text-warmCream font-bold transition-colors flex items-center gap-1"
+          >
+            <span>👑</span>
+            <span>CR7 GOAT Dossier</span>
+          </Link>
         </div>
 
         {/* Organizer discreet link */}

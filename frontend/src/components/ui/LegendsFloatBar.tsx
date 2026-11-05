@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import confetti from 'canvas-confetti';
 import { sounds } from '../../utils/soundEffects';
@@ -175,6 +176,16 @@ export const LegendsFloatBar: React.FC = () => {
                 {activeLegend === 'kante' && "⚡ N'GOLO KANTÉ WON THE TACKLE & RECOVERED THE BALL!"}
               </motion.div>
             )}
+
+            {/* Link to Full CR7 GOAT Dossier */}
+            <Link
+              to="/cr7-goat"
+              onClick={() => sounds.playSiuuu()}
+              className="w-full py-1.5 px-2 rounded-xl bg-gradient-to-r from-burntOrange/30 to-charcoal-900 hover:from-burntOrange/50 border border-burntOrange text-warmCream font-mono text-[10px] font-black uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all shadow-sm"
+            >
+              <span>👑</span>
+              <span>WHY CR7 IS THE ONLY GOAT →</span>
+            </Link>
 
             {/* Footer Tag */}
             <div className="flex items-center justify-between text-[9px] font-mono text-slate-400 pt-1 border-t border-white/5">

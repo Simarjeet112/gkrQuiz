@@ -4,6 +4,39 @@ export default {
   theme: {
     extend: {
       colors: {
+        charcoal: {
+          950: '#0B0D11',
+          900: '#12151B',
+          850: '#181C24',
+          800: '#212631',
+          700: '#2E3544',
+          600: '#434D62',
+        },
+        burntOrange: {
+          DEFAULT: '#EA580C',
+          light: '#FB923C',
+          500: '#F97316',
+          600: '#EA580C',
+          700: '#C2410C',
+          dark: '#9A3412',
+          glow: 'rgba(234, 88, 12, 0.35)',
+        },
+        forestGreen: {
+          DEFAULT: '#064E3B',
+          pitch: '#065F46',
+          dark: '#022C22',
+          emerald: '#10B981',
+          light: '#34D399',
+          glow: 'rgba(6, 78, 59, 0.4)',
+        },
+        warmCream: {
+          DEFAULT: '#FEF3C7',
+          50: '#FFFBEB',
+          100: '#FEF3C7',
+          200: '#FDE68A',
+          text: '#FFF7ED',
+          border: 'rgba(254, 243, 199, 0.25)',
+        },
         carbon: {
           950: '#07090E',
           900: '#0B0F19',
@@ -52,6 +85,8 @@ export default {
         'titanium-hover': '0 16px 40px -5px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(212, 255, 0, 0.35)',
         'lime-tactile': '0 4px 0 #9EBF00, 0 8px 20px rgba(212, 255, 0, 0.25)',
         'ember-tactile': '0 4px 0 #B84300, 0 8px 20px rgba(255, 92, 0, 0.25)',
+        'orange-glow': '0 0 35px rgba(234, 88, 12, 0.35), 0 0 15px rgba(249, 115, 22, 0.2)',
+        'forest-glow': '0 0 35px rgba(6, 78, 59, 0.45), 0 0 15px rgba(16, 185, 129, 0.25)',
         'subtle-elevation': '0 4px 20px rgba(0, 0, 0, 0.4)',
       },
       borderRadius: {
