@@ -18,6 +18,7 @@ interface LeaderboardEntry {
   time_taken_seconds: number;
   submitted_at: string;
   status: string;
+  track?: string;
 }
 
 const fmtTime = (s: number) => `${Math.floor(s / 60)}m ${s % 60}s`;
@@ -64,7 +65,7 @@ export const LeaderboardPage: React.FC = () => {
   const top3 = entries.slice(0, 3);
 
   return (
-    <div className="relative min-h-[calc(100vh-4.5rem)] bg-carbon-950 py-10 px-4 sm:px-6 overflow-hidden">
+    <div className="relative min-h-[calc(100vh-4.5rem)] bg-charcoal text-warmCream py-10 px-4 sm:px-6 overflow-hidden">
       <ChessBackground />
       <div className="max-w-5xl mx-auto space-y-8 relative z-10">
 
@@ -332,11 +333,24 @@ export const LeaderboardPage: React.FC = () => {
                       </td>
                       <td className="py-4 px-4">
                         <div className="flex items-center gap-2">
-                          <span className="font-bold text-white font-sans text-base">{item.display_name}</span>
+                          <span className="font-bold text-warmCream font-sans text-base">{item.display_name}</span>
                           {item.rank <= 3 && <Crown className="w-3.5 h-3.5 text-amber-400 shrink-0" />}
+                          {item.track === 'dark' ? (
+                            <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                              ⏳ DARK
+                            </span>
+                          ) : item.track === 'code' ? (
+                            <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">
+                              💻 CODE
+                            </span>
+                          ) : (
+                            <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                              ⚽ CR7 LEGEND
+                            </span>
+                          )}
                         </div>
                         {item.participant_code && (
-                          <div className="text-[11px] text-carbon-400">{item.participant_code}</div>
+                          <div className="text-[11px] text-warmCream/60 font-mono">{item.participant_code}</div>
                         )}
                       </td>
                       <td className="py-4 px-4 text-center">

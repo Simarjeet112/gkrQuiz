@@ -36,7 +36,8 @@ export async function initDatabase(db?: IDatabase): Promise<void> {
       submitted_at TIMESTAMP,
       status VARCHAR(20) NOT NULL DEFAULT 'in_progress',
       total_score INTEGER NOT NULL DEFAULT 0,
-      time_taken_seconds INTEGER
+      time_taken_seconds INTEGER,
+      track VARCHAR(32) DEFAULT 'code'
     );
   `);
 

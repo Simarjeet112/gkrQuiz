@@ -17,36 +17,36 @@ import { LiveFootballPitch } from '../components/stadium/LiveFootballPitch';
 import { ChessBackground } from '../components/ui/ChessBackground';
 import { sounds } from '../utils/soundEffects';
 
-const tierCards = [
+const trackCards = [
   {
-    tier: 'STAGE 01',
-    level: '⚽ FIRST HALF KICKOFF',
-    points: '10 PTS EACH',
-    color: 'border-emerald-500/30 hover:border-emerald-400',
-    bg: 'bg-[#09131a]',
-    tag: 'bg-[#00ff85] text-black font-black',
-    desc: 'Moves 1 & 2: Rapid pitch opening, Premier League & Real Madrid trivia, loops, control flow, and baseline tactical theory.',
-    icon: <span className="text-xl text-[#00ff85] font-bold">⚽</span>,
-  },
-  {
-    tier: 'STAGE 02',
-    level: '⚡ MIDFIELD ENGINE ROOM',
-    points: '20 PTS EACH',
-    color: 'border-blue-500/30 hover:border-blue-400',
-    bg: 'bg-[#091124]',
-    tag: 'bg-[#00a5ff] text-black font-black',
-    desc: 'Moves 3 & 4: Eden Hazard silky dribbles, Kanté defensive intercepts, sorting masterclasses, and tactical half-space chess.',
-    icon: <span className="text-xl text-[#00a5ff] font-bold">🪄</span>,
-  },
-  {
-    tier: 'STAGE 03',
-    level: '🏆 90TH MINUTE CLUTCH WINNER',
-    points: '30 PTS',
+    tier: 'TRACK 01 // ⚽',
+    level: 'CR7 & FOOTBALL LEGENDS',
+    points: 'MADRID × CHELSEA',
     color: 'border-amber-400/40 hover:border-amber-400',
-    bg: 'bg-[#1a1408]',
-    tag: 'bg-[#FEBE10] text-black font-black',
-    desc: 'Move 5: Cristiano Ronaldo stoppage-time rocket into the top corner. Graph routing, cache architecture, and ultimate Ballon d\'Or glory.',
+    bg: 'bg-forestGreen/40',
+    tag: 'bg-amber-400 text-charcoal font-black',
+    desc: 'Cristiano Ronaldo 5x Ballon d\'Or, Eden Hazard silky Stamford Bridge dribbles, N\'Golo Kanté engine, Tactical Chess, and Real Madrid royal heritage.',
     icon: <span className="text-xl text-amber-400 font-bold">👑</span>,
+  },
+  {
+    tier: 'TRACK 02 // ⏳',
+    level: 'NETFLIX DARK // WINDEN KNOT',
+    points: 'SIC MUNDUS 1986–2052',
+    color: 'border-emerald-500/40 hover:border-emerald-400',
+    bg: 'bg-forestGreen/50',
+    tag: 'bg-emerald-400 text-charcoal font-black',
+    desc: 'Jonas Kahnwald yellow raincoat, Martha Nielsen, Adam & Eva, the 33-year cycle, H.G. Tannhaus brass clockwork, and the Origin World bootstrap paradox.',
+    icon: <span className="text-xl text-emerald-400 font-bold">🌀</span>,
+  },
+  {
+    tier: 'TRACK 03 // 💻',
+    level: 'GEEKROOM CODE & CHESS',
+    points: 'DSA & GRANDMASTER',
+    color: 'border-cyan-400/40 hover:border-cyan-400',
+    bg: 'bg-charcoal/80',
+    tag: 'bg-cyan-400 text-charcoal font-black',
+    desc: 'Data structures (LIFO/FIFO), recursion, sorting algorithms, Python, SQL, OOP principles, and Grandmaster 2800+ ELO positional chess logic.',
+    icon: <span className="text-xl text-cyan-400 font-bold">♟️</span>,
   },
 ];
 
@@ -681,20 +681,20 @@ export const LandingPage: React.FC = () => {
       {/* ── 3. ARCHITECTURAL BENTO GAUNTLET GRID ── */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 border-t border-white/10">
         <div className="text-center max-w-2xl mx-auto mb-12 space-y-2">
-          <div className="inline-flex items-center gap-2 text-xs font-mono text-lime uppercase tracking-widest px-3 py-1 rounded-full bg-lime/10 border border-lime/30">
-            [ THE ARENA BLUEPRINT // BENTO DISCOVERY ]
+          <div className="inline-flex items-center gap-2 text-xs font-mono text-emerald-400 uppercase tracking-widest px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30">
+            [ 3 MATCHDAY TRACKS // BENTO ARENA ]
           </div>
-          <h2 className="text-3xl sm:text-5xl font-black text-white font-display">
-            HOW THE ARENA WORKS
+          <h2 className="text-3xl sm:text-5xl font-black text-warmCream font-display">
+            CHOOSE YOUR TRACK
           </h2>
-          <p className="text-xs sm:text-sm text-slate-400 font-mono">
-            Structured progressive difficulty. No random luck — purely your speed and technical precision.
+          <p className="text-xs sm:text-sm text-warmCream/70 font-mono">
+            CR7 & Football Legends, Netflix DARK Winden Knot, or Geekroom Code & Chess. Earn an authentic FIFA FUT card upon completion!
           </p>
         </div>
 
         {/* Bento Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {tierCards.map((tier, idx) => (
+          {trackCards.map((tier, idx) => (
             <motion.div
               key={tier.tier}
               initial={{ opacity: 0, y: 16 }}

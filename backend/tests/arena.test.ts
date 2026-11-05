@@ -7,6 +7,7 @@ import { getDB } from '../src/db/connection.js';
 
 test('GEEKROOM CODE ARENA - Comprehensive Test Suite', async (t) => {
   const db = getDB();
+  await db.run("UPDATE questions SET is_active = 1;");
   await seedDatabase(db);
 
   // Clear previous test attempts & participants for clean isolation
@@ -183,15 +184,17 @@ test('GEEKROOM CODE ARENA - Comprehensive Test Suite', async (t) => {
     // Temporarily deactivate tough questions
     await db.run("UPDATE questions SET is_active = 0 WHERE difficulty = 'tough'");
 
-    await assert.rejects(
-      async () => {
-        await quizService.startQuiz('Unlucky Player', 'GTBIT-FAIL');
-      },
-      /Insufficient Tough questions/i
-    );
-
-    // Restore tough questions
-    await db.run("UPDATE questions SET is_active = 1 WHERE difficulty = 'tough'");
+    try {
+      await assert.rejects(
+        async () => {
+          await quizService.startQuiz('Unlucky Player', 'GTBIT-FAIL');
+        },
+        /Insufficient Tough questions/i
+      );
+    } finally {
+      // Restore tough questions
+      await db.run("UPDATE questions SET is_active = 1 WHERE difficulty = 'tough'");
+    }
   });
 
   await t.test('14. Batch 2026 algorithm: Enrollment numbers ending with 26 get targeted Easy Python, Easy SQL, Medium OOP, and Basic DS in Tough slot', async () => {
@@ -241,6 +244,7 @@ test('GEEKROOM CODE ARENA - Comprehensive Test Suite', async (t) => {
       'Chelsea FC',
       'Real Madrid',
       'Tactical Football Chess',
+      'Football & Code',
     ];
 
     res.questions.forEach((q) => {
@@ -261,7 +265,7 @@ test('GEEKROOM CODE ARENA - Comprehensive Test Suite', async (t) => {
     await db.run('DELETE FROM quiz_attempts;');
     await db.run('DELETE FROM participants;');
 
-    const remainingParticipants = await db.getOne<{ count: number }>('SELECT count(*) as count FROM participants');
-    assert.equal(remainingParticipants?.count, 0, 'No fake or test participants should remain in production DB');
+    const remainingParticipants = await db.getOne<{ count: number | string }>('SELECT count(*) as count FROM participants');
+    assert.equal(Number(remainingParticipants?.count), 0, 'No fake or test participants should remain in production DB');
   });
 });

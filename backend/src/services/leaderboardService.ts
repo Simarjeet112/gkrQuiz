@@ -27,7 +27,8 @@ export class LeaderboardService {
          a.total_score,
          COALESCE(a.time_taken_seconds, 0) as time_taken_seconds,
          a.submitted_at,
-         a.status
+         a.status,
+         a.track
        FROM quiz_attempts a
        JOIN participants p ON a.participant_id = p.id
        WHERE a.status IN ('completed', 'expired')
@@ -49,6 +50,7 @@ export class LeaderboardService {
       time_taken_seconds: r.time_taken_seconds,
       submitted_at: r.submitted_at,
       status: r.status,
+      track: (r as any).track || 'code',
     }));
   }
 }

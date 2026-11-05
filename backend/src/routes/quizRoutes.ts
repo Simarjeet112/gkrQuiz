@@ -1,8 +1,10 @@
 import { Router, Request, Response } from 'express';
 import { QuizService } from '../services/quizService.js';
+import { AIService } from '../services/aiService.js';
 
 const router = Router();
 const quizService = new QuizService();
+const aiService = new AIService();
 
 // GET /api/quiz/config - Public configuration
 router.get('/config', async (_req: Request, res: Response) => {
@@ -34,11 +36,18 @@ router.post('/start', async (req: Request, res: Response) => {
     const participantCode = req.body.participantCode || req.body.participant_code;
     const track = req.body.track || 'code';
     const difficulty = req.body.difficulty || req.body.difficulty_mode;
+    const questionCount = req.body.questionCount || req.body.question_count || 5;
     if (!displayName || typeof displayName !== 'string' || !displayName.trim()) {
       return res.status(400).json({ success: false, error: 'Player name is required.' });
     }
 
-    const result = await quizService.startQuiz(displayName, participantCode, track, difficulty);
+    const result = await quizService.startQuiz(
+      displayName,
+      participantCode,
+      track,
+      difficulty,
+      Number(questionCount)
+    );
     res.status(201).json({ success: true, data: result });
   } catch (err: any) {
     res.status(400).json({ success: false, error: err.message });
@@ -92,6 +101,36 @@ router.get('/attempts/:attemptId/results', async (req: Request, res: Response) =
     res.json({ success: true, data: results });
   } catch (err: any) {
     res.status(404).json({ success: false, error: err.message });
+  }
+});
+
+// POST /api/quiz/attempts/:attemptId/ai-analysis - Gemini AI Tactical Scouting Report
+router.post('/attempts/:attemptId/ai-analysis', async (req: Request, res: Response) => {
+  try {
+    const { attemptId } = req.params;
+    const results = await quizService.getResults(attemptId);
+
+    const accuracyPct =
+      results.total_questions > 0
+        ? Math.round((results.correct_count / results.total_questions) * 100)
+        : 0;
+
+    const report = await aiService.generateMatchReport({
+      playerName: results.participant.display_name,
+      track: (results as any).track || 'code',
+      score: results.total_score,
+      maxScore: results.max_score,
+      accuracyPct,
+      timeTakenSeconds: results.time_taken_seconds,
+      totalQuestions: results.total_questions,
+      easyCorrect: results.difficulty_breakdown.easy.correct,
+      mediumCorrect: results.difficulty_breakdown.medium.correct,
+      toughCorrect: results.difficulty_breakdown.tough.correct,
+    });
+
+    res.json({ success: true, data: report });
+  } catch (err: any) {
+    res.status(500).json({ success: false, error: err.message });
   }
 });
 

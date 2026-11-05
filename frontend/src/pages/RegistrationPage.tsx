@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Play, User, Hash, AlertCircle, ShieldAlert, Terminal, Sparkles, Cpu } from 'lucide-react';
+import { Play, User, Hash, AlertCircle, Sparkles, Clock, Compass } from 'lucide-react';
 import { BitByte3D } from '../components/mascot/BitByte3D';
 import { BitByteMood } from '../components/mascot/bitbyteDialogue';
 import { ChessBackground } from '../components/ui/ChessBackground';
@@ -13,8 +13,9 @@ export const RegistrationPage: React.FC = () => {
 
   const [displayName, setDisplayName] = useState('');
   const [participantCode, setParticipantCode] = useState('');
-  const [selectedTrack, setSelectedTrack] = useState<'ronaldo' | 'code'>('ronaldo');
+  const [selectedTrack, setSelectedTrack] = useState<'ronaldo' | 'dark' | 'code'>('ronaldo');
   const [selectedDifficulty, setSelectedDifficulty] = useState<'easy' | 'tough' | 'balanced'>('balanced');
+  const [selectedCount, setSelectedCount] = useState<number>(5);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [config, setConfig] = useState<{
@@ -52,11 +53,18 @@ export const RegistrationPage: React.FC = () => {
     sounds.playSelect();
 
     try {
-      const data = await api.startQuiz(name, participantCode.trim() || undefined, selectedTrack, selectedDifficulty);
+      const data = await api.startQuiz(
+        name,
+        participantCode.trim() || undefined,
+        selectedTrack,
+        selectedDifficulty,
+        selectedCount
+      );
       localStorage.setItem('gkr_active_attempt_id', data.attemptId);
       localStorage.setItem('gkr_player_name', name);
       localStorage.setItem('gkr_active_track', selectedTrack);
       localStorage.setItem('gkr_active_difficulty', selectedDifficulty);
+      localStorage.setItem('gkr_active_count', String(selectedCount));
       navigate(`/arena/${data.attemptId}`);
     } catch (err: any) {
       setError(err.message || 'Failed to start quiz. Please try again.');
@@ -65,58 +73,58 @@ export const RegistrationPage: React.FC = () => {
     }
   };
 
+  const questionCountOptions = [
+    { count: 5, label: '5Q Blitz', desc: '5 mins • Sprint' },
+    { count: 10, label: '10Q Rapid', desc: '10 mins • Standard' },
+    { count: 20, label: '20Q Half-Match', desc: '20 mins • Deep Dive' },
+    { count: 30, label: '30Q Full 90’', desc: '30 mins • High Stakes' },
+    { count: 50, label: '50Q Marathon', desc: '50 mins • Legendary' },
+  ];
+
   return (
-    <div className="relative min-h-[calc(100vh-4rem)] flex items-center justify-center p-4 bg-carbon-950 text-carbon-50 overflow-hidden">
+    <div className="relative min-h-[calc(100vh-4rem)] flex items-center justify-center p-4 bg-charcoal text-warmCream overflow-hidden">
       <ChessBackground />
 
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-        className="w-full max-w-lg p-6 sm:p-8 rounded-2xl border border-white/10 shadow-titanium relative bg-[#101522]"
+        className="w-full max-w-xl p-6 sm:p-8 rounded-3xl border-2 border-emerald-500/30 shadow-2xl relative bg-gradient-to-b from-forestGreen/90 via-charcoal/95 to-charcoal backdrop-blur-xl"
       >
         {/* Top Header */}
         <div className="flex items-center justify-between pb-4 border-b border-white/10">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/15 p-1 flex items-center justify-center">
+            <div className="w-10 h-10 rounded-xl bg-forestGreen border border-emerald-400/40 p-1 flex items-center justify-center shadow-md">
               <img src="/geekroom-logo.png" alt="Geekroom GTBIT" className="w-full h-full object-contain" />
             </div>
             <div>
-              <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#00ff85]/15 text-[#00ff85] border border-[#00ff85]/30 font-bold uppercase tracking-wider flex items-center gap-1">
-                <span>⚽</span> TUNNEL EXIT // SANTIAGO BERNABÉU SEAT #7
+              <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/40 font-bold uppercase tracking-wider flex items-center gap-1">
+                <span>👑</span> SANTIAGO BERNABÉU × STAMFORD BRIDGE
               </span>
-              <div className="text-sm font-black text-white font-display mt-0.5">
-                MATCHDAY ARENA // GEEKROOM × UCL
+              <div className="text-sm font-black text-warmCream font-display mt-0.5">
+                GEEKROOM SAAS ARENA // 2026
               </div>
             </div>
           </div>
-          <span className="text-[10px] font-mono px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 font-bold flex items-center gap-1">
-            <span>●</span> KICKOFF READY
+          <span className="text-[10px] font-mono px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-bold flex items-center gap-1">
+            <span>●</span> POSTGRES / NEON DB
           </span>
         </div>
 
         {/* 3D BitByte Coder Greeting */}
         <div className="py-2 border-b border-white/10">
           <BitByte3D
-            size="companion"
-            mood={displayName.length > 2 ? 'excited' : 'welcome'}
+            mood={selectedTrack === 'ronaldo' ? 'victory' : selectedTrack === 'dark' ? 'thinking' : 'excited'}
             customMessage={
-              displayName.length > 2
-                ? `Yo ${displayName}! Dribble past defenders like Hazard & finish like CR7!`
-                : 'Welcome, striker! Enter your callsign below to take your position on the pitch.'
+              selectedTrack === 'ronaldo'
+                ? "SIUUU! Real Madrid & Chelsea brotherhood awaits. Prepare for football tactics and legendary history!"
+                : selectedTrack === 'dark'
+                ? "Sic Mundus Creatus Est. What we know is a drop, what we don't know is an ocean. Jonas & Martha await."
+                : "Welcome to Code Arena! Algorithmic depth, system design, and Grandmaster chess logic loaded."
             }
+            size="companion"
+            showSpeech={true}
           />
-        </div>
-
-        {/* Heading */}
-        <div className="mt-4 mb-4 text-center sm:text-left">
-          <h1 className="text-2xl font-black text-white font-display tracking-tight flex items-center gap-2">
-            <span>MATCHDAY LINEUP ADMISSION</span>
-            <span className="text-sm font-mono text-[#FEBE10] font-normal">⚽</span>
-          </h1>
-          <p className="text-slate-400 text-xs mt-1 font-mono">
-            5 Moves to Glory: ⚽ First Half Kickoff (10p) → ⚡ Midfield Engine (20p) → 🏆 90' Stoppage Winner (30p). 5-Min Blitz Clock.
-          </p>
         </div>
 
         {/* Error Alert */}
@@ -124,7 +132,7 @@ export const RegistrationPage: React.FC = () => {
           <motion.div
             initial={{ opacity: 0, scale: 0.96 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="mb-4 p-3 rounded-xl bg-rose-500/15 border border-rose-500/30 text-xs text-rose-300 flex items-start gap-2.5 font-mono"
+            className="my-3 p-3 rounded-xl bg-rose-500/20 border border-rose-500/40 text-xs text-rose-200 flex items-start gap-2.5 font-mono"
           >
             <AlertCircle className="w-4 h-4 text-rose-400 shrink-0 mt-0.5" />
             <span>{error}</span>
@@ -132,79 +140,138 @@ export const RegistrationPage: React.FC = () => {
         )}
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="space-y-4">
-          {/* Arena Track Selector: CR7 & Legends vs Geekroom Tech */}
+        <form onSubmit={handleSubmit} className="space-y-4 mt-4">
+          {/* 1. Track Selector: 3 Tracks */}
           <div className="space-y-1.5">
-            <label className="block text-xs font-mono uppercase tracking-wider text-slate-300 flex items-center justify-between">
-              <span>SELECT MATCHDAY TRACK</span>
-              <span className="text-[10px] text-[#00ff85] font-bold">5-MIN BLITZ // 90 PTS</span>
+            <label className="block text-xs font-mono uppercase tracking-wider text-warmCream/80 flex items-center justify-between">
+              <span>1. SELECT MATCHDAY TRACK</span>
+              <span className="text-[10px] text-amber-400 font-bold">3 THEMATIC PATHS</span>
             </label>
-            <div className="grid grid-cols-2 gap-2.5">
-              {/* Ronaldo, Hazard & Kanté Legends Track */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+              {/* Track A: CR7 & Football Legends */}
               <button
                 type="button"
                 onClick={() => {
                   setSelectedTrack('ronaldo');
                   sounds.playSiuuu();
                 }}
-                className={`p-3 rounded-xl border text-left transition-all relative overflow-hidden ${
+                className={`p-3 rounded-2xl border text-left transition-all relative overflow-hidden flex flex-col justify-between ${
                   selectedTrack === 'ronaldo'
-                    ? 'bg-gradient-to-br from-amber-500/20 via-blue-900/30 to-black border-amber-400 shadow-[0_0_20px_rgba(254,190,16,0.3)]'
-                    : 'bg-[#090D16] border-white/10 hover:border-white/25 opacity-70'
+                    ? 'bg-gradient-to-br from-amber-500/25 via-emerald-950/60 to-charcoal border-amber-400 shadow-[0_0_20px_rgba(245,158,11,0.35)]'
+                    : 'bg-black/30 border-white/10 hover:border-white/25 opacity-75'
                 }`}
               >
-                <div className="flex items-center gap-1.5 mb-1">
-                  <div className="flex -space-x-1">
-                    <img src="/ronaldo-ballondor.jpg" alt="" className="w-5 h-5 rounded-full object-cover border border-amber-400" />
-                    <img src="/hazard.jpg" alt="" className="w-5 h-5 rounded-full object-cover border border-blue-400" />
-                    <img src="/kante.jpg" alt="" className="w-5 h-5 rounded-full object-cover border border-emerald-400" />
+                <div>
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-base">⚽ 👑</span>
+                    <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-amber-400/20 text-amber-300 font-bold">
+                      GOAT
+                    </span>
                   </div>
-                  <span className="text-[9px] font-mono px-1 py-0.5 rounded bg-amber-400/20 text-amber-300 font-bold">
-                    GOAT 🏆
-                  </span>
-                </div>
-                <div className="text-xs font-bold text-white font-display">
-                  CR7 & LEGENDS
-                </div>
-                <div className="text-[10px] text-slate-300 font-sans mt-0.5 line-clamp-1">
-                  Ronaldo, Hazard, Kanté, Chelsea & Real Madrid
+                  <div className="text-xs font-bold text-warmCream font-display">
+                    CR7 & FOOTBALL
+                  </div>
+                  <div className="text-[10px] text-warmCream/70 font-sans mt-0.5">
+                    Ronaldo, Hazard, Kanté, Madrid & Chelsea
+                  </div>
                 </div>
               </button>
 
-              {/* Geekroom Tech Track */}
+              {/* Track B: Netflix DARK Winden Knot */}
+              <button
+                type="button"
+                onClick={() => {
+                  setSelectedTrack('dark');
+                  sounds.playClick();
+                }}
+                className={`p-3 rounded-2xl border text-left transition-all relative overflow-hidden flex flex-col justify-between ${
+                  selectedTrack === 'dark'
+                    ? 'bg-gradient-to-br from-emerald-600/30 via-emerald-950/70 to-black border-emerald-400 shadow-[0_0_20px_rgba(16,185,129,0.35)]'
+                    : 'bg-black/30 border-white/10 hover:border-white/25 opacity-75'
+                }`}
+              >
+                <div>
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-base">⏳ 🌀</span>
+                    <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-emerald-400/20 text-emerald-300 font-bold">
+                      SIC MUNDUS
+                    </span>
+                  </div>
+                  <div className="text-xs font-bold text-warmCream font-display">
+                    NETFLIX DARK
+                  </div>
+                  <div className="text-[10px] text-warmCream/70 font-sans mt-0.5">
+                    Jonas, Martha, Winden Caves & Tannhaus
+                  </div>
+                </div>
+              </button>
+
+              {/* Track C: Geekroom Code & Chess */}
               <button
                 type="button"
                 onClick={() => {
                   setSelectedTrack('code');
                   sounds.playSelect();
                 }}
-                className={`p-3 rounded-xl border text-left transition-all relative overflow-hidden ${
+                className={`p-3 rounded-2xl border text-left transition-all relative overflow-hidden flex flex-col justify-between ${
                   selectedTrack === 'code'
-                    ? 'bg-lime/10 border-lime shadow-[0_0_20px_rgba(212,255,0,0.25)]'
-                    : 'bg-[#090D16] border-white/10 hover:border-white/25 opacity-70'
+                    ? 'bg-gradient-to-br from-cyan-600/25 via-slate-900/60 to-black border-cyan-400 shadow-[0_0_20px_rgba(6,182,212,0.3)]'
+                    : 'bg-black/30 border-white/10 hover:border-white/25 opacity-75'
                 }`}
               >
-                <div className="flex items-center gap-1.5 mb-1">
-                  <span className="text-sm">💻</span>
-                  <span className="text-[9px] font-mono px-1 py-0.5 rounded bg-lime/20 text-lime font-bold">
-                    TECH ⌨️
-                  </span>
-                </div>
-                <div className="text-xs font-bold text-white font-display">
-                  CODE & CHESS
-                </div>
-                <div className="text-[10px] text-slate-300 font-sans mt-0.5 line-clamp-1">
-                  DSA, Python, SQL, Recurrences & Chess Logic
+                <div>
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-base">💻 ♟️</span>
+                    <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-cyan-400/20 text-cyan-300 font-bold">
+                      TECH
+                    </span>
+                  </div>
+                  <div className="text-xs font-bold text-warmCream font-display">
+                    CODE & CHESS
+                  </div>
+                  <div className="text-[10px] text-warmCream/70 font-sans mt-0.5">
+                    DSA, Python, SQL, OOP & Grandmaster Chess
+                  </div>
                 </div>
               </button>
             </div>
           </div>
 
-          {/* Difficulty Selector: Easy vs Tough vs Balanced */}
+          {/* 2. Question Count Selector: 5, 10, 20, 30, 50 */}
           <div className="space-y-1.5 pt-1">
-            <label className="block text-xs font-mono uppercase tracking-wider text-slate-300 flex items-center justify-between">
-              <span>MATCH DIFFICULTY</span>
-              <span className="text-[10px] text-amber-400 font-bold">CHOOSE YOUR TIER</span>
+            <label className="block text-xs font-mono uppercase tracking-wider text-warmCream/80 flex items-center justify-between">
+              <span>2. SELECT QUESTION COUNT (LIMIT)</span>
+              <span className="text-[10px] text-emerald-400 font-bold">
+                PROPORTIONAL TIMER • EA FC FUT CARD UPON COMPLETION
+              </span>
+            </label>
+            <div className="grid grid-cols-2 sm:grid-cols-5 gap-1.5">
+              {questionCountOptions.map((opt) => (
+                <button
+                  key={opt.count}
+                  type="button"
+                  onClick={() => {
+                    setSelectedCount(opt.count);
+                    sounds.playClick();
+                  }}
+                  className={`p-2.5 rounded-xl border text-center transition-all ${
+                    selectedCount === opt.count
+                      ? 'bg-amber-500/25 border-amber-400 text-amber-300 font-bold shadow-md shadow-amber-500/20 scale-[1.02]'
+                      : 'bg-black/25 border-white/10 text-warmCream/70 hover:border-white/20'
+                  }`}
+                >
+                  <div className="text-xs font-bold leading-tight">{opt.label}</div>
+                  <div className="text-[9px] text-warmCream/60 font-mono mt-0.5 leading-tight">{opt.desc}</div>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* 3. Difficulty Bias: Balanced, Easy, Tough */}
+          <div className="space-y-1.5 pt-1">
+            <label className="block text-xs font-mono uppercase tracking-wider text-warmCream/80 flex items-center justify-between">
+              <span>3. DIFFICULTY FOCUS</span>
+              <span className="text-[10px] text-amber-400 font-bold">ADAPTIVE CURVE</span>
             </label>
             <div className="grid grid-cols-3 gap-2">
               <button
@@ -213,127 +280,119 @@ export const RegistrationPage: React.FC = () => {
                   setSelectedDifficulty('easy');
                   sounds.playClick();
                 }}
-                className={`p-2.5 rounded-xl border text-center transition-all ${
+                className={`p-2 rounded-xl border text-center transition-all ${
                   selectedDifficulty === 'easy'
-                    ? 'bg-emerald-500/20 border-emerald-400 text-emerald-300 shadow-[0_0_15px_rgba(16,185,129,0.3)]'
-                    : 'bg-[#090D16] border-white/10 text-slate-400 hover:border-white/20'
+                    ? 'bg-emerald-500/25 border-emerald-400 text-emerald-300 font-bold'
+                    : 'bg-black/20 border-white/10 text-warmCream/60 hover:border-white/20'
                 }`}
               >
-                <div className="text-base mb-0.5">🟢</div>
-                <div className="text-xs font-black uppercase tracking-wider">EASY</div>
-                <div className="text-[9px] font-mono text-slate-400 mt-0.5">PL Debut (10-20p)</div>
+                <div className="text-xs font-bold">🌱 Easy Opening</div>
+                <div className="text-[9px] font-mono text-warmCream/60">Rapid Warmup</div>
               </button>
 
               <button
                 type="button"
                 onClick={() => {
                   setSelectedDifficulty('balanced');
-                  sounds.playSelect();
+                  sounds.playClick();
                 }}
-                className={`p-2.5 rounded-xl border text-center transition-all ${
+                className={`p-2 rounded-xl border text-center transition-all ${
                   selectedDifficulty === 'balanced'
-                    ? 'bg-gradient-to-r from-blue-900/40 to-amber-900/40 border-[#FEBE10] text-[#FEBE10] shadow-[0_0_15px_rgba(254,190,16,0.3)]'
-                    : 'bg-[#090D16] border-white/10 text-slate-400 hover:border-white/20'
+                    ? 'bg-amber-500/25 border-amber-400 text-amber-300 font-bold'
+                    : 'bg-black/20 border-white/10 text-warmCream/60 hover:border-white/20'
                 }`}
               >
-                <div className="text-base mb-0.5">⚡</div>
-                <div className="text-xs font-black uppercase tracking-wider">BALANCED</div>
-                <div className="text-[9px] font-mono text-slate-400 mt-0.5">2E + 2M + 1T</div>
+                <div className="text-xs font-bold">⚖️ Balanced</div>
+                <div className="text-[9px] font-mono text-warmCream/60">Standard FUT Split</div>
               </button>
 
               <button
                 type="button"
                 onClick={() => {
                   setSelectedDifficulty('tough');
-                  sounds.playSiuuu();
+                  sounds.playClick();
                 }}
-                className={`p-2.5 rounded-xl border text-center transition-all ${
+                className={`p-2 rounded-xl border text-center transition-all ${
                   selectedDifficulty === 'tough'
-                    ? 'bg-rose-500/25 border-rose-500 text-rose-300 shadow-[0_0_15px_rgba(244,63,94,0.4)]'
-                    : 'bg-[#090D16] border-white/10 text-slate-400 hover:border-white/20'
+                    ? 'bg-rose-500/25 border-rose-400 text-rose-300 font-bold'
+                    : 'bg-black/20 border-white/10 text-warmCream/60 hover:border-white/20'
                 }`}
               >
-                <div className="text-base mb-0.5">🔴</div>
-                <div className="text-xs font-black uppercase tracking-wider">TOUGH</div>
-                <div className="text-[9px] font-mono text-slate-400 mt-0.5">UCL Final (30p)</div>
+                <div className="text-xs font-bold">🔥 Tough Focus</div>
+                <div className="text-[9px] font-mono text-warmCream/60">Grandmaster / UCL</div>
               </button>
             </div>
           </div>
 
-          <div>
-            <label className="block text-xs font-mono uppercase tracking-wider text-slate-300 mb-1.5 flex items-center justify-between">
-              <span>Player Name / Callsign <span className="text-lime">*</span></span>
-              <span className="text-[10px] text-slate-500 font-normal">Max 40 chars</span>
+          {/* 4. Player Name Input */}
+          <div className="space-y-1.5 pt-1">
+            <label className="block text-xs font-mono uppercase tracking-wider text-warmCream/80 flex items-center justify-between">
+              <span>4. PLAYER CALLSIGN // DISPLAY NAME</span>
+              <span className="text-[10px] text-amber-400 font-bold">FUT CARD HOLDER</span>
             </label>
             <div className="relative">
-              <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+              <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-warmCream/40" />
               <input
                 type="text"
                 value={displayName}
                 onChange={(e) => setDisplayName(e.target.value)}
-                placeholder="e.g. Alex Mercer"
+                placeholder="e.g. Cristiano Ronaldo, Eden Hazard, Jonas..."
                 maxLength={40}
                 required
-                className="w-full pl-10 pr-4 py-3 rounded-xl bg-[#090D16] border border-white/10 focus:border-lime focus:ring-1 focus:ring-lime text-white text-sm outline-none transition-all placeholder:text-slate-600 font-sans"
+                className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-black/40 border border-white/15 text-warmCream text-sm placeholder:text-warmCream/30 focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400 transition-all font-sans"
               />
             </div>
           </div>
 
-          <div>
-            <label className="block text-xs font-mono uppercase tracking-wider text-slate-300 mb-1.5 flex items-center justify-between">
-              <span>College Roll No. / Participant ID</span>
-              <span className="text-[10px] text-slate-500 font-normal">
-                {config.require_roll_number ? '(Required)' : '(Optional)'}
-              </span>
+          {/* 5. Roll Number / Participant Code */}
+          <div className="space-y-1.5">
+            <label className="block text-xs font-mono uppercase tracking-wider text-warmCream/80 flex items-center justify-between">
+              <span>PARTICIPANT ID / ROLL NUMBER (OPTIONAL)</span>
+              <span className="text-[10px] text-emerald-400 font-bold">BATCH '26 ADAPTIVE</span>
             </label>
             <div className="relative">
-              <Hash className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+              <Hash className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-warmCream/40" />
               <input
                 type="text"
                 value={participantCode}
                 onChange={(e) => setParticipantCode(e.target.value)}
-                placeholder="e.g. 02315603124 or GTBIT-01"
+                placeholder="e.g. 06213202726 or CR7-BERNABÉU"
                 maxLength={30}
-                className="w-full pl-10 pr-4 py-3 rounded-xl bg-[#090D16] border border-white/10 focus:border-lime focus:ring-1 focus:ring-lime text-white text-sm outline-none transition-all placeholder:text-slate-600 font-mono text-xs"
+                className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-black/40 border border-white/15 text-warmCream text-sm placeholder:text-warmCream/30 focus:outline-none focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400 transition-all font-mono"
               />
             </div>
           </div>
 
-          {/* Rules briefing */}
-          <div className="p-3.5 rounded-xl bg-[#090D16] border border-white/10 text-[11px] font-mono text-slate-400 space-y-1">
-            <div className="text-xs font-bold text-lime flex items-center gap-1.5 mb-1">
-              <ShieldAlert className="w-3.5 h-3.5" />
-              <span>RULES OF THE BOARD:</span>
-            </div>
-            <div>• 5 Moves: 2 Opening (10p) → 2 Middlegame (20p) → 1 Endgame (30p)</div>
-            <div>• 5+0 Rapid Blitz clock; candidate moves auto-saved continuously</div>
-            <div>• Standings: 1) Game Score 2) Clock Time 3) Submission timestamp</div>
-          </div>
-
-          <motion.button
+          {/* Submit Kickoff Button */}
+          <button
             type="submit"
             disabled={loading}
-            whileTap={{ scale: 0.98 }}
-            className="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl btn-primary text-xs uppercase tracking-wider disabled:opacity-50"
+            className="w-full mt-3 btn-burnt-orange py-3.5 px-6 rounded-xl font-black text-sm tracking-wide uppercase flex items-center justify-center gap-2.5 shadow-xl hover:shadow-burntOrange/40 transition-all disabled:opacity-50"
           >
             {loading ? (
-              <span className="flex items-center gap-2">
-                <span className="w-4 h-4 border-2 border-carbon-950/30 border-t-carbon-950 rounded-full animate-spin" />
-                <span>CALCULATING OPENING MOVES...</span>
-              </span>
+              <>
+                <div className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin" />
+                <span>Entering The Arena...</span>
+              </>
             ) : (
               <>
                 <Play className="w-4 h-4 fill-current" />
-                <span>♟ 1. e4 // INITIATE ARENA CHALLENGE</span>
+                <span>Start {selectedCount}Q Challenge • Kickoff</span>
               </>
             )}
-          </motion.button>
-
-          {/* Barcode Strip */}
-          <div className="pt-2 text-center font-mono text-[9px] tracking-[0.25em] text-slate-500 select-none">
-            ||| |||| | ||||| || |||||| |||| | || [ADMIT-CHALLENGER-ONE]
-          </div>
+          </button>
         </form>
+
+        {/* Footer Oasis & Real Madrid × Chelsea Brotherhood Banner */}
+        <div className="mt-5 pt-3 border-t border-white/10 flex items-center justify-between text-[11px] text-warmCream/60 font-mono">
+          <div className="flex items-center gap-1.5">
+            <span className="text-amber-400">🎸 Oasis Vibe</span>
+            <span>• Wonderwall</span>
+          </div>
+          <div className="flex items-center gap-1">
+            <span>💙 Chelsea FC × Real Madrid 🤍</span>
+          </div>
+        </div>
       </motion.div>
     </div>
   );

@@ -82,6 +82,7 @@ export interface QuizResultResponse {
     participant_code?: string | null;
   };
   status: AttemptStatus;
+  track?: string;
   total_score: number;
   max_score: number;
   time_taken_seconds: number;
@@ -111,6 +112,7 @@ export interface LeaderboardEntry {
   time_taken_seconds: number;
   submitted_at: string;
   status: AttemptStatus;
+  track?: string;
 }
 
 export interface EventConfig {

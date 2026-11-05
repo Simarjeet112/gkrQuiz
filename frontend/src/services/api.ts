@@ -19,12 +19,13 @@ export const api = {
     displayName: string,
     participantCode?: string,
     track: string = 'code',
-    difficulty?: 'easy' | 'tough' | 'balanced'
+    difficulty?: 'easy' | 'tough' | 'balanced',
+    questionCount: number = 5
   ) {
     const res = await fetch(`${API_BASE}/quiz/start`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ displayName, participantCode, track, difficulty }),
+      body: JSON.stringify({ displayName, participantCode, track, difficulty, questionCount }),
     });
     const json = await res.json();
     if (!res.ok) throw new Error(json.error || 'Failed to start quiz');
@@ -64,6 +65,16 @@ export const api = {
     const res = await fetch(`${API_BASE}/quiz/attempts/${attemptId}/results`);
     const json = await res.json();
     if (!res.ok) throw new Error(json.error || 'Failed to load results');
+    return json.data;
+  },
+
+  async getAiAnalysis(attemptId: string) {
+    const res = await fetch(`${API_BASE}/quiz/attempts/${attemptId}/ai-analysis`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+    });
+    const json = await res.json();
+    if (!res.ok) throw new Error(json.error || 'Failed to generate AI match analysis');
     return json.data;
   },
 

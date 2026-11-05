@@ -6,6 +6,14 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
+// Standardize pg types to match SQLite behavior:
+// 20 = INT8/BIGINT (COUNT(*) etc.) -> return number
+pg.types.setTypeParser(20, (val: string) => parseInt(val, 10));
+// 1114 = TIMESTAMP -> return string ISO
+pg.types.setTypeParser(1114, (str: string) => (str.includes('T') ? str : str.replace(' ', 'T') + 'Z'));
+// 1184 = TIMESTAMPTZ -> return string ISO
+pg.types.setTypeParser(1184, (str: string) => str);
+
 export interface DBResult {
   changes: number;
   lastInsertRowid?: number | bigint;
@@ -92,9 +100,14 @@ class PostgresDatabase implements IDatabase {
   private pool: pg.Pool;
 
   constructor(connectionString: string) {
+    const isNeonOrSSL =
+      connectionString.includes('neon.tech') ||
+      connectionString.includes('sslmode=require') ||
+      process.env.PG_SSL === 'true';
+
     this.pool = new pg.Pool({
       connectionString,
-      ssl: process.env.PG_SSL === 'true' ? { rejectUnauthorized: false } : false,
+      ssl: isNeonOrSSL ? { rejectUnauthorized: false } : false,
     });
   }
 
@@ -176,9 +189,18 @@ let dbInstance: IDatabase | null = null;
 export function getDB(): IDatabase {
   if (dbInstance) return dbInstance;
 
-  const databaseUrl = process.env.DATABASE_URL;
+  let databaseUrl = process.env.DATABASE_URL || '';
+  if (databaseUrl) {
+    // Normalize psycopg / neon connection URLs
+    databaseUrl = databaseUrl
+      .replace(/^postgresql\+psycopg:\/\//, 'postgres://')
+      .replace('&channel_binding=require', '')
+      .replace('?channel_binding=require&', '?')
+      .replace('?channel_binding=require', '');
+  }
+
   if (databaseUrl && (databaseUrl.startsWith('postgres://') || databaseUrl.startsWith('postgresql://'))) {
-    console.log('[DB] Connecting to PostgreSQL database...');
+    console.log('[DB] Connecting to PostgreSQL database (Neon / Cloud DB)...');
     dbInstance = new PostgresDatabase(databaseUrl);
   } else {
     const dbPath = process.env.SQLITE_PATH || path.resolve(process.cwd(), 'data', 'geekroom_arena.db');

@@ -49,7 +49,8 @@ export class QuizService {
     displayName: string,
     participantCode?: string,
     track: string = 'code',
-    difficultyMode: string = 'balanced'
+    difficultyMode: string = 'balanced',
+    questionCount: number = 5
   ): Promise<{
     attemptId: string;
     participantId: string;
@@ -71,7 +72,12 @@ export class QuizService {
       throw new Error('College roll number / participant ID is required.');
     }
 
-    const durationMinutes = parseInt(await this.getConfig('quiz_duration_minutes', '5'), 10) || 5;
+    const targetCount = [5, 10, 20, 30, 40, 50].includes(Number(questionCount))
+      ? Number(questionCount)
+      : 5;
+
+    const baseDuration = parseInt(await this.getConfig('quiz_duration_minutes', '5'), 10) || 5;
+    const durationMinutes = targetCount > 5 ? targetCount : baseDuration;
 
     // Check or create participant
     let participant = await this.db.getOne<{ id: string; display_name: string }>(
@@ -115,12 +121,18 @@ export class QuizService {
             deadlineAt: ongoing.deadline_at,
             durationMinutes,
             questions: attemptDetails.questions,
+            track: ongoing.track || track,
           };
         }
       }
     }
 
-    // Select questions: 2 Easy, 2 Medium, 1 Tough
+    // Dynamic question distribution:
+    // 40% easy, 40% medium, 20% tough
+    const reqEasy = Math.max(1, Math.round(targetCount * 0.4));
+    const reqMed = Math.max(1, Math.round(targetCount * 0.4));
+    const reqTough = Math.max(1, targetCount - reqEasy - reqMed);
+
     let selectedEasy: Array<{
       id: string;
       text: string;
@@ -148,9 +160,10 @@ export class QuizService {
       code_snippet?: string | null;
     }> = [];
 
-    if (track === 'ronaldo' || track === 'legends' || track === 'football') {
-      // ── CR7 & FOOTBALL LEGENDS TRACK ──
-      // Ronaldo, Hazard, Kanté, Chelsea FC, Real Madrid, Tactical Chess, and Football & Code
+    const isFootball = track === 'ronaldo' || track === 'legends' || track === 'football';
+    const isDark = track === 'dark' || track === 'winden';
+
+    if (isFootball) {
       const footballCats = [
         'Cristiano Ronaldo',
         'Eden Hazard',
@@ -170,7 +183,7 @@ export class QuizService {
         options: string;
         code_snippet?: string | null;
       }>(
-        `SELECT id, text, difficulty, category, options, code_snippet FROM questions WHERE category IN (${placeholders}) AND difficulty = "easy" AND is_active = 1`,
+        `SELECT id, text, difficulty, category, options, code_snippet FROM questions WHERE category IN (${placeholders}) AND difficulty = 'easy' AND is_active = 1`,
         footballCats
       );
 
@@ -182,7 +195,7 @@ export class QuizService {
         options: string;
         code_snippet?: string | null;
       }>(
-        `SELECT id, text, difficulty, category, options, code_snippet FROM questions WHERE category IN (${placeholders}) AND difficulty = "medium" AND is_active = 1`,
+        `SELECT id, text, difficulty, category, options, code_snippet FROM questions WHERE category IN (${placeholders}) AND difficulty = 'medium' AND is_active = 1`,
         footballCats
       );
 
@@ -194,37 +207,58 @@ export class QuizService {
         options: string;
         code_snippet?: string | null;
       }>(
-        `SELECT id, text, difficulty, category, options, code_snippet FROM questions WHERE category IN (${placeholders}) AND difficulty = "tough" AND is_active = 1`,
+        `SELECT id, text, difficulty, category, options, code_snippet FROM questions WHERE category IN (${placeholders}) AND difficulty = 'tough' AND is_active = 1`,
         footballCats
       );
 
-      if (difficultyMode === 'easy' && easyFB.length >= 3 && medFB.length >= 2) {
-        selectedEasy = shuffleArray(easyFB).slice(0, 3);
-        selectedMed = shuffleArray(medFB).slice(0, 2);
-        selectedTough = [];
-      } else if (difficultyMode === 'tough' && toughFB.length >= 3 && medFB.length >= 2) {
-        selectedEasy = [];
-        selectedMed = shuffleArray(medFB).slice(0, 2);
-        selectedTough = shuffleArray(toughFB).slice(0, 3);
-      } else if (easyFB.length >= 2 && medFB.length >= 2 && toughFB.length >= 1) {
-        const shuffEasy = shuffleArray(easyFB);
-        const e1 = shuffEasy[0];
-        const e2 = shuffEasy.find((q) => q.id !== e1.id && q.category !== e1.category) || shuffEasy[1];
-        selectedEasy = [e1, e2];
+      selectedEasy = shuffleArray(easyFB).slice(0, reqEasy);
+      selectedMed = shuffleArray(medFB).slice(0, reqMed);
+      selectedTough = shuffleArray(toughFB).slice(0, reqTough);
+    } else if (isDark) {
+      const darkCats = ['DARK // Winden Knot'];
+      const placeholders = darkCats.map(() => '?').join(',');
 
-        const shuffMed = shuffleArray(medFB);
-        const m1 = shuffMed[0];
-        const m2 = shuffMed.find((q) => q.id !== m1.id && q.category !== m1.category) || shuffMed[1];
-        selectedMed = [m1, m2];
+      const easyDark = await this.db.query<{
+        id: string;
+        text: string;
+        difficulty: QuestionDifficulty;
+        category: string;
+        options: string;
+        code_snippet?: string | null;
+      }>(
+        `SELECT id, text, difficulty, category, options, code_snippet FROM questions WHERE category IN (${placeholders}) AND difficulty = 'easy' AND is_active = 1`,
+        darkCats
+      );
 
-        selectedTough = [shuffleArray(toughFB)[0]];
-      }
-    } else if (isBatch2026(participantCode)) {
-      // ── BATCH '26 ADAPTIVE ALGORITHM ──
-      // Freshmen (enrollment ending in 26):
-      // Q1: Basic Python (Easy) | Q2: Basic SQL (Easy) | Q3: Basic OOP (Medium) | Q4: Basic OOP/Python/SQL (Medium) | Q5: Basic DS (Tough slot)
+      const medDark = await this.db.query<{
+        id: string;
+        text: string;
+        difficulty: QuestionDifficulty;
+        category: string;
+        options: string;
+        code_snippet?: string | null;
+      }>(
+        `SELECT id, text, difficulty, category, options, code_snippet FROM questions WHERE category IN (${placeholders}) AND difficulty = 'medium' AND is_active = 1`,
+        darkCats
+      );
 
-      // 1. Easy Python & Easy SQL
+      const toughDark = await this.db.query<{
+        id: string;
+        text: string;
+        difficulty: QuestionDifficulty;
+        category: string;
+        options: string;
+        code_snippet?: string | null;
+      }>(
+        `SELECT id, text, difficulty, category, options, code_snippet FROM questions WHERE category IN (${placeholders}) AND difficulty = 'tough' AND is_active = 1`,
+        darkCats
+      );
+
+      selectedEasy = shuffleArray(easyDark).slice(0, reqEasy);
+      selectedMed = shuffleArray(medDark).slice(0, reqMed);
+      selectedTough = shuffleArray(toughDark).slice(0, reqTough);
+    } else if (isBatch2026(participantCode) && targetCount === 5) {
+      // ── BATCH '26 ADAPTIVE ALGORITHM (5Q Blitz) ──
       const pythonEasy = await this.db.query<{
         id: string;
         text: string;
@@ -232,7 +266,7 @@ export class QuizService {
         category: string;
         options: string;
         code_snippet?: string | null;
-      }>('SELECT id, text, difficulty, category, options, code_snippet FROM questions WHERE category = "Python" AND difficulty = "easy" AND is_active = 1');
+      }>("SELECT id, text, difficulty, category, options, code_snippet FROM questions WHERE category = 'Python' AND difficulty = 'easy' AND is_active = 1");
 
       const sqlEasy = await this.db.query<{
         id: string;
@@ -241,7 +275,7 @@ export class QuizService {
         category: string;
         options: string;
         code_snippet?: string | null;
-      }>('SELECT id, text, difficulty, category, options, code_snippet FROM questions WHERE category = "SQL" AND difficulty = "easy" AND is_active = 1');
+      }>("SELECT id, text, difficulty, category, options, code_snippet FROM questions WHERE category = 'SQL' AND difficulty = 'easy' AND is_active = 1");
 
       const allEasy = await this.db.query<{
         id: string;
@@ -250,7 +284,7 @@ export class QuizService {
         category: string;
         options: string;
         code_snippet?: string | null;
-      }>('SELECT id, text, difficulty, category, options, code_snippet FROM questions WHERE difficulty = "easy" AND is_active = 1');
+      }>("SELECT id, text, difficulty, category, options, code_snippet FROM questions WHERE difficulty = 'easy' AND is_active = 1");
 
       const pEasy = shuffleArray(pythonEasy)[0] || shuffleArray(allEasy)[0];
       const sEasy =
@@ -261,7 +295,6 @@ export class QuizService {
         selectedEasy = [pEasy, sEasy];
       }
 
-      // 2. Medium OOP + Medium Python/SQL/OOP
       const oopMed = await this.db.query<{
         id: string;
         text: string;
@@ -269,7 +302,7 @@ export class QuizService {
         category: string;
         options: string;
         code_snippet?: string | null;
-      }>('SELECT id, text, difficulty, category, options, code_snippet FROM questions WHERE category = "OOP" AND difficulty = "medium" AND is_active = 1');
+      }>("SELECT id, text, difficulty, category, options, code_snippet FROM questions WHERE category = 'OOP' AND difficulty = 'medium' AND is_active = 1");
 
       const mixMed = await this.db.query<{
         id: string;
@@ -278,7 +311,7 @@ export class QuizService {
         category: string;
         options: string;
         code_snippet?: string | null;
-      }>('SELECT id, text, difficulty, category, options, code_snippet FROM questions WHERE category IN ("OOP", "Python", "SQL") AND difficulty = "medium" AND is_active = 1');
+      }>("SELECT id, text, difficulty, category, options, code_snippet FROM questions WHERE category IN ('OOP', 'Python', 'SQL') AND difficulty = 'medium' AND is_active = 1");
 
       const allMed = await this.db.query<{
         id: string;
@@ -287,7 +320,7 @@ export class QuizService {
         category: string;
         options: string;
         code_snippet?: string | null;
-      }>('SELECT id, text, difficulty, category, options, code_snippet FROM questions WHERE difficulty = "medium" AND is_active = 1');
+      }>("SELECT id, text, difficulty, category, options, code_snippet FROM questions WHERE difficulty = 'medium' AND is_active = 1");
 
       const oMed = shuffleArray(oopMed)[0] || shuffleArray(allMed)[0];
       const mMed =
@@ -298,7 +331,6 @@ export class QuizService {
         selectedMed = [oMed, mMed];
       }
 
-      // 3. Tough Data Structures (Basic DS questions configured in Tough slot)
       const dsTough = await this.db.query<{
         id: string;
         text: string;
@@ -306,7 +338,7 @@ export class QuizService {
         category: string;
         options: string;
         code_snippet?: string | null;
-      }>('SELECT id, text, difficulty, category, options, code_snippet FROM questions WHERE category = "Data Structures" AND difficulty = "tough" AND is_active = 1');
+      }>("SELECT id, text, difficulty, category, options, code_snippet FROM questions WHERE category = 'Data Structures' AND difficulty = 'tough' AND is_active = 1");
 
       const allTough = await this.db.query<{
         id: string;
@@ -315,7 +347,7 @@ export class QuizService {
         category: string;
         options: string;
         code_snippet?: string | null;
-      }>('SELECT id, text, difficulty, category, options, code_snippet FROM questions WHERE difficulty = "tough" AND is_active = 1');
+      }>("SELECT id, text, difficulty, category, options, code_snippet FROM questions WHERE difficulty = 'tough' AND is_active = 1");
 
       const tTough = shuffleArray(dsTough)[0] || shuffleArray(allTough)[0];
       if (tTough) {
@@ -323,69 +355,61 @@ export class QuizService {
       }
     }
 
-    // Standard question selection (if not Batch '26 or fallback)
-    if (selectedEasy.length < 2 || selectedMed.length < 2 || selectedTough.length < 1) {
-      const easyQuestions = await this.db.query<{
+    // Top-up with general bank if track pool had fewer than requested questions
+    if (selectedEasy.length < reqEasy) {
+      const existingIds = new Set(selectedEasy.map((q) => q.id));
+      const pool = await this.db.query<{
         id: string;
         text: string;
         difficulty: QuestionDifficulty;
         category: string;
         options: string;
         code_snippet?: string | null;
-      }>('SELECT id, text, difficulty, category, options, code_snippet FROM questions WHERE difficulty = "easy" AND is_active = 1');
-
-      const mediumQuestions = await this.db.query<{
-        id: string;
-        text: string;
-        difficulty: QuestionDifficulty;
-        category: string;
-        options: string;
-        code_snippet?: string | null;
-      }>('SELECT id, text, difficulty, category, options, code_snippet FROM questions WHERE difficulty = "medium" AND is_active = 1');
-
-      const toughQuestions = await this.db.query<{
-        id: string;
-        text: string;
-        difficulty: QuestionDifficulty;
-        category: string;
-        options: string;
-        code_snippet?: string | null;
-      }>('SELECT id, text, difficulty, category, options, code_snippet FROM questions WHERE difficulty = "tough" AND is_active = 1');
-
-      if (easyQuestions.length < 2) {
-        throw new Error(`Insufficient Easy questions in bank. Required: 2, Available: ${easyQuestions.length}`);
-      }
-      if (mediumQuestions.length < 2) {
-        throw new Error(`Insufficient Medium questions in bank. Required: 2, Available: ${mediumQuestions.length}`);
-      }
-      if (toughQuestions.length < 1) {
-        throw new Error(`Insufficient Tough questions in bank. Required: 1, Available: ${toughQuestions.length}`);
-      }
-
-      // Category-diverse selection for maximum question variety in every attempt
-      const shuffledEasy = shuffleArray(easyQuestions);
-      const e1 = shuffledEasy[0];
-      const e2 =
-        shuffledEasy.find((q) => q.id !== e1.id && q.category !== e1.category) ||
-        shuffledEasy.find((q) => q.id !== e1.id) ||
-        shuffledEasy[1];
-      selectedEasy = [e1, e2];
-
-      const shuffledMed = shuffleArray(mediumQuestions);
-      const m1 = shuffledMed[0];
-      const m2 =
-        shuffledMed.find((q) => q.id !== m1.id && q.category !== m1.category) ||
-        shuffledMed.find((q) => q.id !== m1.id) ||
-        shuffledMed[1];
-      selectedMed = [m1, m2];
-
-      selectedTough = shuffleArray(toughQuestions).slice(0, 1);
+      }>("SELECT id, text, difficulty, category, options, code_snippet FROM questions WHERE difficulty = 'easy' AND is_active = 1");
+      const fillers = shuffleArray(pool.filter((q) => !existingIds.has(q.id))).slice(0, reqEasy - selectedEasy.length);
+      selectedEasy.push(...fillers);
     }
 
-    // Enforce strict difficulty progression:
-    // Q1 & Q2: Easy | Q3 & Q4: Medium | Q5: Tough
-    // Questions within each tier are randomized; options are independently shuffled
-    const selected5 = [...selectedEasy, ...selectedMed, ...selectedTough];
+    if (selectedMed.length < reqMed) {
+      const existingIds = new Set(selectedMed.map((q) => q.id));
+      const pool = await this.db.query<{
+        id: string;
+        text: string;
+        difficulty: QuestionDifficulty;
+        category: string;
+        options: string;
+        code_snippet?: string | null;
+      }>("SELECT id, text, difficulty, category, options, code_snippet FROM questions WHERE difficulty = 'medium' AND is_active = 1");
+      const fillers = shuffleArray(pool.filter((q) => !existingIds.has(q.id))).slice(0, reqMed - selectedMed.length);
+      selectedMed.push(...fillers);
+    }
+
+    if (selectedTough.length < reqTough) {
+      const existingIds = new Set(selectedTough.map((q) => q.id));
+      const pool = await this.db.query<{
+        id: string;
+        text: string;
+        difficulty: QuestionDifficulty;
+        category: string;
+        options: string;
+        code_snippet?: string | null;
+      }>("SELECT id, text, difficulty, category, options, code_snippet FROM questions WHERE difficulty = 'tough' AND is_active = 1");
+      const fillers = shuffleArray(pool.filter((q) => !existingIds.has(q.id))).slice(0, reqTough - selectedTough.length);
+      selectedTough.push(...fillers);
+    }
+
+    if (selectedEasy.length < reqEasy) {
+      throw new Error(`Insufficient Easy questions in bank. Required: ${reqEasy}, Available: ${selectedEasy.length}`);
+    }
+    if (selectedMed.length < reqMed) {
+      throw new Error(`Insufficient Medium questions in bank. Required: ${reqMed}, Available: ${selectedMed.length}`);
+    }
+    if (selectedTough.length < reqTough) {
+      throw new Error(`Insufficient Tough questions in bank. Required: ${reqTough}, Available: ${selectedTough.length}`);
+    }
+
+    // Progression: Easy -> Medium -> Tough
+    const finalSelected = [...selectedEasy, ...selectedMed, ...selectedTough];
 
     const pointsMap = await this.getPointsMap();
     const attemptId = 'att_' + crypto.randomUUID().slice(0, 16);
@@ -401,8 +425,8 @@ export class QuizService {
         [attemptId, participant.id, startedAt.toISOString(), deadlineAt.toISOString(), track]
       );
 
-      for (let i = 0; i < selected5.length; i++) {
-        const q = selected5[i];
+      for (let i = 0; i < finalSelected.length; i++) {
+        const q = finalSelected[i];
         const rawOptions: string[] = typeof q.options === 'string' ? JSON.parse(q.options) : q.options;
         const shuffledOptions = shuffleArray(rawOptions);
         const position = i + 1;
@@ -553,9 +577,22 @@ export class QuizService {
     }
 
     const now = new Date();
-    const deadline = new Date(attempt.deadline_at);
-    // Allow 10 seconds grace period for network latency before marking expired
-    const isLate = now.getTime() > deadline.getTime() + 10000;
+    const deadlineRaw = attempt.deadline_at;
+    const deadlineDate: Date =
+      (deadlineRaw as any) instanceof Date
+        ? (deadlineRaw as any)
+        : typeof deadlineRaw === 'string'
+        ? new Date(
+            deadlineRaw.includes('T')
+              ? deadlineRaw.endsWith('Z')
+                ? deadlineRaw
+                : deadlineRaw + 'Z'
+              : deadlineRaw.replace(' ', 'T') + 'Z'
+          )
+        : new Date(deadlineRaw as any);
+
+    // Allow 15 seconds grace period for network latency before marking expired
+    const isLate = now.getTime() > deadlineDate.getTime() + 15000;
     const finalStatus = isAutoExpire || isLate ? 'expired' : 'completed';
 
     // First save any newly provided answers
@@ -741,6 +778,16 @@ export class QuizService {
       `SELECT COUNT(DISTINCT participant_id) as count FROM quiz_attempts WHERE status IN ('completed', 'expired')`
     );
 
+    const calculatedMaxScore =
+      breakdown.easy.max_points + breakdown.medium.max_points + breakdown.tough.max_points || 90;
+
+    const submittedAtStr =
+      (attempt.submitted_at as any) instanceof Date
+        ? (attempt.submitted_at as any).toISOString()
+        : attempt.submitted_at
+        ? String(attempt.submitted_at)
+        : new Date().toISOString();
+
     return {
       attempt_id: attempt.id,
       participant: {
@@ -749,11 +796,12 @@ export class QuizService {
         participant_code: (attempt as any).participant_code,
       },
       status: attempt.status,
+      track: (attempt as any).track || 'code',
       total_score: attempt.total_score,
-      max_score: 90,
+      max_score: calculatedMaxScore,
       time_taken_seconds: attempt.time_taken_seconds || 0,
       time_allowed_seconds: durationMinutes * 60,
-      submitted_at: attempt.submitted_at || new Date().toISOString(),
+      submitted_at: submittedAtStr,
       total_questions: rows.length,
       correct_count: correctCount,
       incorrect_count: incorrectCount,
