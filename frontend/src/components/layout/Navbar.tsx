@@ -16,6 +16,7 @@ export const Navbar: React.FC = () => {
 
   const navLinks = [
     { label: 'Arena Home', path: '/' },
+    { label: '⏳ NETFLIX DARK', path: '/dark' },
     { label: '👑 WHY CR7 > ALL', path: '/cr7-goat' },
     { label: 'Live Leaderboard', path: '/leaderboard', icon: Trophy },
   ];

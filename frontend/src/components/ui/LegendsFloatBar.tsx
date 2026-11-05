@@ -177,15 +177,25 @@ export const LegendsFloatBar: React.FC = () => {
               </motion.div>
             )}
 
-            {/* Link to Full CR7 GOAT Dossier */}
-            <Link
-              to="/cr7-goat"
-              onClick={() => sounds.playSiuuu()}
-              className="w-full py-1.5 px-2 rounded-xl bg-gradient-to-r from-burntOrange/30 to-charcoal-900 hover:from-burntOrange/50 border border-burntOrange text-warmCream font-mono text-[10px] font-black uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all shadow-sm"
-            >
-              <span>👑</span>
-              <span>WHY CR7 IS THE ONLY GOAT →</span>
-            </Link>
+            {/* Links */}
+            <div className="grid grid-cols-2 gap-1.5">
+              <Link
+                to="/dark"
+                className="py-1.5 px-2 rounded-xl bg-forestGreen/40 hover:bg-forestGreen/60 border border-emerald-500/40 text-warmCream font-mono text-[10px] font-black uppercase tracking-wider flex items-center justify-center gap-1 transition-all shadow-sm"
+              >
+                <span>⏳</span>
+                <span>DARK KNOT →</span>
+              </Link>
+
+              <Link
+                to="/cr7-goat"
+                onClick={() => sounds.playSiuuu()}
+                className="py-1.5 px-2 rounded-xl bg-gradient-to-r from-burntOrange/30 to-charcoal-900 hover:from-burntOrange/50 border border-burntOrange text-warmCream font-mono text-[10px] font-black uppercase tracking-wider flex items-center justify-center gap-1 transition-all shadow-sm"
+              >
+                <span>👑</span>
+                <span>CR7 GOAT →</span>
+              </Link>
+            </div>
 
             {/* Footer Tag */}
             <div className="flex items-center justify-between text-[9px] font-mono text-slate-400 pt-1 border-t border-white/5">

@@ -675,6 +675,41 @@ export const LandingPage: React.FC = () => {
               )}
             </motion.div>
           </div>
+
+          {/* ── NETFLIX DARK CINEMATIC FEATURE BANNER ── */}
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="mt-8 rounded-3xl p-6 sm:p-8 bg-gradient-to-r from-[#031c14] via-[#020b08] to-[#041d15] border-2 border-emerald-500/40 shadow-2xl relative overflow-hidden"
+          >
+            <div className="flex flex-col md:flex-row items-center justify-between gap-6 relative z-10">
+              <div className="flex items-center gap-5 text-center md:text-left">
+                <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl overflow-hidden border-2 border-emerald-400 shadow-[0_0_25px_rgba(16,185,129,0.4)] shrink-0 bg-black">
+                  <img src="/dark-triquetra.png" alt="Dark Triquetra" className="w-full h-full object-cover" />
+                </div>
+                <div>
+                  <span className="text-[10px] font-mono px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-bold tracking-widest uppercase border border-emerald-500/30">
+                    SIC MUNDUS CREATUS EST
+                  </span>
+                  <h3 className="text-2xl sm:text-3xl font-black text-warmCream font-display mt-1">
+                    NETFLIX DARK: THE WINDEN KNOT
+                  </h3>
+                  <p className="text-xs text-warmCream/80 font-sans max-w-lg mt-1">
+                    Jonas Kahnwald, Martha Nielsen, the 33-year cycles (1953–2052), 3D God Particle simulation, and Apparat "Goodbye" theme soundtrack.
+                  </p>
+                </div>
+              </div>
+
+              <Link
+                to="/dark"
+                className="px-6 py-3.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-400 hover:from-emerald-500 hover:to-teal-300 text-black font-black font-mono text-xs uppercase tracking-wider flex items-center gap-2 shadow-lg hover:shadow-emerald-500/40 hover:scale-105 active:scale-95 transition-all shrink-0"
+              >
+                <span>ENTER DARK PORTAL</span>
+                <span>⏳</span>
+              </Link>
+            </div>
+          </motion.div>
         </div>
       </section>
 

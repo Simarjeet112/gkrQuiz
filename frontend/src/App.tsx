@@ -9,6 +9,7 @@ import { ResultsPage } from './pages/ResultsPage';
 import { LeaderboardPage } from './pages/LeaderboardPage';
 import { OrganizerPage } from './pages/OrganizerPage';
 import { RonaldoGoatPage } from './pages/RonaldoGoatPage';
+import { DarkExperiencePage } from './pages/DarkExperiencePage';
 import { LegendsFloatBar } from './components/ui/LegendsFloatBar';
 import { WonderwallPlayer } from './components/audio/WonderwallPlayer';
 
@@ -24,6 +25,9 @@ export const App: React.FC = () => {
             <Route path="/cr7-goat" element={<RonaldoGoatPage />} />
             <Route path="/cr7" element={<RonaldoGoatPage />} />
             <Route path="/goat" element={<RonaldoGoatPage />} />
+            <Route path="/dark" element={<DarkExperiencePage />} />
+            <Route path="/winden" element={<DarkExperiencePage />} />
+            <Route path="/netflix-dark" element={<DarkExperiencePage />} />
             <Route path="/arena/:attemptId" element={<QuizArenaPage />} />
             <Route path="/results/:attemptId" element={<ResultsPage />} />
             <Route path="/leaderboard" element={<LeaderboardPage />} />
