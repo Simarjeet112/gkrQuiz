@@ -447,7 +447,7 @@ export const ResultsPage: React.FC = () => {
 
               <p className="text-xs text-warmCream/80 font-sans leading-relaxed max-w-xl">
                 {results.total_score >= 60
-                  ? "You delivered a world-class Ballon d'Or worthy performance in the Geekroom Arena! Unleash the celebration with Oasis Wonderwall in the stadium background!"
+                  ? "You delivered a world-class Ballon d'Or worthy performance in the Code Arena! Unleash the celebration with Oasis Wonderwall in the stadium background!"
                   : "Every champion starts with relentless practice. Re-enter the tunnel, study the tactical review below, and return stronger!"}
               </p>
 

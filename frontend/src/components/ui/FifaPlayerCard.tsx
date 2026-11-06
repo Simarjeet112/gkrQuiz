@@ -1,4 +1,5 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 
 export interface FifaCardProps {
   playerName: string;
@@ -10,6 +11,108 @@ export interface FifaCardProps {
   rank?: number;
   aiCardTitle?: string;
 }
+
+export interface CardCharacter {
+  id: string;
+  name: string;
+  role: string;
+  position: string;
+  club: string;
+  nationFlag: string;
+  clubEmoji: string;
+  image: string;
+  tag: string;
+  badgeSubtitle: string;
+  borderClass: string;
+  bgGlow: string;
+}
+
+export const CHARACTER_ROSTER: CardCharacter[] = [
+  {
+    id: 'cr7-ucl',
+    name: 'Cristiano Ronaldo',
+    role: 'Real Madrid #7 // UCL King',
+    position: 'ST',
+    club: 'Real Madrid C.F.',
+    nationFlag: '🇵🇹',
+    clubEmoji: '👑 ⚽',
+    image: '/ronaldo-ucl.jpg',
+    tag: '#CR7UCL',
+    badgeSubtitle: "BALLON D'OR EDITION",
+    borderClass: 'border-amber-400',
+    bgGlow: 'from-amber-500/20 to-yellow-600/10',
+  },
+  {
+    id: 'hazard-snow',
+    name: 'Eden Hazard',
+    role: 'Chelsea #17 // Magician in Snow',
+    position: 'LW',
+    club: 'Chelsea FC Magician',
+    nationFlag: '🇧🇪',
+    clubEmoji: '💙 🪄',
+    image: '/hazard-snow.jpg',
+    tag: '#HAZARD17',
+    badgeSubtitle: 'STAMFORD BRIDGE WIZARD',
+    borderClass: 'border-blue-400',
+    bgGlow: 'from-blue-500/20 to-cyan-600/10',
+  },
+  {
+    id: 'kante-tank',
+    name: "N'Golo Kanté",
+    role: '70% Earth Covering Engine',
+    position: 'CDM',
+    club: 'Chelsea Midfield Engine',
+    nationFlag: '🇫🇷',
+    clubEmoji: '💥 🛡️',
+    image: '/kante-explosion.jpg',
+    tag: '#KANTE100',
+    badgeSubtitle: '100% TANK ENGINE',
+    borderClass: 'border-emerald-400',
+    bgGlow: 'from-emerald-500/20 to-teal-600/10',
+  },
+  {
+    id: 'cr7-ballondor',
+    name: 'CR7 5x Ballon d’Or',
+    role: 'The Only GOAT in History',
+    position: 'CF',
+    club: 'Real Madrid Galáctico',
+    nationFlag: '🇵🇹',
+    clubEmoji: '🏆 🐐',
+    image: '/ronaldo-ballondor.jpg',
+    tag: '#ONLYGOAT',
+    badgeSubtitle: 'THE ONLY GOAT',
+    borderClass: 'border-amber-300',
+    bgGlow: 'from-amber-400/25 to-orange-500/10',
+  },
+  {
+    id: 'jonas-traveler',
+    name: 'Jonas Kahnwald',
+    role: 'The Traveler // Yellow Jacket',
+    position: 'TRAV',
+    club: 'Sic Mundus Creatus Est',
+    nationFlag: '🇩🇪',
+    clubEmoji: '⏳ 🌀',
+    image: '/jonas-yellow.jpg',
+    tag: '#WINDEN2019',
+    badgeSubtitle: 'SIC MUNDUS CREATUS EST',
+    borderClass: 'border-yellow-400',
+    bgGlow: 'from-yellow-500/20 to-emerald-600/10',
+  },
+  {
+    id: 'dark-triquetra',
+    name: 'The Origin Knot',
+    role: 'Adam & Eva 33-Year Cycle',
+    position: 'ORIG',
+    club: 'Tannhaus Origin World',
+    nationFlag: '♾️',
+    clubEmoji: '☢️ ⏳',
+    image: '/dark-triquetra.png',
+    tag: '#TRIQUETRA',
+    badgeSubtitle: 'TIME KNOT ARCHITECT',
+    borderClass: 'border-teal-400',
+    bgGlow: 'from-teal-500/20 to-emerald-900/20',
+  },
+];
 
 export const FifaPlayerCard: React.FC<FifaCardProps> = ({
   playerName,
@@ -33,72 +136,29 @@ export const FifaPlayerCard: React.FC<FifaCardProps> = ({
   // Calculate authentic FUT OVR (75 - 99)
   const ovr = Math.min(99, Math.max(75, 75 + Math.round((accuracyPct / 100) * 24)));
 
-  // Position based on track & playstyle
-  let position = 'ST';
-  if (isFootball) {
-    if (accuracyPct >= 90) position = 'ST'; // Striker Ronaldo
-    else if (accuracyPct >= 75) position = 'LW'; // Winger Hazard
-    else position = 'CDM'; // Midfield Engine Kanté
-  } else if (isDark) {
-    position = accuracyPct >= 85 ? 'TIME LORD' : 'CHRONOS';
-  } else {
-    position = accuracyPct >= 85 ? 'GM ARCH' : 'FULLSTACK';
-  }
+  // Initial character selection
+  const getDefaultCharIndex = () => {
+    if (isDark) return 4; // Jonas
+    if (accuracyPct >= 90) return 0; // CR7 UCL
+    if (accuracyPct >= 75) return 1; // Hazard
+    if (accuracyPct >= 50) return 2; // Kanté
+    return 3; // CR7 Ballon d'Or
+  };
+
+  const [selectedCharIndex, setSelectedCharIndex] = useState(getDefaultCharIndex());
+  const activeChar = CHARACTER_ROSTER[selectedCharIndex];
 
   // Calculate 6 FUT Stats
-  // PAC: Speed (faster completion gives higher pace)
   const avgSecondsPerQ = totalQuestions > 0 ? timeTakenSeconds / totalQuestions : 30;
   const pac = Math.min(99, Math.max(70, Math.round(99 - Math.max(0, avgSecondsPerQ - 5) * 1.5)));
-
-  // SHO: Accuracy / Finishing
   const sho = Math.min(99, Math.max(68, Math.round(accuracyPct * 0.95 + 4)));
-
-  // PAS: Precision
   const pas = Math.min(99, Math.max(72, Math.round(accuracyPct * 0.9 + 8)));
-
-  // DRI: Agility & Composure
   const dri = Math.min(99, Math.max(74, Math.round(85 + (pac > 85 ? 10 : 0))));
-
-  // DEF: Tenacity / Resilience
   const def = Math.min(99, Math.max(70, Math.round(75 + (rank <= 3 ? 18 : 8))));
-
-  // PHY: Mental Stamina
   const phy = Math.min(99, Math.max(75, Math.round(80 + (totalQuestions >= 20 ? 15 : 8))));
 
-  // Dynamic Avatar / Portrait
-  let avatarUrl = 'https://images.unsplash.com/photo-1579952363873-27f3bade9f55?q=80&w=400&auto=format&fit=crop';
-  let clubName = 'Real Madrid × Chelsea FC';
-  let clubEmoji = '👑 💙';
-  let nationFlag = '🇵🇹';
-  let badgeSubtitle = aiCardTitle || (ovr >= 94 ? "BALLON D'OR EDITION" : 'CHAMPIONS LEAGUE ICON');
-
-  if (isFootball) {
-    if (position === 'ST') {
-      avatarUrl = 'https://images.unsplash.com/photo-1508098682722-e99c43a406b2?q=80&w=400&auto=format&fit=crop';
-      clubName = 'Real Madrid C.F.';
-      nationFlag = '🇵🇹';
-    } else if (position === 'LW') {
-      avatarUrl = 'https://images.unsplash.com/photo-1522778119026-d647f0596c20?q=80&w=400&auto=format&fit=crop';
-      clubName = 'Chelsea FC Magician';
-      nationFlag = '🇧🇪';
-    } else {
-      avatarUrl = 'https://images.unsplash.com/photo-1574629810360-7efbbe195018?q=80&w=400&auto=format&fit=crop';
-      clubName = 'Chelsea Midfield Engine';
-      nationFlag = '🇫🇷';
-    }
-  } else if (isDark) {
-    clubName = 'Sic Mundus Creatus Est';
-    clubEmoji = '⏳ 🌀';
-    nationFlag = '🇩🇪';
-    badgeSubtitle = aiCardTitle || 'WINDEN KNOT MASTER';
-    avatarUrl = 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=400&auto=format&fit=crop';
-  } else {
-    clubName = 'Geekroom GTBIT Arena';
-    clubEmoji = '💻 ♟️';
-    nationFlag = '⚡';
-    badgeSubtitle = aiCardTitle || 'GRANDMASTER DEV';
-    avatarUrl = 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?q=80&w=400&auto=format&fit=crop';
-  }
+  const badgeSubtitle = aiCardTitle || activeChar.badgeSubtitle;
+  const position = activeChar.position;
 
   // Client-side Canvas Card Generator for direct PNG export
   const handleDownloadCard = async () => {
@@ -112,7 +172,7 @@ export const FifaPlayerCard: React.FC<FifaCardProps> = ({
 
       // Card Shield Background
       const grad = ctx.createLinearGradient(0, 0, 640, 920);
-      if (isDark) {
+      if (activeChar.id.startsWith('jonas') || activeChar.id.startsWith('dark')) {
         grad.addColorStop(0, '#0a2a1f');
         grad.addColorStop(0.5, '#041c14');
         grad.addColorStop(1, '#020b08');
@@ -154,21 +214,50 @@ export const FifaPlayerCard: React.FC<FifaCardProps> = ({
 
       // Flag & Club
       ctx.font = '36px sans-serif';
-      ctx.fillText(nationFlag, 65, 255);
+      ctx.fillText(activeChar.nationFlag, 65, 255);
       ctx.font = '32px sans-serif';
-      ctx.fillText(clubEmoji, 65, 305);
+      ctx.fillText(activeChar.clubEmoji, 65, 305);
 
-      // Player Name
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.6)';
+      // Draw Hero Image onto canvas
+      try {
+        const img = new Image();
+        img.crossOrigin = 'anonymous';
+        img.src = activeChar.image;
+        await new Promise((resolve) => {
+          img.onload = () => resolve(true);
+          img.onerror = () => resolve(false);
+        });
+
+        ctx.save();
+        ctx.beginPath();
+        if (typeof (ctx as any).roundRect === 'function') {
+          (ctx as any).roundRect(330, 100, 240, 240, 20);
+        } else {
+          ctx.rect(330, 100, 240, 240);
+        }
+        ctx.clip();
+        ctx.drawImage(img, 330, 100, 240, 240);
+        ctx.restore();
+
+        // Image frame border
+        ctx.strokeStyle = '#f59e0b';
+        ctx.lineWidth = 3;
+        ctx.strokeRect(330, 100, 240, 240);
+      } catch (e) {
+        console.warn('Canvas image draw skipped', e);
+      }
+
+      // Player Name Banner
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
       ctx.fillRect(40, 490, 560, 60);
       ctx.strokeStyle = '#f59e0b';
       ctx.lineWidth = 2;
       ctx.strokeRect(40, 490, 560, 60);
 
       ctx.fillStyle = '#fdf8ee';
-      ctx.font = '900 36px sans-serif';
+      ctx.font = '900 34px sans-serif';
       ctx.textAlign = 'center';
-      ctx.fillText(playerName.toUpperCase(), 320, 534);
+      ctx.fillText(playerName.toUpperCase(), 320, 532);
 
       // Stats Section
       const stats = [
@@ -200,11 +289,11 @@ export const FifaPlayerCard: React.FC<FifaCardProps> = ({
       ctx.fillStyle = 'rgba(253, 248, 238, 0.6)';
       ctx.font = '16px sans-serif';
       ctx.textAlign = 'center';
-      ctx.fillText('GEEKROOM // ARENA ULTIMATE TEAM • VERIFIED ATTRIBUTE RATING', 320, 850);
+      ctx.fillText('CODE ARENA // ULTIMATE TEAM • VERIFIED ATTRIBUTE RATING', 320, 850);
 
       // Download trigger
       const link = document.createElement('a');
-      link.download = `EA_FC_CARD_${playerName.replace(/\s+/g, '_')}_${ovr}.png`;
+      link.download = `EA_FC_CARD_${playerName.replace(/\s+/g, '_')}_${activeChar.id}_${ovr}.png`;
       link.href = canvas.toDataURL('image/png');
       link.click();
     } catch (err) {
@@ -215,7 +304,7 @@ export const FifaPlayerCard: React.FC<FifaCardProps> = ({
   };
 
   const handleCopyShare = () => {
-    const shareText = `🔥 My EA FC Ultimate Team Rating: ${ovr} OVR (${position})!\n⚽ Score: ${score}/${maxScore} (${accuracyPct}%)\n⚡ PAC ${pac} | SHO ${sho} | PAS ${pas} | DRI ${dri} | DEF ${def} | PHY ${phy}\n🏟️ Played at Geekroom Arena`;
+    const shareText = `🔥 My EA FC Ultimate Team Rating: ${ovr} OVR (${position})!\n👑 Character: ${activeChar.name} (${activeChar.role})\n⚽ Score: ${score}/${maxScore} (${accuracyPct}%)\n⚡ PAC ${pac} | SHO ${sho} | PAS ${pas} | DRI ${dri} | DEF ${def} | PHY ${phy}\n🏟️ Played at Code Arena`;
     if (navigator.clipboard) {
       navigator.clipboard.writeText(shareText);
       setCopied(true);
@@ -224,13 +313,60 @@ export const FifaPlayerCard: React.FC<FifaCardProps> = ({
   };
 
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col items-center w-full max-w-2xl mx-auto">
+      {/* ── 6 CHARACTER SELECTOR DOCK ── */}
+      <div className="w-full mb-6">
+        <div className="flex items-center justify-between mb-2 px-1">
+          <span className="text-[11px] font-mono uppercase tracking-wider text-amber-300 font-bold flex items-center gap-1.5">
+            <span>⚡</span>
+            <span>CHOOSE YOUR LEGEND CARD AVATAR (6 CHARACTERS):</span>
+          </span>
+          <span className="text-[10px] font-mono text-warmCream/60">
+            {activeChar.role}
+          </span>
+        </div>
+
+        <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
+          {CHARACTER_ROSTER.map((char, index) => {
+            const isSelected = selectedCharIndex === index;
+            return (
+              <button
+                key={char.id}
+                onClick={() => setSelectedCharIndex(index)}
+                className={`p-1.5 rounded-xl border text-center transition-all flex flex-col items-center gap-1 relative overflow-hidden ${
+                  isSelected
+                    ? 'bg-amber-500/20 border-amber-400 scale-105 shadow-[0_0_15px_rgba(245,158,11,0.4)]'
+                    : 'bg-black/40 border-white/10 hover:border-white/30 hover:bg-black/60 opacity-80 hover:opacity-100'
+                }`}
+              >
+                <div className="w-12 h-12 rounded-lg overflow-hidden border border-white/20 bg-black relative">
+                  <img
+                    src={char.image}
+                    alt={char.name}
+                    className="w-full h-full object-cover"
+                  />
+                  {isSelected && (
+                    <div className="absolute inset-0 bg-amber-400/20 border border-amber-400" />
+                  )}
+                </div>
+                <div className="text-[10px] font-bold text-warmCream truncate w-full">
+                  {char.name.split(' ')[0]}
+                </div>
+                <div className="text-[8px] font-mono text-amber-400 font-bold">
+                  {char.position}
+                </div>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
       {/* ── FIFA FUT CARD CONTAINER ── */}
       <div
         ref={cardRef}
         className="relative w-80 sm:w-96 rounded-3xl p-1 shadow-2xl transition-all duration-500 hover:scale-[1.02] hover:shadow-[0_25px_60px_-15px_rgba(245,158,11,0.4)]"
         style={{
-          background: isDark
+          background: activeChar.id.startsWith('jonas') || activeChar.id.startsWith('dark')
             ? 'linear-gradient(135deg, #10b981 0%, #04261b 50%, #064e3b 100%)'
             : 'linear-gradient(135deg, #f59e0b 0%, #ea580c 25%, #04261b 70%, #064e3b 100%)',
         }}
@@ -239,7 +375,7 @@ export const FifaPlayerCard: React.FC<FifaCardProps> = ({
         <div
           className="relative rounded-[22px] overflow-hidden p-6 text-warmCream"
           style={{
-            background: isDark
+            background: activeChar.id.startsWith('jonas') || activeChar.id.startsWith('dark')
               ? 'linear-gradient(180deg, #04261b 0%, #02140e 60%, #010a07 100%)'
               : 'linear-gradient(180deg, #1c140d 0%, #0d1e17 50%, #04261b 100%)',
           }}
@@ -268,20 +404,20 @@ export const FifaPlayerCard: React.FC<FifaCardProps> = ({
               <div className="text-lg font-black tracking-wider text-amber-400 font-mono">
                 {position}
               </div>
-              <div className="text-2xl pt-1">{nationFlag}</div>
-              <div className="text-xl pt-0.5">{clubEmoji}</div>
+              <div className="text-2xl pt-1">{activeChar.nationFlag}</div>
+              <div className="text-xl pt-0.5">{activeChar.clubEmoji}</div>
             </div>
 
             {/* Right Column: Hero Portrait */}
             <div className="relative w-44 h-44 -mr-2">
               <div className="absolute inset-0 rounded-2xl bg-gradient-to-tr from-amber-500/20 via-transparent to-emerald-400/20 blur-sm pointer-events-none" />
               <img
-                src={avatarUrl}
-                alt={playerName}
+                src={activeChar.image}
+                alt={activeChar.name}
                 className="w-full h-full object-cover rounded-2xl border-2 border-amber-400/40 shadow-xl"
               />
               <div className="absolute bottom-1 right-1 bg-black/80 px-2 py-0.5 rounded text-[10px] font-bold text-amber-300 border border-amber-500/30">
-                #CR7VIBE
+                {activeChar.tag}
               </div>
             </div>
           </div>
@@ -292,7 +428,7 @@ export const FifaPlayerCard: React.FC<FifaCardProps> = ({
               {playerName}
             </div>
             <div className="text-[10px] font-mono text-warmCream/70 tracking-widest uppercase">
-              {clubName}
+              {activeChar.club}
             </div>
           </div>
 

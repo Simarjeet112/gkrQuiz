@@ -25,20 +25,20 @@ export const Navbar: React.FC = () => {
     <header className="sticky top-0 z-50 w-full bg-charcoal/95 backdrop-blur-xl border-b border-emerald-500/20 text-warmCream select-none">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         
-        {/* Brand with official Geekroom Logo + Real Madrid & Chelsea Giant Badges */}
+        {/* Brand with Dark Triquetra Logo + Real Madrid & Chelsea Giant Badges */}
         <div className="flex items-center gap-3">
           <Link to="/" className="flex items-center gap-3 group">
-            <div className="relative w-10 h-10 rounded-xl overflow-hidden border border-emerald-500/30 bg-forestGreen p-1.5 transition-all group-hover:border-amber-400 group-hover:scale-105 shadow-md">
+            <div className="relative w-10 h-10 rounded-xl overflow-hidden border border-emerald-500/40 bg-black p-1 transition-all group-hover:border-amber-400 group-hover:scale-105 shadow-md">
               <img
-                src="/geekroom-logo.png"
-                alt="Geekroom GTBIT Logo"
-                className="w-full h-full object-contain"
+                src="/dark-triquetra.png"
+                alt="Code Arena Logo"
+                className="w-full h-full object-cover"
               />
             </div>
             <div>
               <div className="flex items-center gap-2">
                 <span className="font-extrabold tracking-wider text-base sm:text-lg text-warmCream group-hover:text-amber-400 transition-colors font-display">
-                  GEEKROOM
+                  CODE ARENA
                 </span>
                 <span className="text-[10px] px-2 py-0.5 rounded-full bg-gradient-to-r from-forestGreen to-burntOrange text-warmCream font-black uppercase tracking-wider shadow-sm border border-emerald-500/30">
                   MADRID × CHELSEA

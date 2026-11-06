@@ -68,8 +68,8 @@ export const LegendsFloatBar: React.FC = () => {
                   <div className="w-5 h-5 rounded-full border border-amber-400 overflow-hidden bg-amber-900 p-0.5">
                     <img src="/real-madrid-logo.svg" alt="Real Madrid" className="w-full h-full object-contain" />
                   </div>
-                  <div className="w-5 h-5 rounded-full border border-lime overflow-hidden bg-carbon-900 p-0.5">
-                    <img src="/geekroom-logo.png" alt="Geekroom" className="w-full h-full object-contain" />
+                  <div className="w-5 h-5 rounded-full border border-emerald-400 overflow-hidden bg-black p-0.5">
+                    <img src="/dark-triquetra.png" alt="Dark Triquetra" className="w-full h-full object-cover" />
                   </div>
                 </div>
                 <span className="text-[10px] font-mono font-bold text-white uppercase tracking-wider">
@@ -199,7 +199,7 @@ export const LegendsFloatBar: React.FC = () => {
 
             {/* Footer Tag */}
             <div className="flex items-center justify-between text-[9px] font-mono text-slate-400 pt-1 border-t border-white/5">
-              <span>CHELSEA 💙 × MADRID 🤍 × GEEKROOM 💚</span>
+              <span>CHELSEA 💙 × MADRID 🤍 × DARK ⏳</span>
               <span className="text-lime font-bold">CHESS GM ELO</span>
             </div>
           </motion.div>

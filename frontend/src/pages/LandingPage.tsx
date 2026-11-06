@@ -304,8 +304,8 @@ export const LandingPage: React.FC = () => {
                     <div className="w-8 h-8 rounded-lg bg-blue-950/80 border border-blue-400/60 flex items-center justify-center p-1 shadow-md">
                       <img src="/chelsea-logo.svg" alt="Chelsea" className="w-full h-full object-contain" />
                     </div>
-                    <div className="w-8 h-8 rounded-lg bg-carbon-900 border border-lime/60 flex items-center justify-center p-1 shadow-md">
-                      <img src="/geekroom-logo.png" alt="Geekroom" className="w-full h-full object-contain" />
+                    <div className="w-8 h-8 rounded-lg bg-black border border-emerald-500/60 flex items-center justify-center p-0.5 shadow-md overflow-hidden">
+                      <img src="/dark-triquetra.png" alt="Dark Triquetra" className="w-full h-full object-cover" />
                     </div>
                   </div>
                   <div>
@@ -807,8 +807,8 @@ export const LandingPage: React.FC = () => {
           {/* Society Card */}
           <div className="md:col-span-4 rounded-2xl p-6 border border-white/15 bg-gradient-to-b from-[#10172A] to-[#0A0E18] flex flex-col justify-between text-center space-y-4 shadow-titanium">
             <div className="flex items-center justify-center gap-3 pt-2">
-              <div className="w-14 h-14 rounded-2xl bg-white/5 border border-white/15 p-2.5 shadow-md">
-                <img src="/geekroom-logo.png" alt="Geekroom GTBIT" className="w-full h-full object-contain" />
+              <div className="w-14 h-14 rounded-2xl bg-black border border-emerald-500/30 p-1 shadow-md overflow-hidden">
+                <img src="/dark-triquetra.png" alt="Code Arena" className="w-full h-full object-cover" />
               </div>
               <div className="w-14 h-14 rounded-2xl bg-lime/10 border border-lime/30 flex items-center justify-center text-3xl shadow-lg">
                 ♟
@@ -817,7 +817,7 @@ export const LandingPage: React.FC = () => {
 
             <div>
               <div className="text-xs font-mono text-lime font-bold uppercase tracking-wider">
-                GEEKROOM GTBIT // 2026
+                CODE ARENA // 2026
               </div>
               <h4 className="text-lg font-black text-white font-display mt-0.5">
                 CODE ARENA TOURNAMENT

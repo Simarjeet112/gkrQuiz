@@ -81,7 +81,7 @@ export const LeaderboardPage: React.FC = () => {
             </h1>
             <p className="text-xs font-mono text-carbon-400 mt-1 flex flex-wrap items-center gap-2">
               <span className="text-carbon-500">TIEBREAK PROTOCOL:</span>
-              <span className="text-lime-400 font-bold">MAX SCORE [90]</span>
+              <span className="text-lime-400 font-bold">TOTAL SCORE [PTS]</span>
               <span className="text-carbon-600">→</span>
               <span className="text-ember-400 font-bold">RAPID CLOCK [ASC]</span>
               <span className="text-carbon-600">→</span>
@@ -158,7 +158,7 @@ export const LeaderboardPage: React.FC = () => {
                   <div>
                     <div className="text-carbon-400 text-[10px] uppercase">SCORE</div>
                     <strong className="text-white text-xl font-display">{top3[1].total_score}</strong>
-                    <span className="text-carbon-500 text-xs">/90</span>
+                    <span className="text-carbon-400 text-xs font-mono ml-1">PTS</span>
                   </div>
                   <div>
                     <div className="text-carbon-400 text-[10px] uppercase">TIME</div>
@@ -194,7 +194,7 @@ export const LeaderboardPage: React.FC = () => {
                   <div>
                     <div className="text-amber-300/60 text-[10px] uppercase">SCORE</div>
                     <strong className="text-amber-300 text-2xl font-display">{top3[0].total_score}</strong>
-                    <span className="text-amber-500/70 text-xs">/90</span>
+                    <span className="text-amber-400 text-xs font-mono ml-1 font-bold">PTS</span>
                   </div>
                   <div>
                     <div className="text-amber-300/60 text-[10px] uppercase">TIME</div>
@@ -228,7 +228,7 @@ export const LeaderboardPage: React.FC = () => {
                   <div>
                     <div className="text-carbon-400 text-[10px] uppercase">SCORE</div>
                     <strong className="text-white text-xl font-display">{top3[2].total_score}</strong>
-                    <span className="text-carbon-500 text-xs">/90</span>
+                    <span className="text-carbon-400 text-xs font-mono ml-1">PTS</span>
                   </div>
                   <div>
                     <div className="text-carbon-400 text-[10px] uppercase">TIME</div>
@@ -357,7 +357,7 @@ export const LeaderboardPage: React.FC = () => {
                         <span className="font-extrabold text-lime-400 text-lg font-mono">
                           {item.total_score}
                         </span>
-                        <span className="text-carbon-500 text-xs"> /90</span>
+                        <span className="text-carbon-500 text-xs font-mono ml-1 font-bold">PTS</span>
                       </td>
                       <td className="py-4 px-4 text-right text-carbon-300 text-xs">
                         {fmtTime(item.time_taken_seconds)}

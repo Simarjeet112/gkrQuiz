@@ -8,16 +8,16 @@ export const Footer: React.FC = () => {
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
         {/* Logo and Society */}
         <div className="flex items-center gap-3">
-          <img src="/geekroom-logo.png" alt="Geekroom GTBIT" className="w-6 h-6 object-contain" />
-          <span className="font-bold text-slate-200">GEEKROOM // CODE ARENA</span>
+          <img src="/dark-triquetra.png" alt="Code Arena" className="w-6 h-6 object-cover rounded-md" />
+          <span className="font-bold text-slate-200">CODE ARENA // FOOTBALL × DARK × CHESS</span>
           <span className="text-slate-600">•</span>
-          <span className="text-lime font-semibold">GTBIT Orientation 2026</span>
+          <span className="text-lime font-semibold">ARENA TOURNAMENT 2026</span>
         </div>
 
         {/* Attribution */}
         <div className="flex items-center gap-3 text-[11px] text-slate-400">
           <span>Engineered by</span>
-          <span className="text-white font-bold">Geekroom Technical Society</span>
+          <span className="text-white font-bold">Code Arena Society</span>
           <span className="text-slate-600">•</span>
           <Link
             to="/cr7-goat"
@@ -30,7 +30,7 @@ export const Footer: React.FC = () => {
 
         {/* Organizer discreet link */}
         <div className="flex items-center gap-3 text-[11px]">
-          <span className="text-slate-500">5 QUESTIONS · 90 PTS MAX</span>
+          <span className="text-slate-500">ADAPTIVE QUESTS · NEON POSTGRES</span>
           <span className="text-slate-700">|</span>
           <Link
             to="/organizer"

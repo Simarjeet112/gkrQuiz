@@ -94,15 +94,15 @@ export const RegistrationPage: React.FC = () => {
         {/* Top Header */}
         <div className="flex items-center justify-between pb-4 border-b border-white/10">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-forestGreen border border-emerald-400/40 p-1 flex items-center justify-center shadow-md">
-              <img src="/geekroom-logo.png" alt="Geekroom GTBIT" className="w-full h-full object-contain" />
+            <div className="w-10 h-10 rounded-xl bg-black border border-emerald-400/40 p-1 flex items-center justify-center shadow-md">
+              <img src="/dark-triquetra.png" alt="Code Arena" className="w-full h-full object-cover rounded-lg" />
             </div>
             <div>
               <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/40 font-bold uppercase tracking-wider flex items-center gap-1">
                 <span>👑</span> SANTIAGO BERNABÉU × STAMFORD BRIDGE
               </span>
               <div className="text-sm font-black text-warmCream font-display mt-0.5">
-                GEEKROOM SAAS ARENA // 2026
+                CODE ARENA // 2026
               </div>
             </div>
           </div>
